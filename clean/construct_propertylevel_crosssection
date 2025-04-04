@@ -1,0 +1,56 @@
+**** construct property level cross-section data ****
+**** notes ****
+**** environment ****
+clear all
+set more off
+
+* directories
+global dir "/Users/reinakishida/Dropbox/Project_Multinationals"
+global dir_raw "$dir/data/raw"
+global dir_temp "$dir/data/temp"
+global dir_cleaned "$dir/data/raw_cleaned"
+
+* inputs
+global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+
+* outputs
+global output_property_level "$dir_cleaned/property_level"
+global output_company_level "$dir_cleaned/company_level"
+
+* intermediates
+global temp_property_level "$dir_temp/property_level"
+global temp_company_level "$dir_temp/company_level"
+
+* roadmap
+program main
+    clean_property_details
+end
+
+**** property details ****
+program clean_property_details
+    cd "$input_metals_mining/properties_property_details"
+
+    import excel "property_details_1_general_info_commodities_location_Africa.xls", cellrange(A7) clear
+    save "$temp_path/property_details_1.dta", replace
+
+    local property_details_1 /// 
+        "property_details_1_general_info_commodities_location_AsiaPacific.xls" /// 
+        "property_details_1_general_info_commodities_location_EuropeMiddleEast.xls" /// 
+        "property_details_1_general_info_commodities_location_LatinAmerica.xls" /// 
+        "property_details_1_general_info_commodities_location_USCanada.xls" ///
+
+
+    foreach file of local property_details_1 {
+        import excel `file', cellrange(A7) clear
+        append using property_details_1.dta
+        rename SUBPROPERTY? SUBPROPERTY
+    }
+
+    save property_details_1.dta, replace
+end
+
+
+
+* rename variables
+
+
