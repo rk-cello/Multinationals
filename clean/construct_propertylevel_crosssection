@@ -30,7 +30,10 @@ end
 program clean_property_details
     cd "$input_metals_mining/properties_property_details"
 
-    import excel "property_details_1_general_info_commodities_location_Africa.xls", cellrange(A7) clear
+    * property_details_1
+    import excel "property_details_1_general_info_commodities_location_Africa.xls", /// 
+    cellrange(A7) clear
+
     save "$temp_path/property_details_1.dta", replace
 
     local property_details_1 /// 
@@ -39,18 +42,82 @@ program clean_property_details
         "property_details_1_general_info_commodities_location_LatinAmerica.xls" /// 
         "property_details_1_general_info_commodities_location_USCanada.xls" ///
 
-
     foreach file of local property_details_1 {
-        import excel `file', cellrange(A7) clear
+        import excel `file', ///
+        cellrange(A7) clear
         append using property_details_1.dta
         rename SUBPROPERTY? SUBPROPERTY
     }
 
-    save property_details_1.dta, replace
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  also_known_as
+    rename D  primary_commodity
+    rename E  dev_stage
+    rename F  actv_status
+    rename G  minesearch_id
+    rename H  intierra_live_ppty_id
+    rename I  meg_prop_id
+    rename J  yr_source_date
+    rename K  mo_source_date
+    rename L  mo_yr_source_date
+    rename M  mine_type1
+    rename N  mine_type2
+    rename O  mine_type3
+    rename P  subproperty
+    rename Q  sub_prop_parent_id
+    rename R  sub_prop_parent_name
+    rename S  commodities_list
+    rename T  commodity1
+    rename U  commodity2
+    rename V  commodity3
+    rename W  commodity4
+    rename X  commodity5
+    rename Y  commodity6
+    rename Z  state_province
+    rename AA country_name
+    rename AB snl_global_region
+    rename AC latitude
+    rename AD longitude
+    rename AE coordinate_accuracy
+    rename AF distance_from
+
+    * label variables
+    label var prop_name             "Name of the mine or facility"
+    label var prop_id               "Unique key for the project"
+    label var also_known_as         "List of property aliases"
+    label var primary_commodity     "Main material extracted"
+    label var dev_stage             "Development stage of the project"
+    label var actv_status           "Current activity status"
+    label var minesearch_id         "Unique MineSearch ID"  
+    label var intierra_live_ppty_id "The unique identifier for a property in the IntierraLive product"
+    label var meg_prop_id           "MEG's new primary key for mining projects"
+    label var yr_source_date        "Year of the most recent source information about the project"
+    label var mo_source_date        "Month of the most recent source information about the project"
+    label var mo_yr_source_date     "Month and year of the most recent source information about the project"
+    label var mine_type1            "Mining operation carried out at a mine (Type 1)"
+    label var mine_type2            "Mining operation carried out at a mine (Type 2)"
+    label var mine_type3            "Mining operation carried out at a mine (Type 3)"
+    label var subproperty           "Indicates that the property is a component of another mining property"
+    label var sub_prop_parent_id    "Key of the mining project identified as parent of the subproperty"
+    label var sub_prop_parent_name  "Name of a claim or group of claims about which mining data is reported"
+    label var commodities_list      "A list of the project's current products"
+    label var commodity1            "Material extracted during the course of mining operations (Commodity 1)"
+    label var commodity2            "Material extracted during the course of mining operations (Commodity 2)"
+    label var commodity3            "Material extracted during the course of mining operations (Commodity 3)"
+    label var commodity4            "Material extracted during the course of mining operations (Commodity 4)"
+    label var commodity5            "Material extracted during the course of mining operations (Commodity 5)"
+    label var commodity6            "Material extracted during the course of mining operations (Commodity 6)"
+    label var state_province        "Common name of a country division"
+    label var country_name          "Common English country name"
+    label var snl_global_region     "Name of the global region"
+    label var latitude              "Latitude"
+    label var longitude             "Longitude"
+    label var coordinate_accuracy   "Accuracy of latitude and longitude"
+    label var distance_from         "Distance from the nearest town"
+
+    save "$temp_path/property_details_1.dta", replace
 end
-
-
-
-* rename variables
 
 
