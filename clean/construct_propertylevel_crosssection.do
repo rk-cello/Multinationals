@@ -21,8 +21,6 @@ global output_company_level "$dir_cleaned/company_level"
 global temp_property_level "$dir_temp/property_level"
 global temp_company_level "$dir_temp/company_level"
 
-* data list
-
 
 * roadmap
 program main
@@ -263,67 +261,69 @@ program clean_property_details_3_2
     * rename variables
     rename A  prop_name
     rename B  prop_id
-    rename C  operator_name
-    rename D  operator_snl_instn_key
-    rename E  operator_common_name
-    rename F  operator_company_name_abbrev
-    rename G  operator_date_closing_price
-    rename H  operator_mkt_cap
-    rename I  operator_price_to_ltm_eps
-    rename J  operator_tev
-    rename K  operator_tev_to_ltm_ebitda
-    rename L  operator_total_debt_to_total_cap
-    rename M  operator_price_earn_after_extra // as operator_price_to_earn_after_extra is too long for var name
-    rename N  operator_tev_to_ebitda
-    rename O  operator_period_ended
-    rename P  operator_working_capital
-    rename Q  operator_total_cap_at_bv
-    rename R  operator_total_debt
-    rename S  operator_current_liab
-    rename T  operator_hq
-    rename U  operator_address1
-    rename V  operator_address2
-    rename W  operator_city_state
-    rename X  operator_state
-    rename Y  operator_location
-    rename Z  operator_frgn_province
-    rename AA operator_country
-    rename AB operator_zip
-    rename AC operator_postal_code
-    rename AD operator_global_region
+    rename C  operator_phone
+    rename D  operator_website
+    rename E  operator_ticker
+    rename F  operator_exchange
+    rename G  operator_trading_symbol_exchange
+    rename H  operator_ceo_name
+    rename I  operator_ceo_age
+    rename J  operator_ceo_biography
+    rename K  operator_cfo_name
+    rename L  operator_cfo_age
+    rename M  operator_cfo_biography
+    rename N  operator_coo_name
+    rename O  operator_coo_age
+    rename P  operator_coo_biography
+    rename Q  operator_president_name
+    rename R  operator_president_age
+    rename S  operator_president_biography
+    rename T  operator_investor_relations_name // shortened to fit
+    rename U  operator_investor_relations_age // shortened to fit
+    rename V  operator_investor_relations_bio // shortened to fit
+    rename W  operator_chairman_of_board_name
+    rename X  operator_chairman_of_board_age
+    rename Y  operator_chairman_of_board_bio // shortened to fit
+    rename Z  operator_vp_head_explor_name // shortened to fit
+    rename AA operator_vp_head_explor_age // shortened to fit
+    rename AB operator_vp_head_explor_bio // shortened to fit
+    rename AC operator_chief_geologist_name
+    rename AD operator_chief_geologist_age
+    rename AE operator_chief_geologist_bio // shortened to fit
 
     * label variables
-    label var prop_name                     "Name of the mine or facility"
-    label var prop_id                       "Unique key for the project"
-    label var operator_name                 "Complete name of the institution, as specified in its charter"
-    label var operator_snl_instn_key        "S&P's unique key to identify institutions (corporations, partnerships, etc.)"
-    label var operator_common_name          "Most recognized company name"
-    label var operator_company_name_abbrev  "Shortened version of the company's name"
-    label var operator_date_closing_price   "Date (and time, for intraday prices) of the pricing information"
-    label var operator_mkt_cap              "Aggregate market capitalization of all common equity issues"
-    label var operator_price_to_ltm_eps     "Price as a multiple of last-twelve-months earnings per share"
-    label var operator_tev                  "Market capitalization of ongoing operations, less cash and equivalents"
-    label var operator_tev_to_ltm_ebitda    "Total enterprise value as a multiple of last-twelve-month EBITDA"
-    label var operator_total_debt_to_total_cap "Debt as a percent of total market capitalization"
-    label var operator_price_earn_after_extra "Price as a multiple of earnings per share after extraordinary items"
-    label var operator_tev_to_ebitda        "Total enterprise value as a multiple of EBITDA"
-    label var operator_period_ended         "Ending date of the fiscal period, standardized to the last day of the month"
-    label var operator_working_capital      "Current assets net of current liabilities"
-    label var operator_total_cap_at_bv      "Book value of all forms of capital (equity, debt, mezzanine items)"
-    label var operator_total_debt           "Aggregate unpaid principal balance owed under financial obligations"
-    label var operator_current_liab         "Accounts payable and other obligations due within the next 12 months"
-    label var operator_hq                   "City where the operator is headquartered"
-    label var operator_address1             "First line of the operator's address"
-    label var operator_address2             "Second line of the operator's address"
-    label var operator_city_state           "City and state or province of the operator"
-    label var operator_state                "State postal code, as defined by U.S. FIPS 5-2"
-    label var operator_location             "City and state (U.S.) or city and country (non-U.S.) of the operator's HQ"
-    label var operator_frgn_province        "Province or major political subdivision for non-U.S. addresses"
-    label var operator_country              "Common English name of the operator's country"
-    label var operator_zip                  "U.S. Postal Service Zip Code"
-    label var operator_postal_code          "Postal code or routing code for non-U.S. addresses"
-    label var operator_global_region        "Name of the global region where the operator is located"    
-    
+    label var prop_name                          "Name of the mine or facility"
+    label var prop_id                            "Unique key for the project"
+    label var operator_phone                     "Phone number"
+    label var operator_website                   "URL of a site found on the world-wide web"
+    label var operator_ticker                    "Ticker or trading symbol of this security as used on the issue's primary securities exchange"
+    label var operator_exchange                  "Abbreviated name of the securities exchange or OTC Tier"
+    label var operator_trading_symbol_exchange   "Ticker and abbreviated name of the securities exchange or OTC Tier"
+    label var operator_ceo_name                  "Operator CEO's Name"
+    label var operator_ceo_age                   "Operator CEO's Age"
+    label var operator_ceo_biography             "Operator CEO's Biography"
+    label var operator_cfo_name                  "Operator CFO's Name"
+    label var operator_cfo_age                   "Operator CFO's Age"
+    label var operator_cfo_biography             "Operator CFO's Biography"
+    label var operator_coo_name                  "Operator COO's Name"
+    label var operator_coo_age                   "Operator COO's Age"
+    label var operator_coo_biography             "Operator COO's Biography"
+    label var operator_president_name            "Operator President's Name"
+    label var operator_president_age             "Operator President's Age"
+    label var operator_president_biography       "Operator President's Biography"
+    label var operator_investor_relations_name   "Operator Investor Relations Professional's Name"
+    label var operator_investor_relations_age    "Operator Investor Relations Professional's Age"
+    label var operator_investor_relations_bio    "Operator Investor Relations Professional's Biography"
+    label var operator_chairman_of_board_name    "Operator Chairman of the Board's Name"
+    label var operator_chairman_of_board_age     "Operator Chairman of the Board's Age"
+    label var operator_chairman_of_board_bio     "Operator Chairman of the Board's Biography"
+    label var operator_vp_head_explor_name       "Operator VP/Head of Exploration's Name"
+    label var operator_vp_head_explor_age        "Operator VP/Head of Exploration's Age"
+    label var operator_vp_head_explor_bio        "Operator VP/Head of Exploration's Biography"
+    label var operator_chief_geologist_name      "Operator Chief Geologist's Name"
+    label var operator_chief_geologist_age       "Operator Chief Geologist's Age"
+    label var operator_chief_geologist_bio       "Operator Chief Geologist's Biography"
+
     save "$dir_temp/property_details_3_2.dta", replace
 end
 
