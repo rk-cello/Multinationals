@@ -21,32 +21,32 @@ global output_company_level "$dir_cleaned/company_level"
 global temp_property_level "$dir_temp/property_level"
 global temp_company_level "$dir_temp/company_level"
 
+* data list
+
+
 * roadmap
 program main
-    clean_property_details
+    clean_property_details_1
+    clean_property_details_2
+    clean_property_details_3_1
+    clean_property_details_3_2
+    clean_property_details_4
 end
 
 **** property details ****
-program clean_property_details
+program clean_property_details_1
     cd "$input_metals_mining/properties_property_details"
 
-    * property_details_1
-    import excel "property_details_1_general_info_commodities_location_Africa.xls", /// 
-    cellrange(A7) clear
+    local property_details_1 "property_details_1_general_info_commodities_location_AsiaPacific.xls property_details_1_general_info_commodities_location_EuropeMiddleEast.xls property_details_1_general_info_commodities_location_LatinAmerica.xls property_details_1_general_info_commodities_location_USCanada.xls"
 
-    save "$temp_path/property_details_1.dta", replace
-
-    local property_details_1 /// 
-        "property_details_1_general_info_commodities_location_AsiaPacific.xls" /// 
-        "property_details_1_general_info_commodities_location_EuropeMiddleEast.xls" /// 
-        "property_details_1_general_info_commodities_location_LatinAmerica.xls" /// 
-        "property_details_1_general_info_commodities_location_USCanada.xls" ///
+    import excel "property_details_1_general_info_commodities_location_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_1.dta", replace
 
     foreach file of local property_details_1 {
-        import excel `file', ///
-        cellrange(A7) clear
-        append using property_details_1.dta
-        rename SUBPROPERTY? SUBPROPERTY
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_1.dta"
+        save "$dir_temp/property_details_1.dta", replace
     }
 
     * rename variables
@@ -117,7 +117,215 @@ program clean_property_details
     label var coordinate_accuracy   "Accuracy of latitude and longitude"
     label var distance_from         "Distance from the nearest town"
 
-    save "$temp_path/property_details_1.dta", replace
+    save "$dir_temp/property_details_1.dta", replace
 end
+
+program clean_property_details_2
+
+    local property_details_2 "property_details_2_coal_AsiaPacific.xls property_details_2_coal_EuropeMiddleEast.xls property_details_2_coal_LatinAmerica.xls property_details_2_coal_USCanada.xls"
+
+    import excel "property_details_2_coal_Africa.xls", cellrange(A7) clear
+    keep A B C D E F G H I J K
+    save "$dir_temp/property_details_2.dta", replace
+
+    foreach file of local property_details_2 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        keep A B C D E F G H I J K
+        append using "$dir_temp/property_details_2.dta"
+        save "$dir_temp/property_details_2.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  coal_uses
+    rename D  economic_coal_seam_count
+    rename E  total_coal_seam_count
+    rename F  transport_method_coal_details
+    rename G  shipping_port_coal_detail
+    rename H  coal_seam
+    rename I  coal_rank
+    rename J  coal_rank_abbrev
+    rename K  coal_group
+
+    * label variables
+    label var prop_name                  "Name of the mine or facility"
+    label var prop_id                    "Unique key for the project"    
+    label var coal_uses                  "Use to which coal produced is put"
+    label var economic_coal_seam_count   "Coal seams that are economically feasible to mine"
+    label var total_coal_seam_count      "Coal seams occurring at a mine, including those deemed uneconomic"
+    label var transport_method_coal_details "Method of transportation for coal"
+    label var shipping_port_coal_detail  "Name of a shipping port for coal"
+    label var coal_seam                  "Name of the coal seam"
+    label var coal_rank                  "Standard classifications of coals by rank, as defined by ASTM D-388"
+    label var coal_rank_abbrev           "Abbreviated standard classifications of coals by rank, as defined by ASTM D-388"
+    label var coal_group                 "Standard classifications of coals by rank, as defined by ASTM D-388"
+
+    save "$dir_temp/property_details_2.dta", replace
+end
+
+program clean_property_details_3_1
+
+    local property_details_3_1 "property_details_3_operator_1_AsiaPacific.xls property_details_3_operator_1_EuropeMiddleEast.xls property_details_3_operator_1_LatinAmerica.xls property_details_3_operator_1_USCanada.xls"
+
+    import excel "property_details_3_operator_1_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_3_1.dta", replace
+
+    foreach file of local property_details_3_1 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_3_1.dta"
+        save "$dir_temp/property_details_3_1.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  operator_name
+    rename D  operator_snl_instn_key
+    rename E  operator_common_name
+    rename F  operator_company_name_abbrev
+    rename G  operator_date_closing_price
+    rename H  operator_mkt_cap
+    rename I  operator_price_to_ltm_eps
+    rename J  operator_tev
+    rename K  operator_tev_to_ltm_ebitda
+    rename L  operator_total_debt_to_total_cap
+    rename M  operator_price_earn_after_extra // as operator_price_to_earn_after_extra is too long for var name
+    rename N  operator_tev_to_ebitda
+    rename O  operator_period_ended
+    rename P  operator_working_capital
+    rename Q  operator_total_cap_at_bv
+    rename R  operator_total_debt
+    rename S  operator_current_liab
+    rename T  operator_hq
+    rename U  operator_address1
+    rename V  operator_address2
+    rename W  operator_city_state
+    rename X  operator_state
+    rename Y  operator_location
+    rename Z  operator_frgn_province
+    rename AA operator_country
+    rename AB operator_zip
+    rename AC operator_postal_code
+    rename AD operator_global_region
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var operator_name                 "Complete name of the institution, as specified in its charter"
+    label var operator_snl_instn_key        "S&P's unique key to identify institutions (corporations, partnerships, etc.)"
+    label var operator_common_name          "Most recognized company name"
+    label var operator_company_name_abbrev  "Shortened version of the company's name"
+    label var operator_date_closing_price   "Date (and time, for intraday prices) of the pricing information"
+    label var operator_mkt_cap              "Aggregate market capitalization of all common equity issues"
+    label var operator_price_to_ltm_eps     "Price as a multiple of last-twelve-months earnings per share"
+    label var operator_tev                  "Market capitalization of ongoing operations, less cash and equivalents"
+    label var operator_tev_to_ltm_ebitda    "Total enterprise value as a multiple of last-twelve-month EBITDA"
+    label var operator_total_debt_to_total_cap "Debt as a percent of total market capitalization"
+    label var operator_price_earn_after_extra "Price as a multiple of earnings per share after extraordinary items"
+    label var operator_tev_to_ebitda        "Total enterprise value as a multiple of EBITDA"
+    label var operator_period_ended         "Ending date of the fiscal period, standardized to the last day of the month"
+    label var operator_working_capital      "Current assets net of current liabilities"
+    label var operator_total_cap_at_bv      "Book value of all forms of capital (equity, debt, mezzanine items)"
+    label var operator_total_debt           "Aggregate unpaid principal balance owed under financial obligations"
+    label var operator_current_liab         "Accounts payable and other obligations due within the next 12 months"
+    label var operator_hq                   "City where the operator is headquartered"
+    label var operator_address1             "First line of the operator's address"
+    label var operator_address2             "Second line of the operator's address"
+    label var operator_city_state           "City and state or province of the operator"
+    label var operator_state                "State postal code, as defined by U.S. FIPS 5-2"
+    label var operator_location             "City and state (U.S.) or city and country (non-U.S.) of the operator's HQ"
+    label var operator_frgn_province        "Province or major political subdivision for non-U.S. addresses"
+    label var operator_country              "Common English name of the operator's country"
+    label var operator_zip                  "U.S. Postal Service Zip Code"
+    label var operator_postal_code          "Postal code or routing code for non-U.S. addresses"
+    label var operator_global_region        "Name of the global region where the operator is located"    
+    
+    save "$dir_temp/property_details_3_1.dta", replace
+end
+
+program clean_property_details_3_2
+
+    local property_details_3_2 "property_details_3_operator_2_AsiaPacific.xls property_details_3_operator_2_EuropeMiddleEast.xls property_details_3_operator_2_LatinAmerica.xls property_details_3_operator_2_USCanada.xls"
+
+    import excel "property_details_3_operator_2_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_3_2.dta", replace
+
+    foreach file of local property_details_3_2 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_3_2.dta"
+        save "$dir_temp/property_details_3_2.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  operator_name
+    rename D  operator_snl_instn_key
+    rename E  operator_common_name
+    rename F  operator_company_name_abbrev
+    rename G  operator_date_closing_price
+    rename H  operator_mkt_cap
+    rename I  operator_price_to_ltm_eps
+    rename J  operator_tev
+    rename K  operator_tev_to_ltm_ebitda
+    rename L  operator_total_debt_to_total_cap
+    rename M  operator_price_earn_after_extra // as operator_price_to_earn_after_extra is too long for var name
+    rename N  operator_tev_to_ebitda
+    rename O  operator_period_ended
+    rename P  operator_working_capital
+    rename Q  operator_total_cap_at_bv
+    rename R  operator_total_debt
+    rename S  operator_current_liab
+    rename T  operator_hq
+    rename U  operator_address1
+    rename V  operator_address2
+    rename W  operator_city_state
+    rename X  operator_state
+    rename Y  operator_location
+    rename Z  operator_frgn_province
+    rename AA operator_country
+    rename AB operator_zip
+    rename AC operator_postal_code
+    rename AD operator_global_region
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var operator_name                 "Complete name of the institution, as specified in its charter"
+    label var operator_snl_instn_key        "S&P's unique key to identify institutions (corporations, partnerships, etc.)"
+    label var operator_common_name          "Most recognized company name"
+    label var operator_company_name_abbrev  "Shortened version of the company's name"
+    label var operator_date_closing_price   "Date (and time, for intraday prices) of the pricing information"
+    label var operator_mkt_cap              "Aggregate market capitalization of all common equity issues"
+    label var operator_price_to_ltm_eps     "Price as a multiple of last-twelve-months earnings per share"
+    label var operator_tev                  "Market capitalization of ongoing operations, less cash and equivalents"
+    label var operator_tev_to_ltm_ebitda    "Total enterprise value as a multiple of last-twelve-month EBITDA"
+    label var operator_total_debt_to_total_cap "Debt as a percent of total market capitalization"
+    label var operator_price_earn_after_extra "Price as a multiple of earnings per share after extraordinary items"
+    label var operator_tev_to_ebitda        "Total enterprise value as a multiple of EBITDA"
+    label var operator_period_ended         "Ending date of the fiscal period, standardized to the last day of the month"
+    label var operator_working_capital      "Current assets net of current liabilities"
+    label var operator_total_cap_at_bv      "Book value of all forms of capital (equity, debt, mezzanine items)"
+    label var operator_total_debt           "Aggregate unpaid principal balance owed under financial obligations"
+    label var operator_current_liab         "Accounts payable and other obligations due within the next 12 months"
+    label var operator_hq                   "City where the operator is headquartered"
+    label var operator_address1             "First line of the operator's address"
+    label var operator_address2             "Second line of the operator's address"
+    label var operator_city_state           "City and state or province of the operator"
+    label var operator_state                "State postal code, as defined by U.S. FIPS 5-2"
+    label var operator_location             "City and state (U.S.) or city and country (non-U.S.) of the operator's HQ"
+    label var operator_frgn_province        "Province or major political subdivision for non-U.S. addresses"
+    label var operator_country              "Common English name of the operator's country"
+    label var operator_zip                  "U.S. Postal Service Zip Code"
+    label var operator_postal_code          "Postal code or routing code for non-U.S. addresses"
+    label var operator_global_region        "Name of the global region where the operator is located"    
+    
+    save "$dir_temp/property_details_3_2.dta", replace
+end
+
 
 
