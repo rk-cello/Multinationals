@@ -29,6 +29,21 @@ program main
     clean_property_details_3_1
     clean_property_details_3_2
     clean_property_details_4
+    clean_property_details_5_1
+    clean_property_details_5_2
+    clean_property_details_5_3
+    clean_property_details_5_4
+    clean_property_details_5_5
+    clean_property_details_5_6
+    clean_property_details_5_7
+    clean_property_details_5_8
+    clean_property_details_5_9
+    clean_property_details_5_10
+    clean_property_details_5_11
+    clean_property_details_5_12
+    clean_property_details_5_13
+    clean_property_details_5_14
+    clean_property_details_5_15
 end
 
 **** property details ****
@@ -327,5 +342,69 @@ program clean_property_details_3_2
     save "$dir_temp/property_details_3_2.dta", replace
 end
 
+program clean_property_details_4
 
+    local property_details_4 "property_details_4_ownership_info_AsiaPacific.xls property_details_4_ownership_info_EuropeMiddleEast.xls property_details_4_ownership_info_LatinAmerica.xls property_details_4_ownership_info_USCanada.xls"
+
+    import excel "property_details_4_ownership_info_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_4.dta", replace
+
+    foreach file of local property_details_4 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_4.dta"
+        save "$dir_temp/property_details_4.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  num_royalty_owners
+    rename D  owner_list
+    rename E  num_royalty_holders
+    rename F  royalty_holder_list
+
+    * label variables
+    label var prop_name              "Name of the mine or facility"
+    label var prop_id                "Unique key for the project"
+    label var num_royalty_owners     "Number of ownership stakes held by institutions in a mining project"
+    label var owner_list             "A list of the project's current owners, including the amount owned"
+    label var num_royalty_holders    "Number of royalties which are held against a mining project"
+    label var royalty_holder_list    "A list of the project's current royalty holders, including percent of revenue"
+
+    save "$dir_temp/property_details_4.dta", replace
+end
+
+program clean_property_details_4
+
+    local property_details_4 "property_details_4_ownership_info_AsiaPacific.xls property_details_4_ownership_info_EuropeMiddleEast.xls property_details_4_ownership_info_LatinAmerica.xls property_details_4_ownership_info_USCanada.xls"
+
+    import excel "property_details_4_ownership_info_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_4.dta", replace
+
+    foreach file of local property_details_4 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_4.dta"
+        save "$dir_temp/property_details_4.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  num_royalty_owners
+    rename D  owner_list
+    rename E  num_royalty_holders
+    rename F  royalty_holder_list
+
+    * label variables
+    label var prop_name              "Name of the mine or facility"
+    label var prop_id                "Unique key for the project"
+    label var num_royalty_owners     "Number of ownership stakes held by institutions in a mining project"
+    label var owner_list             "A list of the project's current owners, including the amount owned"
+    label var num_royalty_holders    "Number of royalties which are held against a mining project"
+    label var royalty_holder_list    "A list of the project's current royalty holders, including percent of revenue"
+
+    save "$dir_temp/property_details_4.dta", replace
+end
 
