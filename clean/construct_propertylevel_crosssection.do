@@ -21,6 +21,7 @@ global output_company_level "$dir_cleaned/company_level"
 global temp_property_level "$dir_temp/property_level"
 global temp_company_level "$dir_temp/company_level"
 
+cd "$input_metals_mining/properties_property_details"
 
 * roadmap
 program main
@@ -48,7 +49,6 @@ end
 
 **** property details ****
 program clean_property_details_1
-    cd "$input_metals_mining/properties_property_details"
 
     local property_details_1 "property_details_1_general_info_commodities_location_AsiaPacific.xls property_details_1_general_info_commodities_location_EuropeMiddleEast.xls property_details_1_general_info_commodities_location_LatinAmerica.xls property_details_1_general_info_commodities_location_USCanada.xls"
 
@@ -375,36 +375,188 @@ program clean_property_details_4
     save "$dir_temp/property_details_4.dta", replace
 end
 
-program clean_property_details_4
+program clean_property_details_5_1
 
-    local property_details_4 "property_details_4_ownership_info_AsiaPacific.xls property_details_4_ownership_info_EuropeMiddleEast.xls property_details_4_ownership_info_LatinAmerica.xls property_details_4_ownership_info_USCanada.xls"
+    local property_details_5_1 "property_details_5_ownership_details_1_AsiaPacific.xls property_details_5_ownership_details_1_EuropeMiddleEast.xls property_details_5_ownership_details_1_LatinAmerica.xls property_details_5_ownership_details_1_USCanada.xls"
 
-    import excel "property_details_4_ownership_info_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_4.dta", replace
+    import excel "property_details_5_ownership_details_1_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_1.dta", replace
 
-    foreach file of local property_details_4 {
+    foreach file of local property_details_5_1 {
         display "Processing: `file'"
         import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_4.dta"
-        save "$dir_temp/property_details_4.dta", replace
+        * convert name variables to string
+        tostring H I J X Y Z AF AG AH, replace
+        append using "$dir_temp/property_details_5_1.dta"
+        save "$dir_temp/property_details_5_1.dta", replace
     }
 
     * rename variables
     rename A  prop_name
     rename B  prop_id
-    rename C  num_royalty_owners
-    rename D  owner_list
-    rename E  num_royalty_holders
-    rename F  royalty_holder_list
+    rename C  owner_name_1
+    rename D  owner_name_2
+    rename E  owner_name_3
+    rename F  owner_name_4
+    rename G  owner_name_5
+    rename H  owner_name_6
+    rename I  owner_name_7
+    rename J  owner_name_8
+    rename K  owner_snl_instn_key_1
+    rename L  owner_snl_instn_key_2
+    rename M  owner_snl_instn_key_3
+    rename N  owner_snl_instn_key_4
+    rename O  owner_snl_instn_key_5
+    rename P  owner_snl_instn_key_6
+    rename Q  owner_snl_instn_key_7
+    rename R  owner_snl_instn_key_8
+    rename S  current_owner_common_name_1
+    rename T  current_owner_common_name_2
+    rename U  current_owner_common_name_3
+    rename V  current_owner_common_name_4
+    rename W  current_owner_common_name_5
+    rename X  current_owner_common_name_6
+    rename Y  current_owner_common_name_7
+    rename Z  current_owner_common_name_8
+    rename AA current_owner_comp_name_abbr_1 // shortened to fit
+    rename AB current_owner_comp_name_abbr_2 // shortened to fit
+    rename AC current_owner_comp_name_abbr_3 // shortened to fit
+    rename AD current_owner_comp_name_abbr_4 // shortened to fit
+    rename AE current_owner_comp_name_abbr_5 // shortened to fit
+    rename AF current_owner_comp_name_abbr_6 // shortened to fit
+    rename AG current_owner_comp_name_abbr_7 // shortened to fit
+    rename AH current_owner_comp_name_abbr_8 // shortened to fit
 
     * label variables
-    label var prop_name              "Name of the mine or facility"
-    label var prop_id                "Unique key for the project"
-    label var num_royalty_owners     "Number of ownership stakes held by institutions in a mining project"
-    label var owner_list             "A list of the project's current owners, including the amount owned"
-    label var num_royalty_holders    "Number of royalties which are held against a mining project"
-    label var royalty_holder_list    "A list of the project's current royalty holders, including percent of revenue"
+    label var prop_name                             "Name of the mine or facility"
+    label var prop_id                               "Unique key for the project"
+    label var owner_name_1                          "Complete name of the institution (Owner 1)"
+    label var owner_name_2                          "Complete name of the institution (Owner 2)"
+    label var owner_name_3                          "Complete name of the institution (Owner 3)"
+    label var owner_name_4                          "Complete name of the institution (Owner 4)"
+    label var owner_name_5                          "Complete name of the institution (Owner 5)"
+    label var owner_name_6                          "Complete name of the institution (Owner 6)"
+    label var owner_name_7                          "Complete name of the institution (Owner 7)"
+    label var owner_name_8                          "Complete name of the institution (Owner 8)"
+    label var owner_snl_instn_key_1                 "S&P's unique key to identify institutions (Owner 1)"
+    label var owner_snl_instn_key_2                 "S&P's unique key to identify institutions (Owner 2)"
+    label var owner_snl_instn_key_3                 "S&P's unique key to identify institutions (Owner 3)"
+    label var owner_snl_instn_key_4                 "S&P's unique key to identify institutions (Owner 4)"
+    label var owner_snl_instn_key_5                 "S&P's unique key to identify institutions (Owner 5)"
+    label var owner_snl_instn_key_6                 "S&P's unique key to identify institutions (Owner 6)"
+    label var owner_snl_instn_key_7                 "S&P's unique key to identify institutions (Owner 7)"
+    label var owner_snl_instn_key_8                 "S&P's unique key to identify institutions (Owner 8)"
+    label var current_owner_common_name_1           "Most recognized company name (Owner 1)"
+    label var current_owner_common_name_2           "Most recognized company name (Owner 2)"
+    label var current_owner_common_name_3           "Most recognized company name (Owner 3)"
+    label var current_owner_common_name_4           "Most recognized company name (Owner 4)"
+    label var current_owner_common_name_5           "Most recognized company name (Owner 5)"
+    label var current_owner_common_name_6           "Most recognized company name (Owner 6)"
+    label var current_owner_common_name_7           "Most recognized company name (Owner 7)"
+    label var current_owner_common_name_8           "Most recognized company name (Owner 8)"
+    label var current_owner_comp_name_abbr_1   "Shortened version of the company's name (Owner 1)"
+    label var current_owner_comp_name_abbr_2   "Shortened version of the company's name (Owner 2)"
+    label var current_owner_comp_name_abbr_3   "Shortened version of the company's name (Owner 3)"
+    label var current_owner_comp_name_abbr_4   "Shortened version of the company's name (Owner 4)"
+    label var current_owner_comp_name_abbr_5   "Shortened version of the company's name (Owner 5)"
+    label var current_owner_comp_name_abbr_6   "Shortened version of the company's name (Owner 6)"
+    label var current_owner_comp_name_abbr_7   "Shortened version of the company's name (Owner 7)"
+    label var current_owner_comp_name_abbr_8   "Shortened version of the company's name (Owner 8)"
 
-    save "$dir_temp/property_details_4.dta", replace
+    save "$dir_temp/property_details_5_1.dta", replace
 end
+
+program clean_property_details_5_2
+
+    local property_details_5_2 "property_details_5_ownership_details_2_AsiaPacific.xls property_details_5_ownership_details_2_EuropeMiddleEast.xls property_details_5_ownership_details_2_LatinAmerica.xls property_details_5_ownership_details_2_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_2_Africa.xls", cellrange(A7) clear
+    tostring H I J AE AF AG AH, replace
+    save "$dir_temp/property_details_5_2.dta", replace
+
+    foreach file of local property_details_5_2 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        * convert name variables to string
+        tostring H I J AE AF AG AH, replace
+        append using "$dir_temp/property_details_5_2.dta"
+        save "$dir_temp/property_details_5_2.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_type_1
+    rename D  owner_type_2
+    rename E  owner_type_3
+    rename F  owner_type_4
+    rename G  owner_type_5
+    rename H  owner_type_6
+    rename I  owner_type_7
+    rename J  owner_type_8
+    rename K  owner_pct_1
+    rename L  owner_pct_2
+    rename M  owner_pct_3
+    rename N  owner_pct_4
+    rename O  owner_pct_5
+    rename P  owner_pct_6
+    rename Q  owner_pct_7
+    rename R  owner_pct_8
+    rename S  current_controlling_own_pct_1
+    rename T  current_controlling_own_pct_2
+    rename U  current_controlling_own_pct_3
+    rename V  current_controlling_own_pct_4
+    rename W  current_controlling_own_pct_5
+    rename X  current_controlling_own_pct_6
+    rename Y  current_controlling_own_pct_7
+    rename Z  current_controlling_own_pct_8
+    rename AA owner_hq_1
+    rename AB owner_hq_2
+    rename AC owner_hq_3
+    rename AD owner_hq_4
+    rename AE owner_hq_5
+    rename AF owner_hq_6
+    rename AG owner_hq_7
+    rename AH owner_hq_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var owner_type_1                  "Forms of financial interest (Owner 1)"
+    label var owner_type_2                  "Forms of financial interest (Owner 2)"
+    label var owner_type_3                  "Forms of financial interest (Owner 3)"
+    label var owner_type_4                  "Forms of financial interest (Owner 4)"
+    label var owner_type_5                  "Forms of financial interest (Owner 5)"
+    label var owner_type_6                  "Forms of financial interest (Owner 6)"
+    label var owner_type_7                  "Forms of financial interest (Owner 7)"
+    label var owner_type_8                  "Forms of financial interest (Owner 8)"
+    label var owner_pct_1                   "Actual or potential ownership interest (Owner 1)"
+    label var owner_pct_2                   "Actual or potential ownership interest (Owner 2)"
+    label var owner_pct_3                   "Actual or potential ownership interest (Owner 3)"
+    label var owner_pct_4                   "Actual or potential ownership interest (Owner 4)"
+    label var owner_pct_5                   "Actual or potential ownership interest (Owner 5)"
+    label var owner_pct_6                   "Actual or potential ownership interest (Owner 6)"
+    label var owner_pct_7                   "Actual or potential ownership interest (Owner 7)"
+    label var owner_pct_8                   "Actual or potential ownership interest (Owner 8)"
+    label var current_controlling_own_pct_1 "Percentage of controlling ownership (Owner 1)"
+    label var current_controlling_own_pct_2 "Percentage of controlling ownership (Owner 2)"
+    label var current_controlling_own_pct_3 "Percentage of controlling ownership (Owner 3)"
+    label var current_controlling_own_pct_4 "Percentage of controlling ownership (Owner 4)"
+    label var current_controlling_own_pct_5 "Percentage of controlling ownership (Owner 5)"
+    label var current_controlling_own_pct_6 "Percentage of controlling ownership (Owner 6)"
+    label var current_controlling_own_pct_7 "Percentage of controlling ownership (Owner 7)"
+    label var current_controlling_own_pct_8 "Percentage of controlling ownership (Owner 8)"
+    label var owner_hq_1                    "Headquarter city (Owner 1)"
+    label var owner_hq_2                    "Headquarter city (Owner 2)"
+    label var owner_hq_3                    "Headquarter city (Owner 3)"
+    label var owner_hq_4                    "Headquarter city (Owner 4)"
+    label var owner_hq_5                    "Headquarter city (Owner 5)"
+    label var owner_hq_6                    "Headquarter city (Owner 6)"
+    label var owner_hq_7                    "Headquarter city (Owner 7)"
+    label var owner_hq_8                    "Headquarter city (Owner 8)"
+
+    save "$dir_temp/property_details_5_2.dta", replace
+end
+
+
 
