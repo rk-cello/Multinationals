@@ -1,5 +1,7 @@
 **** construct property level cross-section data ****
 **** notes ****
+* some string variables should be converted to numeric
+* this script is for appending each property details data
 **** environment ****
 clear all
 set more off
@@ -25,30 +27,30 @@ cd "$input_metals_mining/properties_property_details"
 
 * roadmap
 program main
-    clean_property_details_1
-    clean_property_details_2
-    clean_property_details_3_1
-    clean_property_details_3_2
-    clean_property_details_4
-    clean_property_details_5_1
-    clean_property_details_5_2
-    clean_property_details_5_3
-    clean_property_details_5_4
-    clean_property_details_5_5
-    clean_property_details_5_6
-    clean_property_details_5_7
-    clean_property_details_5_8
-    clean_property_details_5_9
-    clean_property_details_5_10
-    clean_property_details_5_11
-    clean_property_details_5_12
-    clean_property_details_5_13
-    clean_property_details_5_14
-    clean_property_details_5_15
+    combine_property_details_1
+    combine_property_details_2
+    combine_property_details_3_1
+    combine_property_details_3_2
+    combine_property_details_4
+    combine_property_details_5_1
+    combine_property_details_5_2
+    combine_property_details_5_3
+    combine_property_details_5_4
+    combine_property_details_5_5
+    combine_property_details_5_6
+    combine_property_details_5_7
+    combine_property_details_5_8
+    combine_property_details_5_9
+    combine_property_details_5_10
+    combine_property_details_5_11
+    combine_property_details_5_12
+    combine_property_details_5_13
+    combine_property_details_5_14
+    combine_property_details_5_15
 end
 
 **** property details ****
-program clean_property_details_1
+program combine_property_details_1
 
     local property_details_1 "property_details_1_general_info_commodities_location_AsiaPacific.xls property_details_1_general_info_commodities_location_EuropeMiddleEast.xls property_details_1_general_info_commodities_location_LatinAmerica.xls property_details_1_general_info_commodities_location_USCanada.xls"
 
@@ -133,7 +135,7 @@ program clean_property_details_1
     save "$dir_temp/property_details_1.dta", replace
 end
 
-program clean_property_details_2
+program combine_property_details_2
 
     local property_details_2 "property_details_2_coal_AsiaPacific.xls property_details_2_coal_EuropeMiddleEast.xls property_details_2_coal_LatinAmerica.xls property_details_2_coal_USCanada.xls"
 
@@ -178,7 +180,7 @@ program clean_property_details_2
     save "$dir_temp/property_details_2.dta", replace
 end
 
-program clean_property_details_3_1
+program combine_property_details_3_1
 
     local property_details_3_1 "property_details_3_operator_1_AsiaPacific.xls property_details_3_operator_1_EuropeMiddleEast.xls property_details_3_operator_1_LatinAmerica.xls property_details_3_operator_1_USCanada.xls"
 
@@ -259,7 +261,7 @@ program clean_property_details_3_1
     save "$dir_temp/property_details_3_1.dta", replace
 end
 
-program clean_property_details_3_2
+program combine_property_details_3_2
 
     local property_details_3_2 "property_details_3_operator_2_AsiaPacific.xls property_details_3_operator_2_EuropeMiddleEast.xls property_details_3_operator_2_LatinAmerica.xls property_details_3_operator_2_USCanada.xls"
 
@@ -342,7 +344,7 @@ program clean_property_details_3_2
     save "$dir_temp/property_details_3_2.dta", replace
 end
 
-program clean_property_details_4
+program combine_property_details_4
 
     local property_details_4 "property_details_4_ownership_info_AsiaPacific.xls property_details_4_ownership_info_EuropeMiddleEast.xls property_details_4_ownership_info_LatinAmerica.xls property_details_4_ownership_info_USCanada.xls"
 
@@ -375,7 +377,7 @@ program clean_property_details_4
     save "$dir_temp/property_details_4.dta", replace
 end
 
-program clean_property_details_5_1
+program combine_property_details_5_1
 
     local property_details_5_1 "property_details_5_ownership_details_1_AsiaPacific.xls property_details_5_ownership_details_1_EuropeMiddleEast.xls property_details_5_ownership_details_1_LatinAmerica.xls property_details_5_ownership_details_1_USCanada.xls"
 
@@ -385,7 +387,6 @@ program clean_property_details_5_1
     foreach file of local property_details_5_1 {
         display "Processing: `file'"
         import excel "`file'", cellrange(A7) clear
-        * convert name variables to string
         tostring H I J X Y Z AF AG AH, replace
         append using "$dir_temp/property_details_5_1.dta"
         save "$dir_temp/property_details_5_1.dta", replace
@@ -466,7 +467,7 @@ program clean_property_details_5_1
     save "$dir_temp/property_details_5_1.dta", replace
 end
 
-program clean_property_details_5_2
+program combine_property_details_5_2
 
     local property_details_5_2 "property_details_5_ownership_details_2_AsiaPacific.xls property_details_5_ownership_details_2_EuropeMiddleEast.xls property_details_5_ownership_details_2_LatinAmerica.xls property_details_5_ownership_details_2_USCanada.xls"
 
@@ -477,7 +478,6 @@ program clean_property_details_5_2
     foreach file of local property_details_5_2 {
         display "Processing: `file'"
         import excel "`file'", cellrange(A7) clear
-        * convert name variables to string
         tostring H I J AE AF AG AH, replace
         append using "$dir_temp/property_details_5_2.dta"
         save "$dir_temp/property_details_5_2.dta", replace
@@ -558,5 +558,1093 @@ program clean_property_details_5_2
     save "$dir_temp/property_details_5_2.dta", replace
 end
 
+program combine_property_details_5_3
+    local property_details_5_3 "property_details_5_ownership_details_3_AsiaPacific.xls property_details_5_ownership_details_3_EuropeMiddleEast.xls property_details_5_ownership_details_3_LatinAmerica.xls property_details_5_ownership_details_3_USCanada.xls"
 
+    import excel "property_details_5_ownership_details_3_Africa.xls", cellrange(A7) clear
+    tostring C-AH, replace
+    save "$dir_temp/property_details_5_3.dta", replace
 
+    foreach file of local property_details_5_3 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        tostring C-AH, replace
+        append using "$dir_temp/property_details_5_3.dta"
+        save "$dir_temp/property_details_5_3.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_address1_1
+    rename D  owner_address1_2
+    rename E  owner_address1_3
+    rename F  owner_address1_4
+    rename G  owner_address1_5
+    rename H  owner_address1_6
+    rename I  owner_address1_7
+    rename J  owner_address1_8
+    rename K  owner_address2_1
+    rename L  owner_address2_2
+    rename M  owner_address2_3
+    rename N  owner_address2_4
+    rename O  owner_address2_5
+    rename P  owner_address2_6
+    rename Q  owner_address2_7
+    rename R  owner_address2_8
+    rename S  owner_city_state_1
+    rename T  owner_city_state_2
+    rename U  owner_city_state_3
+    rename V  owner_city_state_4
+    rename W  owner_city_state_5
+    rename X  owner_city_state_6
+    rename Y  owner_city_state_7
+    rename Z  owner_city_state_8
+    rename AA owner_state_1
+    rename AB owner_state_2
+    rename AC owner_state_3
+    rename AD owner_state_4
+    rename AE owner_state_5
+    rename AF owner_state_6
+    rename AG owner_state_7
+    rename AH owner_state_8
+
+    * label variables
+    label var prop_name                 "Name of the mine or facility"
+    label var prop_id                   "Unique key for the project"
+    label var owner_address1_1          "First line of an address (Owner 1)"
+    label var owner_address1_2          "First line of an address (Owner 2)"
+    label var owner_address1_3          "First line of an address (Owner 3)"
+    label var owner_address1_4          "First line of an address (Owner 4)"
+    label var owner_address1_5          "First line of an address (Owner 5)"
+    label var owner_address1_6          "First line of an address (Owner 6)"
+    label var owner_address1_7          "First line of an address (Owner 7)"
+    label var owner_address1_8          "First line of an address (Owner 8)"
+    label var owner_address2_1          "Second line of an address (Owner 1)"
+    label var owner_address2_2          "Second line of an address (Owner 2)"
+    label var owner_address2_3          "Second line of an address (Owner 3)"
+    label var owner_address2_4          "Second line of an address (Owner 4)"
+    label var owner_address2_5          "Second line of an address (Owner 5)"
+    label var owner_address2_6          "Second line of an address (Owner 6)"
+    label var owner_address2_7          "Second line of an address (Owner 7)"
+    label var owner_address2_8          "Second line of an address (Owner 8)"
+    label var owner_city_state_1        "City and state or province (Owner 1)"
+    label var owner_city_state_2        "City and state or province (Owner 2)"
+    label var owner_city_state_3        "City and state or province (Owner 3)"
+    label var owner_city_state_4        "City and state or province (Owner 4)"
+    label var owner_city_state_5        "City and state or province (Owner 5)"
+    label var owner_city_state_6        "City and state or province (Owner 6)"
+    label var owner_city_state_7        "City and state or province (Owner 7)"
+    label var owner_city_state_8        "City and state or province (Owner 8)"
+    label var owner_state_1             "State postal code (Owner 1)"
+    label var owner_state_2             "State postal code (Owner 2)"
+    label var owner_state_3             "State postal code (Owner 3)"
+    label var owner_state_4             "State postal code (Owner 4)"
+    label var owner_state_5             "State postal code (Owner 5)"
+    label var owner_state_6             "State postal code (Owner 6)"
+    label var owner_state_7             "State postal code (Owner 7)"
+    label var owner_state_8             "State postal code (Owner 8)"
+
+    save "$dir_temp/property_details_5_3.dta", replace
+
+end
+
+program combine_property_details_5_4
+    local property_details_5_4 "property_details_5_ownership_details_4_AsiaPacific.xls property_details_5_ownership_details_4_EuropeMiddleEast.xls property_details_5_ownership_details_4_LatinAmerica.xls property_details_5_ownership_details_4_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_4_Africa.xls", cellrange(A7) clear
+    tostring C-AH, replace
+    save "$dir_temp/property_details_5_4.dta", replace
+
+    foreach file of local property_details_5_4 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        tostring C-AH, replace
+        append using "$dir_temp/property_details_5_4.dta"
+        save "$dir_temp/property_details_5_4.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_location_1
+    rename D  owner_location_2
+    rename E  owner_location_3
+    rename F  owner_location_4
+    rename G  owner_location_5
+    rename H  owner_location_6
+    rename I  owner_location_7
+    rename J  owner_location_8
+    rename K  owner_frgn_province_1
+    rename L  owner_frgn_province_2
+    rename M  owner_frgn_province_3
+    rename N  owner_frgn_province_4
+    rename O  owner_frgn_province_5
+    rename P  owner_frgn_province_6
+    rename Q  owner_frgn_province_7
+    rename R  owner_frgn_province_8
+    rename S  owner_country_1
+    rename T  owner_country_2
+    rename U  owner_country_3
+    rename V  owner_country_4
+    rename W  owner_country_5
+    rename X  owner_country_6
+    rename Y  owner_country_7
+    rename Z  owner_country_8
+    rename AA owner_zip_1
+    rename AB owner_zip_2
+    rename AC owner_zip_3
+    rename AD owner_zip_4
+    rename AE owner_zip_5
+    rename AF owner_zip_6
+    rename AG owner_zip_7
+    rename AH owner_zip_8
+
+    * label variables
+    label var prop_name                 "Name of the mine or facility"
+    label var prop_id                   "Unique key for the project"
+    label var owner_location_1          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 1)"
+    label var owner_location_2          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 2)"
+    label var owner_location_3          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 3)"
+    label var owner_location_4          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 4)"
+    label var owner_location_5          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 5)"
+    label var owner_location_6          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 6)"
+    label var owner_location_7          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 7)"
+    label var owner_location_8          "City and state (U.S.) or city and country (non-U.S.) where the company is headquartered (Owner 8)"
+    label var owner_frgn_province_1      "Province or major political subdivision for non-U.S. addresses (Owner 1)"
+    label var owner_frgn_province_2      "Province or major political subdivision for non-U.S. addresses (Owner 2)"
+    label var owner_frgn_province_3      "Province or major political subdivision for non-U.S. addresses (Owner 3)"
+    label var owner_frgn_province_4      "Province or major political subdivision for non-U.S. addresses (Owner 4)"
+    label var owner_frgn_province_5      "Province or major political subdivision for non-U.S. addresses (Owner 5)"
+    label var owner_frgn_province_6      "Province or major political subdivision for non-U.S. addresses (Owner 6)"
+    label var owner_frgn_province_7      "Province or major political subdivision for non-U.S. addresses (Owner 7)"
+    label var owner_frgn_province_8      "Province or major political subdivision for non-U.S. addresses (Owner 8)"
+    label var owner_country_1            "Country where the owner is headquartered (Owner 1)"
+    label var owner_country_2            "Country where the owner is headquartered (Owner 2)"
+    label var owner_country_3            "Country where the owner is headquartered (Owner 3)"
+    label var owner_country_4            "Country where the owner is headquartered (Owner 4)"
+    label var owner_country_5            "Country where the owner is headquartered (Owner 5)"
+    label var owner_country_6            "Country where the owner is headquartered (Owner 6)"
+    label var owner_country_7            "Country where the owner is headquartered (Owner 7)"
+    label var owner_country_8            "Country where the owner is headquartered (Owner 8)"
+    label var owner_zip_1                "U.S. Postal Service Zip Code (Owner 1)"
+    label var owner_zip_2                "U.S. Postal Service Zip Code (Owner 2)"
+    label var owner_zip_3                "U.S. Postal Service Zip Code (Owner 3)"
+    label var owner_zip_4                "U.S. Postal Service Zip Code (Owner 4)"
+    label var owner_zip_5                "U.S. Postal Service Zip Code (Owner 5)"
+    label var owner_zip_6                "U.S. Postal Service Zip Code (Owner 6)"
+    label var owner_zip_7                "U.S. Postal Service Zip Code (Owner 7)"
+    label var owner_zip_8                "U.S. Postal Service Zip Code (Owner 8)"
+
+    save "$dir_temp/property_details_5_4.dta", replace
+end
+
+program combine_property_details_5_5
+    local property_details_5_5 "property_details_5_ownership_details_5_AsiaPacific.xls property_details_5_ownership_details_5_EuropeMiddleEast.xls property_details_5_ownership_details_5_LatinAmerica.xls property_details_5_ownership_details_5_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_5_Africa.xls", cellrange(A7) clear
+    tostring C-AH, replace
+    save "$dir_temp/property_details_5_5.dta", replace
+
+    foreach file of local property_details_5_5 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        tostring C-AH, replace
+        append using "$dir_temp/property_details_5_5.dta"
+        save "$dir_temp/property_details_5_5.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_postal_code_1
+    rename D  owner_postal_code_2
+    rename E  owner_postal_code_3
+    rename F  owner_postal_code_4
+    rename G  owner_postal_code_5
+    rename H  owner_postal_code_6
+    rename I  owner_postal_code_7
+    rename J  owner_postal_code_8
+    rename K  owner_global_region_1
+    rename L  owner_global_region_2
+    rename M  owner_global_region_3
+    rename N  owner_global_region_4
+    rename O  owner_global_region_5
+    rename P  owner_global_region_6
+    rename Q  owner_global_region_7
+    rename R  owner_global_region_8
+    rename S  owner_phone_1
+    rename T  owner_phone_2
+    rename U  owner_phone_3
+    rename V  owner_phone_4
+    rename W  owner_phone_5
+    rename X  owner_phone_6
+    rename Y  owner_phone_7
+    rename Z  owner_phone_8
+    rename AA owner_website_1
+    rename AB owner_website_2
+    rename AC owner_website_3
+    rename AD owner_website_4
+    rename AE owner_website_5
+    rename AF owner_website_6
+    rename AG owner_website_7
+    rename AH owner_website_8
+
+    * label variables
+    label var prop_name                 "Name of the mine or facility"
+    label var prop_id                   "Unique key for the project"
+    label var owner_postal_code_1       "Postal code or routing code for non-U.S. addresses (Owner 1)"
+    label var owner_postal_code_2       "Postal code or routing code for non-U.S. addresses (Owner 2)"
+    label var owner_postal_code_3       "Postal code or routing code for non-U.S. addresses (Owner 3)"
+    label var owner_postal_code_4       "Postal code or routing code for non-U.S. addresses (Owner 4)"
+    label var owner_postal_code_5       "Postal code or routing code for non-U.S. addresses (Owner 5)"
+    label var owner_postal_code_6       "Postal code or routing code for non-U.S. addresses (Owner 6)"
+    label var owner_postal_code_7       "Postal code or routing code for non-U.S. addresses (Owner 7)"
+    label var owner_postal_code_8       "Postal code or routing code for non-U.S. addresses (Owner 8)"
+    label var owner_global_region_1     "Global region where the owner is headquartered (Owner 1)"
+    label var owner_global_region_2     "Global region where the owner is headquartered (Owner 2)"
+    label var owner_global_region_3     "Global region where the owner is headquartered (Owner 3)"
+    label var owner_global_region_4     "Global region where the owner is headquartered (Owner 4)"
+    label var owner_global_region_5     "Global region where the owner is headquartered (Owner 5)"
+    label var owner_global_region_6     "Global region where the owner is headquartered (Owner 6)"
+    label var owner_global_region_7     "Global region where the owner is headquartered (Owner 7)"
+    label var owner_global_region_8     "Global region where the owner is headquartered (Owner 8)"
+    label var owner_phone_1             "Headquarter phone number (Owner 1)"
+    label var owner_phone_2             "Headquarter phone number (Owner 2)"
+    label var owner_phone_3             "Headquarter phone number (Owner 3)"
+    label var owner_phone_4             "Headquarter phone number (Owner 4)"
+    label var owner_phone_5             "Headquarter phone number (Owner 5)"
+    label var owner_phone_6             "Headquarter phone number (Owner 6)"
+    label var owner_phone_7             "Headquarter phone number (Owner 7)"
+    label var owner_phone_8             "Headquarter phone number (Owner 8)"
+    label var owner_website_1           "Owner website URL (Owner 1)"
+    label var owner_website_2           "Owner website URL (Owner 2)"
+    label var owner_website_3           "Owner website URL (Owner 3)"
+    label var owner_website_4           "Owner website URL (Owner 4)"
+    label var owner_website_5           "Owner website URL (Owner 5)"
+    label var owner_website_6           "Owner website URL (Owner 6)"
+    label var owner_website_7           "Owner website URL (Owner 7)"
+    label var owner_website_8           "Owner website URL (Owner 8)"
+
+    save "$dir_temp/property_details_5_5.dta", replace
+end
+
+program combine_property_details_5_6
+    local property_details_5_6 "property_details_5_ownership_details_6_AsiaPacific.xls property_details_5_ownership_details_6_EuropeMiddleEast.xls property_details_5_ownership_details_6_LatinAmerica.xls property_details_5_ownership_details_6_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_6_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_6.dta", replace
+
+    foreach file of local property_details_5_6 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_6.dta"
+        save "$dir_temp/property_details_5_6.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_date_closing_price_1
+    rename D  owner_date_closing_price_2
+    rename E  owner_date_closing_price_3
+    rename F  owner_date_closing_price_4
+    rename G  owner_date_closing_price_5
+    rename H  owner_date_closing_price_6
+    rename I  owner_date_closing_price_7
+    rename J  owner_date_closing_price_8
+    rename K  owner_mkt_cap_1
+    rename L  owner_mkt_cap_2
+    rename M  owner_mkt_cap_3
+    rename N  owner_mkt_cap_4
+    rename O  owner_mkt_cap_5
+    rename P  owner_mkt_cap_6
+    rename Q  owner_mkt_cap_7
+    rename R  owner_mkt_cap_8
+    rename S  owner_price_to_ltm_eps_1
+    rename T  owner_price_to_ltm_eps_2
+    rename U  owner_price_to_ltm_eps_3
+    rename V  owner_price_to_ltm_eps_4
+    rename W  owner_price_to_ltm_eps_5
+    rename X  owner_price_to_ltm_eps_6
+    rename Y  owner_price_to_ltm_eps_7
+    rename Z  owner_price_to_ltm_eps_8
+    rename AA owner_tev_1
+    rename AB owner_tev_2
+    rename AC owner_tev_3
+    rename AD owner_tev_4
+    rename AE owner_tev_5
+    rename AF owner_tev_6
+    rename AG owner_tev_7
+    rename AH owner_tev_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var owner_date_closing_price_1    "Date of closing price (Owner 1)"
+    label var owner_date_closing_price_2    "Date of closing price (Owner 2)"
+    label var owner_date_closing_price_3    "Date of closing price (Owner 3)"
+    label var owner_date_closing_price_4    "Date of closing price (Owner 4)"
+    label var owner_date_closing_price_5    "Date of closing price (Owner 5)"
+    label var owner_date_closing_price_6    "Date of closing price (Owner 6)"
+    label var owner_date_closing_price_7    "Date of closing price (Owner 7)"
+    label var owner_date_closing_price_8    "Date of closing price (Owner 8)"
+    label var owner_mkt_cap_1               "Market capitalization (Owner 1)"
+    label var owner_mkt_cap_2               "Market capitalization (Owner 2)"
+    label var owner_mkt_cap_3               "Market capitalization (Owner 3)"
+    label var owner_mkt_cap_4               "Market capitalization (Owner 4)"
+    label var owner_mkt_cap_5               "Market capitalization (Owner 5)"
+    label var owner_mkt_cap_6               "Market capitalization (Owner 6)"
+    label var owner_mkt_cap_7               "Market capitalization (Owner 7)"
+    label var owner_mkt_cap_8               "Market capitalization (Owner 8)"
+    label var owner_price_to_ltm_eps_1      "Price to LTM EPS (Owner 1)"
+    label var owner_price_to_ltm_eps_2      "Price to LTM EPS (Owner 2)"
+    label var owner_price_to_ltm_eps_3      "Price to LTM EPS (Owner 3)"
+    label var owner_price_to_ltm_eps_4      "Price to LTM EPS (Owner 4)"
+    label var owner_price_to_ltm_eps_5      "Price to LTM EPS (Owner 5)"
+    label var owner_price_to_ltm_eps_6      "Price to LTM EPS (Owner 6)"
+    label var owner_price_to_ltm_eps_7      "Price to LTM EPS (Owner 7)"
+    label var owner_price_to_ltm_eps_8      "Price to LTM EPS (Owner 8)"
+    label var owner_tev_1                   "Total enterprise value (Owner 1)"
+    label var owner_tev_2                   "Total enterprise value (Owner 2)"
+    label var owner_tev_3                   "Total enterprise value (Owner 3)"
+    label var owner_tev_4                   "Total enterprise value (Owner 4)"
+    label var owner_tev_5                   "Total enterprise value (Owner 5)"
+    label var owner_tev_6                   "Total enterprise value (Owner 6)"
+    label var owner_tev_7                   "Total enterprise value (Owner 7)"
+    label var owner_tev_8                   "Total enterprise value (Owner 8)"
+
+    save "$dir_temp/property_details_5_6.dta", replace
+end
+
+program combine_property_details_5_7
+    local property_details_5_7 "property_details_5_ownership_details_7_AsiaPacific.xls property_details_5_ownership_details_7_EuropeMiddleEast.xls property_details_5_ownership_details_7_LatinAmerica.xls property_details_5_ownership_details_7_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_7_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_7.dta", replace
+
+    foreach file of local property_details_5_7 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_7.dta"
+        save "$dir_temp/property_details_5_7.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_tev_to_ltm_ebitda_1
+    rename D  owner_tev_to_ltm_ebitda_2
+    rename E  owner_tev_to_ltm_ebitda_3
+    rename F  owner_tev_to_ltm_ebitda_4
+    rename G  owner_tev_to_ltm_ebitda_5
+    rename H  owner_tev_to_ltm_ebitda_6
+    rename I  owner_tev_to_ltm_ebitda_7
+    rename J  owner_tev_to_ltm_ebitda_8
+    rename K  owner_total_debt_to_total_cap_1
+    rename L  owner_total_debt_to_total_cap_2
+    rename M  owner_total_debt_to_total_cap_3
+    rename N  owner_total_debt_to_total_cap_4
+    rename O  owner_total_debt_to_total_cap_5
+    rename P  owner_total_debt_to_total_cap_6
+    rename Q  owner_total_debt_to_total_cap_7
+    rename R  owner_total_debt_to_total_cap_8
+    rename S  owner_price_to_earn_after_extra1
+    rename T  owner_price_to_earn_after_extra2
+    rename U  owner_price_to_earn_after_extra3
+    rename V  owner_price_to_earn_after_extra4
+    rename W  owner_price_to_earn_after_extra5
+    rename X  owner_price_to_earn_after_extra6
+    rename Y  owner_price_to_earn_after_extra7
+    rename Z  owner_price_to_earn_after_extra8
+    rename AA owner_tev_to_ebitda_1
+    rename AB owner_tev_to_ebitda_2
+    rename AC owner_tev_to_ebitda_3
+    rename AD owner_tev_to_ebitda_4
+    rename AE owner_tev_to_ebitda_5
+    rename AF owner_tev_to_ebitda_6
+    rename AG owner_tev_to_ebitda_7
+    rename AH owner_tev_to_ebitda_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var owner_tev_to_ltm_ebitda_1     "TEV to LTM EBITDA (Owner 1)"
+    label var owner_tev_to_ltm_ebitda_2     "TEV to LTM EBITDA (Owner 2)"
+    label var owner_tev_to_ltm_ebitda_3     "TEV to LTM EBITDA (Owner 3)"
+    label var owner_tev_to_ltm_ebitda_4     "TEV to LTM EBITDA (Owner 4)"
+    label var owner_tev_to_ltm_ebitda_5     "TEV to LTM EBITDA (Owner 5)"
+    label var owner_tev_to_ltm_ebitda_6     "TEV to LTM EBITDA (Owner 6)"
+    label var owner_tev_to_ltm_ebitda_7     "TEV to LTM EBITDA (Owner 7)"
+    label var owner_tev_to_ltm_ebitda_8     "TEV to LTM EBITDA (Owner 8)"
+    label var owner_total_debt_to_total_cap_1 "Total debt to total capitalization (Owner 1)"
+    label var owner_total_debt_to_total_cap_2 "Total debt to total capitalization (Owner 2)"
+    label var owner_total_debt_to_total_cap_3 "Total debt to total capitalization (Owner 3)"
+    label var owner_total_debt_to_total_cap_4 "Total debt to total capitalization (Owner 4)"
+    label var owner_total_debt_to_total_cap_5 "Total debt to total capitalization (Owner 5)"
+    label var owner_total_debt_to_total_cap_6 "Total debt to total capitalization (Owner 6)"
+    label var owner_total_debt_to_total_cap_7 "Total debt to total capitalization (Owner 7)"
+    label var owner_total_debt_to_total_cap_8 "Total debt to total capitalization (Owner 8)"
+    label var owner_price_to_earn_after_extra1 "Price to earnings after extra (Owner 1)"
+    label var owner_price_to_earn_after_extra2 "Price to earnings after extra (Owner 2)"
+    label var owner_price_to_earn_after_extra3 "Price to earnings after extra (Owner 3)"
+    label var owner_price_to_earn_after_extra4 "Price to earnings after extra (Owner 4)"
+    label var owner_price_to_earn_after_extra5 "Price to earnings after extra (Owner 5)"
+    label var owner_price_to_earn_after_extra6 "Price to earnings after extra (Owner 6)"
+    label var owner_price_to_earn_after_extra7 "Price to earnings after extra (Owner 7)"
+    label var owner_price_to_earn_after_extra8 "Price to earnings after extra (Owner 8)"
+    label var owner_tev_to_ebitda_1         "TEV to EBITDA (Owner 1)"
+    label var owner_tev_to_ebitda_2         "TEV to EBITDA (Owner 2)"
+    label var owner_tev_to_ebitda_3         "TEV to EBITDA (Owner 3)"
+    label var owner_tev_to_ebitda_4         "TEV to EBITDA (Owner 4)"
+    label var owner_tev_to_ebitda_5         "TEV to EBITDA (Owner 5)"
+    label var owner_tev_to_ebitda_6         "TEV to EBITDA (Owner 6)"
+    label var owner_tev_to_ebitda_7         "TEV to EBITDA (Owner 7)"
+    label var owner_tev_to_ebitda_8         "TEV to EBITDA (Owner 8)"
+
+    save "$dir_temp/property_details_5_7.dta", replace
+end
+
+program combine_property_details_5_8
+    local property_details_5_8 "property_details_5_ownership_details_8_AsiaPacific.xls property_details_5_ownership_details_8_EuropeMiddleEast.xls property_details_5_ownership_details_8_LatinAmerica.xls property_details_5_ownership_details_8_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_8_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_8.dta", replace
+
+    foreach file of local property_details_5_8 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_8.dta"
+        save "$dir_temp/property_details_5_8.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_period_ended_1
+    rename D  owner_period_ended_2
+    rename E  owner_period_ended_3
+    rename F  owner_period_ended_4
+    rename G  owner_period_ended_5
+    rename H  owner_period_ended_6
+    rename I  owner_period_ended_7
+    rename J  owner_period_ended_8
+    rename K  owner_working_capital_1
+    rename L  owner_working_capital_2
+    rename M  owner_working_capital_3
+    rename N  owner_working_capital_4
+    rename O  owner_working_capital_5
+    rename P  owner_working_capital_6
+    rename Q  owner_working_capital_7
+    rename R  owner_working_capital_8
+    rename S  owner_total_cap_at_bv_1
+    rename T  owner_total_cap_at_bv_2
+    rename U  owner_total_cap_at_bv_3
+    rename V  owner_total_cap_at_bv_4
+    rename W  owner_total_cap_at_bv_5
+    rename X  owner_total_cap_at_bv_6
+    rename Y  owner_total_cap_at_bv_7
+    rename Z  owner_total_cap_at_bv_8
+    rename AA owner_total_debt_1
+    rename AB owner_total_debt_2
+    rename AC owner_total_debt_3
+    rename AD owner_total_debt_4
+    rename AE owner_total_debt_5
+    rename AF owner_total_debt_6
+    rename AG owner_total_debt_7
+    rename AH owner_total_debt_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var owner_period_ended_1          "Period ended (Owner 1)"
+    label var owner_period_ended_2          "Period ended (Owner 2)"
+    label var owner_period_ended_3          "Period ended (Owner 3)"
+    label var owner_period_ended_4          "Period ended (Owner 4)"
+    label var owner_period_ended_5          "Period ended (Owner 5)"
+    label var owner_period_ended_6          "Period ended (Owner 6)"
+    label var owner_period_ended_7          "Period ended (Owner 7)"
+    label var owner_period_ended_8          "Period ended (Owner 8)"
+    label var owner_working_capital_1       "Working capital (Owner 1)"
+    label var owner_working_capital_2       "Working capital (Owner 2)"
+    label var owner_working_capital_3       "Working capital (Owner 3)"
+    label var owner_working_capital_4       "Working capital (Owner 4)"
+    label var owner_working_capital_5       "Working capital (Owner 5)"
+    label var owner_working_capital_6       "Working capital (Owner 6)"
+    label var owner_working_capital_7       "Working capital (Owner 7)"
+    label var owner_working_capital_8       "Working capital (Owner 8)"
+    label var owner_total_cap_at_bv_1       "Total capitalization at book value (Owner 1)"
+    label var owner_total_cap_at_bv_2       "Total capitalization at book value (Owner 2)"
+    label var owner_total_cap_at_bv_3       "Total capitalization at book value (Owner 3)"
+    label var owner_total_cap_at_bv_4       "Total capitalization at book value (Owner 4)"
+    label var owner_total_cap_at_bv_5       "Total capitalization at book value (Owner 5)"
+    label var owner_total_cap_at_bv_6       "Total capitalization at book value (Owner 6)"
+    label var owner_total_cap_at_bv_7       "Total capitalization at book value (Owner 7)"
+    label var owner_total_cap_at_bv_8       "Total capitalization at book value (Owner 8)"
+    label var owner_total_debt_1            "Total debt (Owner 1)"
+    label var owner_total_debt_2            "Total debt (Owner 2)"
+    label var owner_total_debt_3            "Total debt (Owner 3)"
+    label var owner_total_debt_4            "Total debt (Owner 4)"
+    label var owner_total_debt_5            "Total debt (Owner 5)"
+    label var owner_total_debt_6            "Total debt (Owner 6)"
+    label var owner_total_debt_7            "Total debt (Owner 7)"
+    label var owner_total_debt_8            "Total debt (Owner 8)"
+
+    save "$dir_temp/property_details_5_8.dta", replace
+end
+
+program combine_property_details_5_9
+    local property_details_5_9 "property_details_5_ownership_details_9_AsiaPacific.xls property_details_5_ownership_details_9_EuropeMiddleEast.xls property_details_5_ownership_details_9_LatinAmerica.xls property_details_5_ownership_details_9_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_9_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_9.dta", replace
+
+    foreach file of local property_details_5_9 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_9.dta"
+        save "$dir_temp/property_details_5_9.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_current_liab_1
+    rename D  owner_current_liab_2
+    rename E  owner_current_liab_3
+    rename F  owner_current_liab_4
+    rename G  owner_current_liab_5
+    rename H  owner_current_liab_6
+    rename I  owner_current_liab_7
+    rename J  owner_current_liab_8
+    rename K  cash_and_equiv_most_recent_yr_1 // shortened to fit
+    rename L  cash_and_equiv_most_recent_yr_2
+    rename M  cash_and_equiv_most_recent_yr_3
+    rename N  cash_and_equiv_most_recent_yr_4
+    rename O  cash_and_equiv_most_recent_yr_5
+    rename P  cash_and_equiv_most_recent_yr_6
+    rename Q  cash_and_equiv_most_recent_yr_7
+    rename R  cash_and_equiv_most_recent_yr_8
+    rename S  cash_and_equiv_most_recent_qtr_1
+    rename T  cash_and_equiv_most_recent_qtr_2
+    rename U  cash_and_equiv_most_recent_qtr_3
+    rename V  cash_and_equiv_most_recent_qtr_4
+    rename W  cash_and_equiv_most_recent_qtr_5
+    rename X  cash_and_equiv_most_recent_qtr_6
+    rename Y  cash_and_equiv_most_recent_qtr_7
+    rename Z  cash_and_equiv_most_recent_qtr_8
+
+    * label variables
+    label var prop_name                             "Name of the mine or facility"
+    label var prop_id                               "Unique key for the project"
+    label var owner_current_liab_1                 "Current liabilities (Owner 1)"
+    label var owner_current_liab_2                 "Current liabilities (Owner 2)"
+    label var owner_current_liab_3                 "Current liabilities (Owner 3)"
+    label var owner_current_liab_4                 "Current liabilities (Owner 4)"
+    label var owner_current_liab_5                 "Current liabilities (Owner 5)"
+    label var owner_current_liab_6                 "Current liabilities (Owner 6)"
+    label var owner_current_liab_7                 "Current liabilities (Owner 7)"
+    label var owner_current_liab_8                 "Current liabilities (Owner 8)"
+    label var cash_and_equiv_most_recent_yr_1 "Cash & cash equivalents - Most Recent Year (Owner 1)"
+    label var cash_and_equiv_most_recent_yr_2 "Cash & cash equivalents - Most Recent Year (Owner 2)"
+    label var cash_and_equiv_most_recent_yr_3 "Cash & cash equivalents - Most Recent Year (Owner 3)"
+    label var cash_and_equiv_most_recent_yr_4 "Cash & cash equivalents - Most Recent Year (Owner 4)"
+    label var cash_and_equiv_most_recent_yr_5 "Cash & cash equivalents - Most Recent Year (Owner 5)"
+    label var cash_and_equiv_most_recent_yr_6 "Cash & cash equivalents - Most Recent Year (Owner 6)"
+    label var cash_and_equiv_most_recent_yr_7 "Cash & cash equivalents - Most Recent Year (Owner 7)"
+    label var cash_and_equiv_most_recent_yr_8 "Cash & cash equivalents - Most Recent Year (Owner 8)"
+    label var cash_and_equiv_most_recent_qtr_1 "Cash & cash equivalents - Most Recent Quarter (Owner 1)"
+    label var cash_and_equiv_most_recent_qtr_2 "Cash & cash equivalents - Most Recent Quarter (Owner 2)"
+    label var cash_and_equiv_most_recent_qtr_3 "Cash & cash equivalents - Most Recent Quarter (Owner 3)"
+    label var cash_and_equiv_most_recent_qtr_4 "Cash & cash equivalents - Most Recent Quarter (Owner 4)"
+    label var cash_and_equiv_most_recent_qtr_5 "Cash & cash equivalents - Most Recent Quarter (Owner 5)"
+    label var cash_and_equiv_most_recent_qtr_6 "Cash & cash equivalents - Most Recent Quarter (Owner 6)"
+    label var cash_and_equiv_most_recent_qtr_7 "Cash & cash equivalents - Most Recent Quarter (Owner 7)"
+    label var cash_and_equiv_most_recent_qtr_8 "Cash & cash equivalents - Most Recent Quarter (Owner 8)"
+
+    save "$dir_temp/property_details_5_9.dta", replace
+end
+
+program combine_property_details_5_10
+    local property_details_5_10 "property_details_5_ownership_details_10_AsiaPacific.xls property_details_5_ownership_details_10_EuropeMiddleEast.xls property_details_5_ownership_details_10_LatinAmerica.xls property_details_5_ownership_details_10_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_10_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_10.dta", replace
+
+    foreach file of local property_details_5_10 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_10.dta"
+        save "$dir_temp/property_details_5_10.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  app5b_cash_begin_yr_1
+    rename D  app5b_cash_begin_yr_2
+    rename E  app5b_cash_begin_yr_3
+    rename F  app5b_cash_begin_yr_4
+    rename G  app5b_cash_begin_yr_5
+    rename H  app5b_cash_begin_yr_6
+    rename I  app5b_cash_begin_yr_7
+    rename J  app5b_cash_begin_yr_8
+    rename K  app5b_cash_begin_qtr_1
+    rename L  app5b_cash_begin_qtr_2
+    rename M  app5b_cash_begin_qtr_3
+    rename N  app5b_cash_begin_qtr_4
+    rename O  app5b_cash_begin_qtr_5
+    rename P  app5b_cash_begin_qtr_6
+    rename Q  app5b_cash_begin_qtr_7
+    rename R  app5b_cash_begin_qtr_8
+    rename S  app5b_cash_end_yr_1
+    rename T  app5b_cash_end_yr_2
+    rename U  app5b_cash_end_yr_3
+    rename V  app5b_cash_end_yr_4
+    rename W  app5b_cash_end_yr_5
+    rename X  app5b_cash_end_yr_6
+    rename Y  app5b_cash_end_yr_7
+    rename Z  app5b_cash_end_yr_8
+    rename AA app5b_cash_end_qtr_1
+    rename AB app5b_cash_end_qtr_2
+    rename AC app5b_cash_end_qtr_3
+    rename AD app5b_cash_end_qtr_4
+    rename AE app5b_cash_end_qtr_5
+    rename AF app5b_cash_end_qtr_6
+    rename AG app5b_cash_end_qtr_7
+    rename AH app5b_cash_end_qtr_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var app5b_cash_begin_yr_1         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 1)"
+    label var app5b_cash_begin_yr_2         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 2)"
+    label var app5b_cash_begin_yr_3         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 3)"
+    label var app5b_cash_begin_yr_4         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 4)"
+    label var app5b_cash_begin_yr_5         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 5)"
+    label var app5b_cash_begin_yr_6         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 6)"
+    label var app5b_cash_begin_yr_7         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 7)"
+    label var app5b_cash_begin_yr_8         "App5B: Cash at Beginning of Period - Most Recent Year (Owner 8)"
+    label var app5b_cash_begin_qtr_1        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 1)"
+    label var app5b_cash_begin_qtr_2        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 2)"
+    label var app5b_cash_begin_qtr_3        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 3)"
+    label var app5b_cash_begin_qtr_4        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 4)"
+    label var app5b_cash_begin_qtr_5        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 5)"
+    label var app5b_cash_begin_qtr_6        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 6)"
+    label var app5b_cash_begin_qtr_7        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 7)"
+    label var app5b_cash_begin_qtr_8        "App5B: Cash at Beginning of Period - Most Recent Quarter (Owner 8)"
+    label var app5b_cash_end_yr_1           "App5B: Cash at End of Period - Most Recent Year (Owner 1)"
+    label var app5b_cash_end_yr_2           "App5B: Cash at End of Period - Most Recent Year (Owner 2)"
+    label var app5b_cash_end_yr_3           "App5B: Cash at End of Period - Most Recent Year (Owner 3)"
+    label var app5b_cash_end_yr_4           "App5B: Cash at End of Period - Most Recent Year (Owner 4)"
+    label var app5b_cash_end_yr_5           "App5B: Cash at End of Period - Most Recent Year (Owner 5)"
+    label var app5b_cash_end_yr_6           "App5B: Cash at End of Period - Most Recent Year (Owner 6)"
+    label var app5b_cash_end_yr_7           "App5B: Cash at End of Period - Most Recent Year (Owner 7)"
+    label var app5b_cash_end_yr_8           "App5B: Cash at End of Period - Most Recent Year (Owner 8)"
+    label var app5b_cash_end_qtr_1          "App5B: Cash at End of Period - Most Recent Quarter (Owner 1)"
+    label var app5b_cash_end_qtr_2          "App5B: Cash at End of Period - Most Recent Quarter (Owner 2)"
+    label var app5b_cash_end_qtr_3          "App5B: Cash at End of Period - Most Recent Quarter (Owner 3)"
+    label var app5b_cash_end_qtr_4          "App5B: Cash at End of Period - Most Recent Quarter (Owner 4)"
+    label var app5b_cash_end_qtr_5          "App5B: Cash at End of Period - Most Recent Quarter (Owner 5)"
+    label var app5b_cash_end_qtr_6          "App5B: Cash at End of Period - Most Recent Quarter (Owner 6)"
+    label var app5b_cash_end_qtr_7          "App5B: Cash at End of Period - Most Recent Quarter (Owner 7)"
+    label var app5b_cash_end_qtr_8          "App5B: Cash at End of Period - Most Recent Quarter (Owner 8)"
+
+    save "$dir_temp/property_details_5_10.dta", replace
+end
+
+program combine_property_details_5_11
+    local property_details_5_11 "property_details_5_ownership_details_11_AsiaPacific.xls property_details_5_ownership_details_11_EuropeMiddleEast.xls property_details_5_ownership_details_11_LatinAmerica.xls property_details_5_ownership_details_11_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_11_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_11.dta", replace
+
+    foreach file of local property_details_5_11 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_11.dta"
+        save "$dir_temp/property_details_5_11.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  app5b_net_increase_cash_yr_1
+    rename D  app5b_net_increase_cash_yr_2
+    rename E  app5b_net_increase_cash_yr_3
+    rename F  app5b_net_increase_cash_yr_4
+    rename G  app5b_net_increase_cash_yr_5
+    rename H  app5b_net_increase_cash_yr_6
+    rename I  app5b_net_increase_cash_yr_7
+    rename J  app5b_net_increase_cash_yr_8
+    rename K  app5b_net_increase_cash_qtr_1
+    rename L  app5b_net_increase_cash_qtr_2
+    rename M  app5b_net_increase_cash_qtr_3
+    rename N  app5b_net_increase_cash_qtr_4
+    rename O  app5b_net_increase_cash_qtr_5
+    rename P  app5b_net_increase_cash_qtr_6
+    rename Q  app5b_net_increase_cash_qtr_7
+    rename R  app5b_net_increase_cash_qtr_8
+    rename S  app5b_est_cf_next_qtr_1
+    rename T  app5b_est_cf_next_qtr_2
+    rename U  app5b_est_cf_next_qtr_3
+    rename V  app5b_est_cf_next_qtr_4
+    rename W  app5b_est_cf_next_qtr_5
+    rename X  app5b_est_cf_next_qtr_6
+    rename Y  app5b_est_cf_next_qtr_7
+    rename Z  app5b_est_cf_next_qtr_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var app5b_net_increase_cash_yr_1  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 1)"
+    label var app5b_net_increase_cash_yr_2  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 2)"
+    label var app5b_net_increase_cash_yr_3  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 3)"
+    label var app5b_net_increase_cash_yr_4  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 4)"
+    label var app5b_net_increase_cash_yr_5  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 5)"
+    label var app5b_net_increase_cash_yr_6  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 6)"
+    label var app5b_net_increase_cash_yr_7  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 7)"
+    label var app5b_net_increase_cash_yr_8  "App5B: Net Increase in Cash Held - Most Recent Year (Owner 8)"
+    label var app5b_net_increase_cash_qtr_1 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 1)"
+    label var app5b_net_increase_cash_qtr_2 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 2)"
+    label var app5b_net_increase_cash_qtr_3 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 3)"
+    label var app5b_net_increase_cash_qtr_4 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 4)"
+    label var app5b_net_increase_cash_qtr_5 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 5)"
+    label var app5b_net_increase_cash_qtr_6 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 6)"
+    label var app5b_net_increase_cash_qtr_7 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 7)"
+    label var app5b_net_increase_cash_qtr_8 "App5B: Net Increase in Cash Held - Most Recent Quarter (Owner 8)"
+    label var app5b_est_cf_next_qtr_1       "App5B: Est Cash Outflow, Next Qtr (Owner 1)"
+    label var app5b_est_cf_next_qtr_2       "App5B: Est Cash Outflow, Next Qtr (Owner 2)"
+    label var app5b_est_cf_next_qtr_3       "App5B: Est Cash Outflow, Next Qtr (Owner 3)"
+    label var app5b_est_cf_next_qtr_4       "App5B: Est Cash Outflow, Next Qtr (Owner 4)"
+    label var app5b_est_cf_next_qtr_5       "App5B: Est Cash Outflow, Next Qtr (Owner 5)"
+    label var app5b_est_cf_next_qtr_6       "App5B: Est Cash Outflow, Next Qtr (Owner 6)"
+    label var app5b_est_cf_next_qtr_7       "App5B: Est Cash Outflow, Next Qtr (Owner 7)"
+    label var app5b_est_cf_next_qtr_8       "App5B: Est Cash Outflow, Next Qtr (Owner 8)"
+
+    save "$dir_temp/property_details_5_11.dta", replace
+end
+
+program combine_property_details_5_12
+    local property_details_5_12 "property_details_5_ownership_details_12_AsiaPacific.xls property_details_5_ownership_details_12_EuropeMiddleEast.xls property_details_5_ownership_details_12_LatinAmerica.xls property_details_5_ownership_details_12_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_12_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_12.dta", replace
+
+    foreach file of local property_details_5_12 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_12.dta"
+        save "$dir_temp/property_details_5_12.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  net_oper_rev_yr_1
+    rename D  net_oper_rev_yr_2
+    rename E  net_oper_rev_yr_3
+    rename F  net_oper_rev_yr_4
+    rename G  net_oper_rev_yr_5
+    rename H  net_oper_rev_yr_6
+    rename I  net_oper_rev_yr_7
+    rename J  net_oper_rev_yr_8
+    rename K  net_oper_rev_qtr_1
+    rename L  net_oper_rev_qtr_2
+    rename M  net_oper_rev_qtr_3
+    rename N  net_oper_rev_qtr_4
+    rename O  net_oper_rev_qtr_5
+    rename P  net_oper_rev_qtr_6
+    rename Q  net_oper_rev_qtr_7
+    rename R  net_oper_rev_qtr_8
+    rename S  net_oper_profit_tax_yr_1
+    rename T  net_oper_profit_tax_yr_2
+    rename U  net_oper_profit_tax_yr_3
+    rename V  net_oper_profit_tax_yr_4
+    rename W  net_oper_profit_tax_yr_5
+    rename X  net_oper_profit_tax_yr_6
+    rename Y  net_oper_profit_tax_yr_7
+    rename Z  net_oper_profit_tax_yr_8
+    rename AA net_oper_profit_tax_qtr_1
+    rename AB net_oper_profit_tax_qtr_2
+    rename AC net_oper_profit_tax_qtr_3
+    rename AD net_oper_profit_tax_qtr_4
+    rename AE net_oper_profit_tax_qtr_5
+    rename AF net_oper_profit_tax_qtr_6
+    rename AG net_oper_profit_tax_qtr_7
+    rename AH net_oper_profit_tax_qtr_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var net_oper_rev_yr_1             "Net Operating Revenue - Most Recent Year (Owner 1)"
+    label var net_oper_rev_yr_2             "Net Operating Revenue - Most Recent Year (Owner 2)"
+    label var net_oper_rev_yr_3             "Net Operating Revenue - Most Recent Year (Owner 3)"
+    label var net_oper_rev_yr_4             "Net Operating Revenue - Most Recent Year (Owner 4)"
+    label var net_oper_rev_yr_5             "Net Operating Revenue - Most Recent Year (Owner 5)"
+    label var net_oper_rev_yr_6             "Net Operating Revenue - Most Recent Year (Owner 6)"
+    label var net_oper_rev_yr_7             "Net Operating Revenue - Most Recent Year (Owner 7)"
+    label var net_oper_rev_yr_8             "Net Operating Revenue - Most Recent Year (Owner 8)"
+    label var net_oper_rev_qtr_1            "Net Operating Revenue - Most Recent Quarter (Owner 1)"
+    label var net_oper_rev_qtr_2            "Net Operating Revenue - Most Recent Quarter (Owner 2)"
+    label var net_oper_rev_qtr_3            "Net Operating Revenue - Most Recent Quarter (Owner 3)"
+    label var net_oper_rev_qtr_4            "Net Operating Revenue - Most Recent Quarter (Owner 4)"
+    label var net_oper_rev_qtr_5            "Net Operating Revenue - Most Recent Quarter (Owner 5)"
+    label var net_oper_rev_qtr_6            "Net Operating Revenue - Most Recent Quarter (Owner 6)"
+    label var net_oper_rev_qtr_7            "Net Operating Revenue - Most Recent Quarter (Owner 7)"
+    label var net_oper_rev_qtr_8            "Net Operating Revenue - Most Recent Quarter (Owner 8)"
+    label var net_oper_profit_tax_yr_1      "Net Operating Profit After Tax - Most Recent Year (Owner 1)"
+    label var net_oper_profit_tax_yr_2      "Net Operating Profit After Tax - Most Recent Year (Owner 2)"
+    label var net_oper_profit_tax_yr_3      "Net Operating Profit After Tax - Most Recent Year (Owner 3)"
+    label var net_oper_profit_tax_yr_4      "Net Operating Profit After Tax - Most Recent Year (Owner 4)"
+    label var net_oper_profit_tax_yr_5      "Net Operating Profit After Tax - Most Recent Year (Owner 5)"
+    label var net_oper_profit_tax_yr_6      "Net Operating Profit After Tax - Most Recent Year (Owner 6)"
+    label var net_oper_profit_tax_yr_7      "Net Operating Profit After Tax - Most Recent Year (Owner 7)"
+    label var net_oper_profit_tax_yr_8      "Net Operating Profit After Tax - Most Recent Year (Owner 8)"
+    label var net_oper_profit_tax_qtr_1     "Net Operating Profit After Tax - Most Recent Quarter (Owner 1)"
+    label var net_oper_profit_tax_qtr_2     "Net Operating Profit After Tax - Most Recent Quarter (Owner 2)"
+    label var net_oper_profit_tax_qtr_3     "Net Operating Profit After Tax - Most Recent Quarter (Owner 3)"
+    label var net_oper_profit_tax_qtr_4     "Net Operating Profit After Tax - Most Recent Quarter (Owner 4)"
+    label var net_oper_profit_tax_qtr_5     "Net Operating Profit After Tax - Most Recent Quarter (Owner 5)"
+    label var net_oper_profit_tax_qtr_6     "Net Operating Profit After Tax - Most Recent Quarter (Owner 6)"
+    label var net_oper_profit_tax_qtr_7     "Net Operating Profit After Tax - Most Recent Quarter (Owner 7)"
+    label var net_oper_profit_tax_qtr_8     "Net Operating Profit After Tax - Most Recent Quarter (Owner 8)"
+
+    save "$dir_temp/property_details_5_12.dta", replace
+end
+
+program combine_property_details_5_13
+    local property_details_5_13 "property_details_5_ownership_details_13_AsiaPacific.xls property_details_5_ownership_details_13_EuropeMiddleEast.xls property_details_5_ownership_details_13_LatinAmerica.xls property_details_5_ownership_details_13_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_13_Africa.xls", cellrange(A7) clear
+    save "$dir_temp/property_details_5_13.dta", replace
+
+    foreach file of local property_details_5_13 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        append using "$dir_temp/property_details_5_13.dta"
+        save "$dir_temp/property_details_5_13.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  rptd_ebitda_yr_1
+    rename D  rptd_ebitda_yr_2
+    rename E  rptd_ebitda_yr_3
+    rename F  rptd_ebitda_yr_4
+    rename G  rptd_ebitda_yr_5
+    rename H  rptd_ebitda_yr_6
+    rename I  rptd_ebitda_yr_7
+    rename J  rptd_ebitda_yr_8
+    rename K  rptd_ebitda_qtr_1
+    rename L  rptd_ebitda_qtr_2
+    rename M  rptd_ebitda_qtr_3
+    rename N  rptd_ebitda_qtr_4
+    rename O  rptd_ebitda_qtr_5
+    rename P  rptd_ebitda_qtr_6
+    rename Q  rptd_ebitda_qtr_7
+    rename R  rptd_ebitda_qtr_8
+    rename S  ebitda_yr_1
+    rename T  ebitda_yr_2
+    rename U  ebitda_yr_3
+    rename V  ebitda_yr_4
+    rename W  ebitda_yr_5
+    rename X  ebitda_yr_6
+    rename Y  ebitda_yr_7
+    rename Z  ebitda_yr_8
+    rename AA ebitda_qtr_1
+    rename AB ebitda_qtr_2
+    rename AC ebitda_qtr_3
+    rename AD ebitda_qtr_4
+    rename AE ebitda_qtr_5
+    rename AF ebitda_qtr_6
+    rename AG ebitda_qtr_7
+    rename AH ebitda_qtr_8
+
+    * label variables
+    label var prop_name             "Name of the mine or facility"
+    label var prop_id               "Unique key for the project"
+    label var rptd_ebitda_yr_1      "Reported EBITDA - Most Recent Year (Owner 1)"
+    label var rptd_ebitda_yr_2      "Reported EBITDA - Most Recent Year (Owner 2)"
+    label var rptd_ebitda_yr_3      "Reported EBITDA - Most Recent Year (Owner 3)"
+    label var rptd_ebitda_yr_4      "Reported EBITDA - Most Recent Year (Owner 4)"
+    label var rptd_ebitda_yr_5      "Reported EBITDA - Most Recent Year (Owner 5)"
+    label var rptd_ebitda_yr_6      "Reported EBITDA - Most Recent Year (Owner 6)"
+    label var rptd_ebitda_yr_7      "Reported EBITDA - Most Recent Year (Owner 7)"
+    label var rptd_ebitda_yr_8      "Reported EBITDA - Most Recent Year (Owner 8)"
+    label var rptd_ebitda_qtr_1     "Reported EBITDA - Most Recent Quarter (Owner 1)"
+    label var rptd_ebitda_qtr_2     "Reported EBITDA - Most Recent Quarter (Owner 2)"
+    label var rptd_ebitda_qtr_3     "Reported EBITDA - Most Recent Quarter (Owner 3)"
+    label var rptd_ebitda_qtr_4     "Reported EBITDA - Most Recent Quarter (Owner 4)"
+    label var rptd_ebitda_qtr_5     "Reported EBITDA - Most Recent Quarter (Owner 5)"
+    label var rptd_ebitda_qtr_6     "Reported EBITDA - Most Recent Quarter (Owner 6)"
+    label var rptd_ebitda_qtr_7     "Reported EBITDA - Most Recent Quarter (Owner 7)"
+    label var rptd_ebitda_qtr_8     "Reported EBITDA - Most Recent Quarter (Owner 8)"
+    label var ebitda_yr_1           "EBITDA - Most Recent Year (Owner 1)"
+    label var ebitda_yr_2           "EBITDA - Most Recent Year (Owner 2)"
+    label var ebitda_yr_3           "EBITDA - Most Recent Year (Owner 3)"
+    label var ebitda_yr_4           "EBITDA - Most Recent Year (Owner 4)"
+    label var ebitda_yr_5           "EBITDA - Most Recent Year (Owner 5)"
+    label var ebitda_yr_6           "EBITDA - Most Recent Year (Owner 6)"
+    label var ebitda_yr_7           "EBITDA - Most Recent Year (Owner 7)"
+    label var ebitda_yr_8           "EBITDA - Most Recent Year (Owner 8)"
+    label var ebitda_qtr_1          "EBITDA - Most Recent Quarter (Owner 1)"
+    label var ebitda_qtr_2          "EBITDA - Most Recent Quarter (Owner 2)"
+    label var ebitda_qtr_3          "EBITDA - Most Recent Quarter (Owner 3)"
+    label var ebitda_qtr_4          "EBITDA - Most Recent Quarter (Owner 4)"
+    label var ebitda_qtr_5          "EBITDA - Most Recent Quarter (Owner 5)"
+    label var ebitda_qtr_6          "EBITDA - Most Recent Quarter (Owner 6)"
+    label var ebitda_qtr_7          "EBITDA - Most Recent Quarter (Owner 7)"
+    label var ebitda_qtr_8          "EBITDA - Most Recent Quarter (Owner 8)"
+
+    save "$dir_temp/property_details_5_13.dta", replace
+end
+
+program combine_property_details_5_14
+    local property_details_5_14 "property_details_5_ownership_details_14_AsiaPacific.xls property_details_5_ownership_details_14_EuropeMiddleEast.xls property_details_5_ownership_details_14_LatinAmerica.xls property_details_5_ownership_details_14_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_14_Africa.xls", cellrange(A7) clear
+    tostring C-Z, replace
+    save "$dir_temp/property_details_5_14.dta", replace
+
+    foreach file of local property_details_5_14 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        tostring C-Z, replace
+        append using "$dir_temp/property_details_5_14.dta"
+        save "$dir_temp/property_details_5_14.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_ticker_1
+    rename D  owner_ticker_2
+    rename E  owner_ticker_3
+    rename F  owner_ticker_4
+    rename G  owner_ticker_5
+    rename H  owner_ticker_6
+    rename I  owner_ticker_7
+    rename J  owner_ticker_8
+    rename K  owner_exchange_1
+    rename L  owner_exchange_2
+    rename M  owner_exchange_3
+    rename N  owner_exchange_4
+    rename O  owner_exchange_5
+    rename P  owner_exchange_6
+    rename Q  owner_exchange_7
+    rename R  owner_exchange_8
+    rename S  owner_trading_symbol_exchange_1
+    rename T  owner_trading_symbol_exchange_2
+    rename U  owner_trading_symbol_exchange_3
+    rename V  owner_trading_symbol_exchange_4
+    rename W  owner_trading_symbol_exchange_5
+    rename X  owner_trading_symbol_exchange_6
+    rename Y  owner_trading_symbol_exchange_7
+    rename Z  owner_trading_symbol_exchange_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var owner_ticker_1                "Ticker (Primary) (Owner 1)"
+    label var owner_ticker_2                "Ticker (Primary) (Owner 2)"
+    label var owner_ticker_3                "Ticker (Primary) (Owner 3)"
+    label var owner_ticker_4                "Ticker (Primary) (Owner 4)"
+    label var owner_ticker_5                "Ticker (Primary) (Owner 5)"
+    label var owner_ticker_6                "Ticker (Primary) (Owner 6)"
+    label var owner_ticker_7                "Ticker (Primary) (Owner 7)"
+    label var owner_ticker_8                "Ticker (Primary) (Owner 8)"
+    label var owner_exchange_1              "Exchange (Primary) (Owner 1)"
+    label var owner_exchange_2              "Exchange (Primary) (Owner 2)"
+    label var owner_exchange_3              "Exchange (Primary) (Owner 3)"
+    label var owner_exchange_4              "Exchange (Primary) (Owner 4)"
+    label var owner_exchange_5              "Exchange (Primary) (Owner 5)"
+    label var owner_exchange_6              "Exchange (Primary) (Owner 6)"
+    label var owner_exchange_7              "Exchange (Primary) (Owner 7)"
+    label var owner_exchange_8              "Exchange (Primary) (Owner 8)"
+    label var owner_trading_symbol_exchange_1 "Trading Symbol & Exchange (Primary) (Owner 1)"
+    label var owner_trading_symbol_exchange_2 "Trading Symbol & Exchange (Primary) (Owner 2)"
+    label var owner_trading_symbol_exchange_3 "Trading Symbol & Exchange (Primary) (Owner 3)"
+    label var owner_trading_symbol_exchange_4 "Trading Symbol & Exchange (Primary) (Owner 4)"
+    label var owner_trading_symbol_exchange_5 "Trading Symbol & Exchange (Primary) (Owner 5)"
+    label var owner_trading_symbol_exchange_6 "Trading Symbol & Exchange (Primary) (Owner 6)"
+    label var owner_trading_symbol_exchange_7 "Trading Symbol & Exchange (Primary) (Owner 7)"
+    label var owner_trading_symbol_exchange_8 "Trading Symbol & Exchange (Primary) (Owner 8)"
+
+    save "$dir_temp/property_details_5_14.dta", replace
+end
+
+program combine_property_details_5_15
+    local property_details_5_15 "property_details_5_ownership_details_15_AsiaPacific.xls property_details_5_ownership_details_15_EuropeMiddleEast.xls property_details_5_ownership_details_15_LatinAmerica.xls property_details_5_ownership_details_15_USCanada.xls"
+
+    import excel "property_details_5_ownership_details_15_Africa.xls", cellrange(A7) clear
+    tostring C-Z, replace
+    save "$dir_temp/property_details_5_15.dta", replace
+
+    foreach file of local property_details_5_15 {
+        display "Processing: `file'"
+        import excel "`file'", cellrange(A7) clear
+        tostring C-Z, replace
+        append using "$dir_temp/property_details_5_15.dta"
+        save "$dir_temp/property_details_5_15.dta", replace
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  owner_ticker_secondary_1
+    rename D  owner_ticker_secondary_2
+    rename E  owner_ticker_secondary_3
+    rename F  owner_ticker_secondary_4
+    rename G  owner_ticker_secondary_5
+    rename H  owner_ticker_secondary_6
+    rename I  owner_ticker_secondary_7
+    rename J  owner_ticker_secondary_8
+    rename K  owner_exchange_secondary_1
+    rename L  owner_exchange_secondary_2
+    rename M  owner_exchange_secondary_3
+    rename N  owner_exchange_secondary_4
+    rename O  owner_exchange_secondary_5
+    rename P  owner_exchange_secondary_6
+    rename Q  owner_exchange_secondary_7
+    rename R  owner_exchange_secondary_8
+    rename S  owner_trading_symbol_ex_second_1 // shortened to fit
+    rename T  owner_trading_symbol_ex_second_2
+    rename U  owner_trading_symbol_ex_second_3
+    rename V  owner_trading_symbol_ex_second_4
+    rename W  owner_trading_symbol_ex_second_5
+    rename X  owner_trading_symbol_ex_second_6
+    rename Y  owner_trading_symbol_ex_second_7
+    rename Z  owner_trading_symbol_ex_second_8
+
+    * label variables
+    label var prop_name                             "Name of the mine or facility"
+    label var prop_id                               "Unique key for the project"
+    label var owner_ticker_secondary_1             "Ticker (Secondary) (Owner 1)"
+    label var owner_ticker_secondary_2             "Ticker (Secondary) (Owner 2)"
+    label var owner_ticker_secondary_3             "Ticker (Secondary) (Owner 3)"
+    label var owner_ticker_secondary_4             "Ticker (Secondary) (Owner 4)"
+    label var owner_ticker_secondary_5             "Ticker (Secondary) (Owner 5)"
+    label var owner_ticker_secondary_6             "Ticker (Secondary) (Owner 6)"
+    label var owner_ticker_secondary_7             "Ticker (Secondary) (Owner 7)"
+    label var owner_ticker_secondary_8             "Ticker (Secondary) (Owner 8)"
+    label var owner_exchange_secondary_1           "Exchange (Secondary) (Owner 1)"
+    label var owner_exchange_secondary_2           "Exchange (Secondary) (Owner 2)"
+    label var owner_exchange_secondary_3           "Exchange (Secondary) (Owner 3)"
+    label var owner_exchange_secondary_4           "Exchange (Secondary) (Owner 4)"
+    label var owner_exchange_secondary_5           "Exchange (Secondary) (Owner 5)"
+    label var owner_exchange_secondary_6           "Exchange (Secondary) (Owner 6)"
+    label var owner_exchange_secondary_7           "Exchange (Secondary) (Owner 7)"
+    label var owner_exchange_secondary_8           "Exchange (Secondary) (Owner 8)"
+    label var owner_trading_symbol_ex_second_1 "Trading Symbol & Exchange (Secondary) (Owner 1)"
+    label var owner_trading_symbol_ex_second_2 "Trading Symbol & Exchange (Secondary) (Owner 2)"
+    label var owner_trading_symbol_ex_second_3 "Trading Symbol & Exchange (Secondary) (Owner 3)"
+    label var owner_trading_symbol_ex_second_4 "Trading Symbol & Exchange (Secondary) (Owner 4)"
+    label var owner_trading_symbol_ex_second_5 "Trading Symbol & Exchange (Secondary) (Owner 5)"
+    label var owner_trading_symbol_ex_second_6 "Trading Symbol & Exchange (Secondary) (Owner 6)"
+    label var owner_trading_symbol_ex_second_7 "Trading Symbol & Exchange (Secondary) (Owner 7)"
+    label var owner_trading_symbol_ex_second_8 "Trading Symbol & Exchange (Secondary) (Owner 8)"
+
+    save "$dir_temp/property_details_5_15.dta", replace
+end
