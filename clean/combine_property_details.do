@@ -2,6 +2,7 @@
 **** notes ****
 * some string variables should be converted to numeric
 * this script is for appending each property details data
+* historical data is year data, but should be separately treated from time-invariant info
 **** environment ****
 clear all
 set more off
@@ -47,6 +48,12 @@ program main
     combine_property_details_5_13
     combine_property_details_5_14
     combine_property_details_5_15
+    combine_property_details_6_1
+    combine_property_details_6_2
+    combine_property_details_7_1
+    combine_property_details_7_2
+    combine_property_details_7_3
+    
 end
 
 **** property details ****
@@ -1648,3 +1655,472 @@ program combine_property_details_5_15
 
     save "$dir_temp/property_details_5_15.dta", replace
 end
+
+program combine_property_details_6_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local years 2000/2022
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach year of numlist `years' {
+        foreach region of local regions {
+            local file_name "property_details_6_historical_ownership_details_1_`year'_`region'.xls"
+            if (fileexists("`file_name'")) {
+                display "Processing: `file_name'"
+                import excel "`file_name'", cellrange(A7) clear
+                gen year = `year'
+                tostring C-J S-AH, replace
+                append using `temp_file'
+                save `temp_file', replace
+            }
+        }
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  historical_owner_name_1
+    rename D  historical_owner_name_2
+    rename E  historical_owner_name_3
+    rename F  historical_owner_name_4
+    rename G  historical_owner_name_5
+    rename H  historical_owner_name_6
+    rename I  historical_owner_name_7
+    rename J  historical_owner_name_8
+    rename K  historical_owner_snl_instn_key_1
+    rename L  historical_owner_snl_instn_key_2
+    rename M  historical_owner_snl_instn_key_3
+    rename N  historical_owner_snl_instn_key_4
+    rename O  historical_owner_snl_instn_key_5
+    rename P  historical_owner_snl_instn_key_6
+    rename Q  historical_owner_snl_instn_key_7
+    rename R  historical_owner_snl_instn_key_8
+    rename S  historical_owner_common_name_1
+    rename T  historical_owner_common_name_2
+    rename U  historical_owner_common_name_3
+    rename V  historical_owner_common_name_4
+    rename W  historical_owner_common_name_5
+    rename X  historical_owner_common_name_6
+    rename Y  historical_owner_common_name_7
+    rename Z  historical_owner_common_name_8
+    rename AA historical_owner_type_1
+    rename AB historical_owner_type_2
+    rename AC historical_owner_type_3
+    rename AD historical_owner_type_4
+    rename AE historical_owner_type_5
+    rename AF historical_owner_type_6
+    rename AG historical_owner_type_7
+    rename AH historical_owner_type_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var year                          "Year of historical ownership details"
+    label var historical_owner_name_1      "Owner Name (Owner 1)"
+    label var historical_owner_name_2      "Owner Name (Owner 2)"
+    label var historical_owner_name_3      "Owner Name (Owner 3)"
+    label var historical_owner_name_4      "Owner Name (Owner 4)"
+    label var historical_owner_name_5      "Owner Name (Owner 5)"
+    label var historical_owner_name_6      "Owner Name (Owner 6)"
+    label var historical_owner_name_7      "Owner Name (Owner 7)"
+    label var historical_owner_name_8      "Owner Name (Owner 8)"
+    label var historical_owner_snl_instn_key_1 "Owner SNL Institution Key (Owner 1)"
+    label var historical_owner_snl_instn_key_2 "Owner SNL Institution Key (Owner 2)"
+    label var historical_owner_snl_instn_key_3 "Owner SNL Institution Key (Owner 3)"
+    label var historical_owner_snl_instn_key_4 "Owner SNL Institution Key (Owner 4)"
+    label var historical_owner_snl_instn_key_5 "Owner SNL Institution Key (Owner 5)"
+    label var historical_owner_snl_instn_key_6 "Owner SNL Institution Key (Owner 6)"
+    label var historical_owner_snl_instn_key_7 "Owner SNL Institution Key (Owner 7)"
+    label var historical_owner_snl_instn_key_8 "Owner SNL Institution Key (Owner 8)"
+    label var historical_owner_common_name_1 "Owner Common Name (Owner 1)"
+    label var historical_owner_common_name_2 "Owner Common Name (Owner 2)"
+    label var historical_owner_common_name_3 "Owner Common Name (Owner 3)"
+    label var historical_owner_common_name_4 "Owner Common Name (Owner 4)"
+    label var historical_owner_common_name_5 "Owner Common Name (Owner 5)"
+    label var historical_owner_common_name_6 "Owner Common Name (Owner 6)"
+    label var historical_owner_common_name_7 "Owner Common Name (Owner 7)"
+    label var historical_owner_common_name_8 "Owner Common Name (Owner 8)"
+    label var historical_owner_type_1      "Owner Type (Owner 1)"
+    label var historical_owner_type_2      "Owner Type (Owner 2)"
+    label var historical_owner_type_3      "Owner Type (Owner 3)"
+    label var historical_owner_type_4      "Owner Type (Owner 4)"
+    label var historical_owner_type_5      "Owner Type (Owner 5)"
+    label var historical_owner_type_6      "Owner Type (Owner 6)"
+    label var historical_owner_type_7      "Owner Type (Owner 7)"
+    label var historical_owner_type_8      "Owner Type (Owner 8)"
+
+    save "$dir_temp/property_details_6_1.dta", replace
+end
+
+program combine_property_details_6_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local years 2000/2022
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach year of numlist `years' {
+        foreach region of local regions {
+            local file_name "property_details_6_historical_ownership_details_2_`year'_`region'.xls"
+            if (fileexists("`file_name'")) {
+                display "Processing: `file_name'"
+                import excel "`file_name'", cellrange(A7) clear
+                gen year = `year'
+                tostring S-AH, replace
+                append using `temp_file'
+                save `temp_file', replace
+            }
+        }
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  historical_equity_own_pct_1
+    rename D  historical_equity_own_pct_2
+    rename E  historical_equity_own_pct_3
+    rename F  historical_equity_own_pct_4
+    rename G  historical_equity_own_pct_5
+    rename H  historical_equity_own_pct_6
+    rename I  historical_equity_own_pct_7
+    rename J  historical_equity_own_pct_8
+    rename K  historical_controlling_own_pct_1
+    rename L  historical_controlling_own_pct_2
+    rename M  historical_controlling_own_pct_3
+    rename N  historical_controlling_own_pct_4
+    rename O  historical_controlling_own_pct_5
+    rename P  historical_controlling_own_pct_6
+    rename Q  historical_controlling_own_pct_7
+    rename R  historical_controlling_own_pct_8
+    rename S  historical_owner_hq_1
+    rename T  historical_owner_hq_2
+    rename U  historical_owner_hq_3
+    rename V  historical_owner_hq_4
+    rename W  historical_owner_hq_5
+    rename X  historical_owner_hq_6
+    rename Y  historical_owner_hq_7
+    rename Z  historical_owner_hq_8
+    rename AA historical_owner_country_1
+    rename AB historical_owner_country_2
+    rename AC historical_owner_country_3
+    rename AD historical_owner_country_4
+    rename AE historical_owner_country_5
+    rename AF historical_owner_country_6
+    rename AG historical_owner_country_7
+    rename AH historical_owner_country_8
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var year                          "Year of historical ownership details"
+    label var historical_equity_own_pct_1  "Historical Equity Ownership Percent (Owner 1)"
+    label var historical_equity_own_pct_2  "Historical Equity Ownership Percent (Owner 2)"
+    label var historical_equity_own_pct_3  "Historical Equity Ownership Percent (Owner 3)"
+    label var historical_equity_own_pct_4  "Historical Equity Ownership Percent (Owner 4)"
+    label var historical_equity_own_pct_5  "Historical Equity Ownership Percent (Owner 5)"
+    label var historical_equity_own_pct_6  "Historical Equity Ownership Percent (Owner 6)"
+    label var historical_equity_own_pct_7  "Historical Equity Ownership Percent (Owner 7)"
+    label var historical_equity_own_pct_8  "Historical Equity Ownership Percent (Owner 8)"
+    label var historical_controlling_own_pct_1 "Historical Controlling Ownership Percent (Owner 1)"
+    label var historical_controlling_own_pct_2 "Historical Controlling Ownership Percent (Owner 2)"
+    label var historical_controlling_own_pct_3 "Historical Controlling Ownership Percent (Owner 3)"
+    label var historical_controlling_own_pct_4 "Historical Controlling Ownership Percent (Owner 4)"
+    label var historical_controlling_own_pct_5 "Historical Controlling Ownership Percent (Owner 5)"
+    label var historical_controlling_own_pct_6 "Historical Controlling Ownership Percent (Owner 6)"
+    label var historical_controlling_own_pct_7 "Historical Controlling Ownership Percent (Owner 7)"
+    label var historical_controlling_own_pct_8 "Historical Controlling Ownership Percent (Owner 8)"
+    label var historical_owner_hq_1        "Owner HQ (Owner 1)"
+    label var historical_owner_hq_2        "Owner HQ (Owner 2)"
+    label var historical_owner_hq_3        "Owner HQ (Owner 3)"
+    label var historical_owner_hq_4        "Owner HQ (Owner 4)"
+    label var historical_owner_hq_5        "Owner HQ (Owner 5)"
+    label var historical_owner_hq_6        "Owner HQ (Owner 6)"
+    label var historical_owner_hq_7        "Owner HQ (Owner 7)"
+    label var historical_owner_hq_8        "Owner HQ (Owner 8)"
+    label var historical_owner_country_1   "Owner Country/Region (Owner 1)"
+    label var historical_owner_country_2   "Owner Country/Region (Owner 2)"
+    label var historical_owner_country_3   "Owner Country/Region (Owner 3)"
+    label var historical_owner_country_4   "Owner Country/Region (Owner 4)"
+    label var historical_owner_country_5   "Owner Country/Region (Owner 5)"
+    label var historical_owner_country_6   "Owner Country/Region (Owner 6)"
+    label var historical_owner_country_7   "Owner Country/Region (Owner 7)"
+    label var historical_owner_country_8   "Owner Country/Region (Owner 8)"
+
+    save "$dir_temp/property_details_6_2.dta", replace
+end
+
+program combine_property_details_7_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_7_royalty_details_1_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-L W-AF, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  royalty_name_1
+    rename D  royalty_name_2
+    rename E  royalty_name_3
+    rename F  royalty_name_4
+    rename G  royalty_name_5
+    rename H  royalty_name_6
+    rename I  royalty_name_7
+    rename J  royalty_name_8
+    rename K  royalty_name_9
+    rename L  royalty_name_10
+    rename M  royalty_snl_instn_key_1
+    rename N  royalty_snl_instn_key_2
+    rename O  royalty_snl_instn_key_3
+    rename P  royalty_snl_instn_key_4
+    rename Q  royalty_snl_instn_key_5
+    rename R  royalty_snl_instn_key_6
+    rename S  royalty_snl_instn_key_7
+    rename T  royalty_snl_instn_key_8
+    rename U  royalty_snl_instn_key_9
+    rename V  royalty_snl_instn_key_10
+    rename W  royalty_type_1
+    rename X  royalty_type_2
+    rename Y  royalty_type_3
+    rename Z  royalty_type_4
+    rename AA royalty_type_5
+    rename AB royalty_type_6
+    rename AC royalty_type_7
+    rename AD royalty_type_8
+    rename AE royalty_type_9
+    rename AF royalty_type_10
+
+    * label variables
+    label var prop_name                 "Name of the mine or facility"
+    label var prop_id                   "Unique key for the project"
+    label var royalty_name_1            "Royalty Name (Royalty 1)"
+    label var royalty_name_2            "Royalty Name (Royalty 2)"
+    label var royalty_name_3            "Royalty Name (Royalty 3)"
+    label var royalty_name_4            "Royalty Name (Royalty 4)"
+    label var royalty_name_5            "Royalty Name (Royalty 5)"
+    label var royalty_name_6            "Royalty Name (Royalty 6)"
+    label var royalty_name_7            "Royalty Name (Royalty 7)"
+    label var royalty_name_8            "Royalty Name (Royalty 8)"
+    label var royalty_name_9            "Royalty Name (Royalty 9)"
+    label var royalty_name_10           "Royalty Name (Royalty 10)"
+    label var royalty_snl_instn_key_1   "Royalty SNL Institution Key (Royalty 1)"
+    label var royalty_snl_instn_key_2   "Royalty SNL Institution Key (Royalty 2)"
+    label var royalty_snl_instn_key_3   "Royalty SNL Institution Key (Royalty 3)"
+    label var royalty_snl_instn_key_4   "Royalty SNL Institution Key (Royalty 4)"
+    label var royalty_snl_instn_key_5   "Royalty SNL Institution Key (Royalty 5)"
+    label var royalty_snl_instn_key_6   "Royalty SNL Institution Key (Royalty 6)"
+    label var royalty_snl_instn_key_7   "Royalty SNL Institution Key (Royalty 7)"
+    label var royalty_snl_instn_key_8   "Royalty SNL Institution Key (Royalty 8)"
+    label var royalty_snl_instn_key_9   "Royalty SNL Institution Key (Royalty 9)"
+    label var royalty_snl_instn_key_10  "Royalty SNL Institution Key (Royalty 10)"
+    label var royalty_type_1            "Royalty Type (Royalty 1)"
+    label var royalty_type_2            "Royalty Type (Royalty 2)"
+    label var royalty_type_3            "Royalty Type (Royalty 3)"
+    label var royalty_type_4            "Royalty Type (Royalty 4)"
+    label var royalty_type_5            "Royalty Type (Royalty 5)"
+    label var royalty_type_6            "Royalty Type (Royalty 6)"
+    label var royalty_type_7            "Royalty Type (Royalty 7)"
+    label var royalty_type_8            "Royalty Type (Royalty 8)"
+    label var royalty_type_9            "Royalty Type (Royalty 9)"
+    label var royalty_type_10           "Royalty Type (Royalty 10)"
+
+    save "$dir_temp/property_details_7_1.dta", replace
+end
+
+program combine_property_details_7_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_7_royalty_details_2_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring M-AF, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  royalty_pct_1
+    rename D  royalty_pct_2
+    rename E  royalty_pct_3
+    rename F  royalty_pct_4
+    rename G  royalty_pct_5
+    rename H  royalty_pct_6
+    rename I  royalty_pct_7
+    rename J  royalty_pct_8
+    rename K  royalty_pct_9
+    rename L  royalty_pct_10
+    rename M  royalty_holder_hq_1
+    rename N  royalty_holder_hq_2
+    rename O  royalty_holder_hq_3
+    rename P  royalty_holder_hq_4
+    rename Q  royalty_holder_hq_5
+    rename R  royalty_holder_hq_6
+    rename S  royalty_holder_hq_7
+    rename T  royalty_holder_hq_8
+    rename U  royalty_holder_hq_9
+    rename V  royalty_holder_hq_10
+    rename W  royalty_holder_country_1
+    rename X  royalty_holder_country_2
+    rename Y  royalty_holder_country_3
+    rename Z  royalty_holder_country_4
+    rename AA royalty_holder_country_5
+    rename AB royalty_holder_country_6
+    rename AC royalty_holder_country_7
+    rename AD royalty_holder_country_8
+    rename AE royalty_holder_country_9
+    rename AF royalty_holder_country_10
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var royalty_pct_1                 "Royalty Percent (Royalty 1)"
+    label var royalty_pct_2                 "Royalty Percent (Royalty 2)"
+    label var royalty_pct_3                 "Royalty Percent (Royalty 3)"
+    label var royalty_pct_4                 "Royalty Percent (Royalty 4)"
+    label var royalty_pct_5                 "Royalty Percent (Royalty 5)"
+    label var royalty_pct_6                 "Royalty Percent (Royalty 6)"
+    label var royalty_pct_7                 "Royalty Percent (Royalty 7)"
+    label var royalty_pct_8                 "Royalty Percent (Royalty 8)"
+    label var royalty_pct_9                 "Royalty Percent (Royalty 9)"
+    label var royalty_pct_10                "Royalty Percent (Royalty 10)"
+    label var royalty_holder_hq_1           "Royalty Holder HQ (Royalty 1)"
+    label var royalty_holder_hq_2           "Royalty Holder HQ (Royalty 2)"
+    label var royalty_holder_hq_3           "Royalty Holder HQ (Royalty 3)"
+    label var royalty_holder_hq_4           "Royalty Holder HQ (Royalty 4)"
+    label var royalty_holder_hq_5           "Royalty Holder HQ (Royalty 5)"
+    label var royalty_holder_hq_6           "Royalty Holder HQ (Royalty 6)"
+    label var royalty_holder_hq_7           "Royalty Holder HQ (Royalty 7)"
+    label var royalty_holder_hq_8           "Royalty Holder HQ (Royalty 8)"
+    label var royalty_holder_hq_9           "Royalty Holder HQ (Royalty 9)"
+    label var royalty_holder_hq_10          "Royalty Holder HQ (Royalty 10)"
+    label var royalty_holder_country_1      "Royalty Holder Country/Region (Royalty 1)"
+    label var royalty_holder_country_2      "Royalty Holder Country/Region (Royalty 2)"
+    label var royalty_holder_country_3      "Royalty Holder Country/Region (Royalty 3)"
+    label var royalty_holder_country_4      "Royalty Holder Country/Region (Royalty 4)"
+    label var royalty_holder_country_5      "Royalty Holder Country/Region (Royalty 5)"
+    label var royalty_holder_country_6      "Royalty Holder Country/Region (Royalty 6)"
+    label var royalty_holder_country_7      "Royalty Holder Country/Region (Royalty 7)"
+    label var royalty_holder_country_8      "Royalty Holder Country/Region (Royalty 8)"
+    label var royalty_holder_country_9      "Royalty Holder Country/Region (Royalty 9)"
+    label var royalty_holder_country_10     "Royalty Holder Country/Region (Royalty 10)"
+
+    save "$dir_temp/property_details_7_2.dta", replace
+end
+
+program combine_property_details_7_3
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_7_royalty_details_3_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-AF, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  royalty_holder_global_region_1
+    rename D  royalty_holder_global_region_2
+    rename E  royalty_holder_global_region_3
+    rename F  royalty_holder_global_region_4
+    rename G  royalty_holder_global_region_5
+    rename H  royalty_holder_global_region_6
+    rename I  royalty_holder_global_region_7
+    rename J  royalty_holder_global_region_8
+    rename K  royalty_holder_global_region_9
+    rename L  royalty_holder_global_region_10
+    rename M  royalty_holder_phone_1
+    rename N  royalty_holder_phone_2
+    rename O  royalty_holder_phone_3
+    rename P  royalty_holder_phone_4
+    rename Q  royalty_holder_phone_5
+    rename R  royalty_holder_phone_6
+    rename S  royalty_holder_phone_7
+    rename T  royalty_holder_phone_8
+    rename U  royalty_holder_phone_9
+    rename V  royalty_holder_phone_10
+    rename W  royalty_holder_website_1
+    rename X  royalty_holder_website_2
+    rename Y  royalty_holder_website_3
+    rename Z  royalty_holder_website_4
+    rename AA royalty_holder_website_5
+    rename AB royalty_holder_website_6
+    rename AC royalty_holder_website_7
+    rename AD royalty_holder_website_8
+    rename AE royalty_holder_website_9
+    rename AF royalty_holder_website_10
+
+    * label variables
+    label var prop_name                     "Name of the mine or facility"
+    label var prop_id                       "Unique key for the project"
+    label var royalty_holder_global_region_1 "Royalty Holder Global Region (Royalty 1)"
+    label var royalty_holder_global_region_2 "Royalty Holder Global Region (Royalty 2)"
+    label var royalty_holder_global_region_3 "Royalty Holder Global Region (Royalty 3)"
+    label var royalty_holder_global_region_4 "Royalty Holder Global Region (Royalty 4)"
+    label var royalty_holder_global_region_5 "Royalty Holder Global Region (Royalty 5)"
+    label var royalty_holder_global_region_6 "Royalty Holder Global Region (Royalty 6)"
+    label var royalty_holder_global_region_7 "Royalty Holder Global Region (Royalty 7)"
+    label var royalty_holder_global_region_8 "Royalty Holder Global Region (Royalty 8)"
+    label var royalty_holder_global_region_9 "Royalty Holder Global Region (Royalty 9)"
+    label var royalty_holder_global_region_10 "Royalty Holder Global Region (Royalty 10)"
+    label var royalty_holder_phone_1        "Royalty Holder Phone (Royalty 1)"
+    label var royalty_holder_phone_2        "Royalty Holder Phone (Royalty 2)"
+    label var royalty_holder_phone_3        "Royalty Holder Phone (Royalty 3)"
+    label var royalty_holder_phone_4        "Royalty Holder Phone (Royalty 4)"
+    label var royalty_holder_phone_5        "Royalty Holder Phone (Royalty 5)"
+    label var royalty_holder_phone_6        "Royalty Holder Phone (Royalty 6)"
+    label var royalty_holder_phone_7        "Royalty Holder Phone (Royalty 7)"
+    label var royalty_holder_phone_8        "Royalty Holder Phone (Royalty 8)"
+    label var royalty_holder_phone_9        "Royalty Holder Phone (Royalty 9)"
+    label var royalty_holder_phone_10       "Royalty Holder Phone (Royalty 10)"
+    label var royalty_holder_website_1      "Royalty Holder Website (Royalty 1)"
+    label var royalty_holder_website_2      "Royalty Holder Website (Royalty 2)"
+    label var royalty_holder_website_3      "Royalty Holder Website (Royalty 3)"
+    label var royalty_holder_website_4      "Royalty Holder Website (Royalty 4)"
+    label var royalty_holder_website_5      "Royalty Holder Website (Royalty 5)"
+    label var royalty_holder_website_6      "Royalty Holder Website (Royalty 6)"
+    label var royalty_holder_website_7      "Royalty Holder Website (Royalty 7)"
+    label var royalty_holder_website_8      "Royalty Holder Website (Royalty 8)"
+    label var royalty_holder_website_9      "Royalty Holder Website (Royalty 9)"
+    label var royalty_holder_website_10     "Royalty Holder Website (Royalty 10)"
+
+    save "$dir_temp/property_details_7_3.dta", replace
+end
+
