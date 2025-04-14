@@ -53,22 +53,31 @@ program main
     combine_property_details_7_1
     combine_property_details_7_2
     combine_property_details_7_3
-    
+    combine_property_details_8
+    combine_property_details_9_1
+    combine_property_details_9_2
+    combine_property_details_9_3
+    combine_property_details_9_4
+    combine_property_details_9_5
 end
 
 **** property details ****
 program combine_property_details_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    local property_details_1 "property_details_1_general_info_commodities_location_AsiaPacific.xls property_details_1_general_info_commodities_location_EuropeMiddleEast.xls property_details_1_general_info_commodities_location_LatinAmerica.xls property_details_1_general_info_commodities_location_USCanada.xls"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    import excel "property_details_1_general_info_commodities_location_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_1.dta", replace
-
-    foreach file of local property_details_1 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_1.dta"
-        save "$dir_temp/property_details_1.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_1_general_info_commodities_location_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -141,21 +150,23 @@ program combine_property_details_1
 
     save "$dir_temp/property_details_1.dta", replace
 end
-
 program combine_property_details_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    local property_details_2 "property_details_2_coal_AsiaPacific.xls property_details_2_coal_EuropeMiddleEast.xls property_details_2_coal_LatinAmerica.xls property_details_2_coal_USCanada.xls"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    import excel "property_details_2_coal_Africa.xls", cellrange(A7) clear
-    keep A B C D E F G H I J K
-    save "$dir_temp/property_details_2.dta", replace
-
-    foreach file of local property_details_2 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        keep A B C D E F G H I J K
-        append using "$dir_temp/property_details_2.dta"
-        save "$dir_temp/property_details_2.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_2_coal_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            keep A-K
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -186,19 +197,22 @@ program combine_property_details_2
 
     save "$dir_temp/property_details_2.dta", replace
 end
-
 program combine_property_details_3_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    local property_details_3_1 "property_details_3_operator_1_AsiaPacific.xls property_details_3_operator_1_EuropeMiddleEast.xls property_details_3_operator_1_LatinAmerica.xls property_details_3_operator_1_USCanada.xls"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    import excel "property_details_3_operator_1_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_3_1.dta", replace
-
-    foreach file of local property_details_3_1 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_3_1.dta"
-        save "$dir_temp/property_details_3_1.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_3_operator_1_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -267,19 +281,22 @@ program combine_property_details_3_1
     
     save "$dir_temp/property_details_3_1.dta", replace
 end
-
 program combine_property_details_3_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    local property_details_3_2 "property_details_3_operator_2_AsiaPacific.xls property_details_3_operator_2_EuropeMiddleEast.xls property_details_3_operator_2_LatinAmerica.xls property_details_3_operator_2_USCanada.xls"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    import excel "property_details_3_operator_2_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_3_2.dta", replace
-
-    foreach file of local property_details_3_2 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_3_2.dta"
-        save "$dir_temp/property_details_3_2.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_3_operator_2_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -350,19 +367,22 @@ program combine_property_details_3_2
 
     save "$dir_temp/property_details_3_2.dta", replace
 end
-
 program combine_property_details_4
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    local property_details_4 "property_details_4_ownership_info_AsiaPacific.xls property_details_4_ownership_info_EuropeMiddleEast.xls property_details_4_ownership_info_LatinAmerica.xls property_details_4_ownership_info_USCanada.xls"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    import excel "property_details_4_ownership_info_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_4.dta", replace
-
-    foreach file of local property_details_4 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_4.dta"
-        save "$dir_temp/property_details_4.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_4_ownership_info_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -383,20 +403,23 @@ program combine_property_details_4
 
     save "$dir_temp/property_details_4.dta", replace
 end
-
 program combine_property_details_5_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    local property_details_5_1 "property_details_5_ownership_details_1_AsiaPacific.xls property_details_5_ownership_details_1_EuropeMiddleEast.xls property_details_5_ownership_details_1_LatinAmerica.xls property_details_5_ownership_details_1_USCanada.xls"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    import excel "property_details_5_ownership_details_1_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_1.dta", replace
-
-    foreach file of local property_details_5_1 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        tostring H I J X Y Z AF AG AH, replace
-        append using "$dir_temp/property_details_5_1.dta"
-        save "$dir_temp/property_details_5_1.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_1_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring H I J X Y Z AF AG AH, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -473,21 +496,23 @@ program combine_property_details_5_1
 
     save "$dir_temp/property_details_5_1.dta", replace
 end
-
 program combine_property_details_5_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    local property_details_5_2 "property_details_5_ownership_details_2_AsiaPacific.xls property_details_5_ownership_details_2_EuropeMiddleEast.xls property_details_5_ownership_details_2_LatinAmerica.xls property_details_5_ownership_details_2_USCanada.xls"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    import excel "property_details_5_ownership_details_2_Africa.xls", cellrange(A7) clear
-    tostring H I J AE AF AG AH, replace
-    save "$dir_temp/property_details_5_2.dta", replace
-
-    foreach file of local property_details_5_2 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        tostring H I J AE AF AG AH, replace
-        append using "$dir_temp/property_details_5_2.dta"
-        save "$dir_temp/property_details_5_2.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_2_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring H I J AE AF AG AH, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -564,20 +589,23 @@ program combine_property_details_5_2
 
     save "$dir_temp/property_details_5_2.dta", replace
 end
-
 program combine_property_details_5_3
-    local property_details_5_3 "property_details_5_ownership_details_3_AsiaPacific.xls property_details_5_ownership_details_3_EuropeMiddleEast.xls property_details_5_ownership_details_3_LatinAmerica.xls property_details_5_ownership_details_3_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_3_Africa.xls", cellrange(A7) clear
-    tostring C-AH, replace
-    save "$dir_temp/property_details_5_3.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_3 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        tostring C-AH, replace
-        append using "$dir_temp/property_details_5_3.dta"
-        save "$dir_temp/property_details_5_3.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_3_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-AH, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -655,20 +683,23 @@ program combine_property_details_5_3
     save "$dir_temp/property_details_5_3.dta", replace
 
 end
-
 program combine_property_details_5_4
-    local property_details_5_4 "property_details_5_ownership_details_4_AsiaPacific.xls property_details_5_ownership_details_4_EuropeMiddleEast.xls property_details_5_ownership_details_4_LatinAmerica.xls property_details_5_ownership_details_4_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_4_Africa.xls", cellrange(A7) clear
-    tostring C-AH, replace
-    save "$dir_temp/property_details_5_4.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_4 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        tostring C-AH, replace
-        append using "$dir_temp/property_details_5_4.dta"
-        save "$dir_temp/property_details_5_4.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_4_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-AH, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -745,22 +776,22 @@ program combine_property_details_5_4
 
     save "$dir_temp/property_details_5_4.dta", replace
 end
-
 program combine_property_details_5_5
-    local property_details_5_5 "property_details_5_ownership_details_5_AsiaPacific.xls property_details_5_ownership_details_5_EuropeMiddleEast.xls property_details_5_ownership_details_5_LatinAmerica.xls property_details_5_ownership_details_5_USCanada.xls"
-
-    import excel "property_details_5_ownership_details_5_Africa.xls", cellrange(A7) clear
-    tostring C-AH, replace
-    save "$dir_temp/property_details_5_5.dta", replace
-
-    foreach file of local property_details_5_5 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        tostring C-AH, replace
-        append using "$dir_temp/property_details_5_5.dta"
-        save "$dir_temp/property_details_5_5.dta", replace
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_5_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-AH, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
-
     * rename variables
     rename A  prop_name
     rename B  prop_id
@@ -796,7 +827,6 @@ program combine_property_details_5_5
     rename AF owner_website_6
     rename AG owner_website_7
     rename AH owner_website_8
-
     * label variables
     label var prop_name                 "Name of the mine or facility"
     label var prop_id                   "Unique key for the project"
@@ -835,19 +865,24 @@ program combine_property_details_5_5
 
     save "$dir_temp/property_details_5_5.dta", replace
 end
-
 program combine_property_details_5_6
-    local property_details_5_6 "property_details_5_ownership_details_6_AsiaPacific.xls property_details_5_ownership_details_6_EuropeMiddleEast.xls property_details_5_ownership_details_6_LatinAmerica.xls property_details_5_ownership_details_6_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_6_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_6.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_6 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_6.dta"
-        save "$dir_temp/property_details_5_6.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_6_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
+    format C-J %tdnn/dd/CCYY //format date variables
 
     * rename variables
     rename A  prop_name
@@ -916,25 +951,29 @@ program combine_property_details_5_6
     label var owner_tev_2                   "Total enterprise value (Owner 2)"
     label var owner_tev_3                   "Total enterprise value (Owner 3)"
     label var owner_tev_4                   "Total enterprise value (Owner 4)"
-    label var owner_tev_5                   "Total enterprise value (Owner 5)"
-    label var owner_tev_6                   "Total enterprise value (Owner 6)"
-    label var owner_tev_7                   "Total enterprise value (Owner 7)"
+    label var owner_tev_5               "Total enterprise value (Owner 5)"
+    label var owner_tev_6               "Total enterprise value (Owner 6)"
+    label var owner_tev_7               "Total enterprise value (Owner 7)"
     label var owner_tev_8                   "Total enterprise value (Owner 8)"
 
     save "$dir_temp/property_details_5_6.dta", replace
 end
-
 program combine_property_details_5_7
-    local property_details_5_7 "property_details_5_ownership_details_7_AsiaPacific.xls property_details_5_ownership_details_7_EuropeMiddleEast.xls property_details_5_ownership_details_7_LatinAmerica.xls property_details_5_ownership_details_7_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_7_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_7.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_7 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_7.dta"
-        save "$dir_temp/property_details_5_7.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_7_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1004,26 +1043,31 @@ program combine_property_details_5_7
     label var owner_tev_to_ebitda_2         "TEV to EBITDA (Owner 2)"
     label var owner_tev_to_ebitda_3         "TEV to EBITDA (Owner 3)"
     label var owner_tev_to_ebitda_4         "TEV to EBITDA (Owner 4)"
-    label var owner_tev_to_ebitda_5         "TEV to EBITDA (Owner 5)"
-    label var owner_tev_to_ebitda_6         "TEV to EBITDA (Owner 6)"
-    label var owner_tev_to_ebitda_7         "TEV to EBITDA (Owner 7)"
-    label var owner_tev_to_ebitda_8         "TEV to EBITDA (Owner 8)"
+    label var owner_tev_to_ebitda_5     "TEV to EBITDA (Owner 5)"
+    label var owner_tev_to_ebitda_6     "TEV to EBITDA (Owner 6)"
+    label var owner_tev_to_ebitda_7     "TEV to EBITDA (Owner 7)"
+    label var owner_tev_to_ebitda_8     "TEV to EBITDA (Owner 8)"
 
     save "$dir_temp/property_details_5_7.dta", replace
 end
-
 program combine_property_details_5_8
-    local property_details_5_8 "property_details_5_ownership_details_8_AsiaPacific.xls property_details_5_ownership_details_8_EuropeMiddleEast.xls property_details_5_ownership_details_8_LatinAmerica.xls property_details_5_ownership_details_8_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_8_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_8.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_8 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_8.dta"
-        save "$dir_temp/property_details_5_8.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_8_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
+    format C-J %tdnn/dd/CCYY
 
     * rename variables
     rename A  prop_name
@@ -1099,18 +1143,22 @@ program combine_property_details_5_8
 
     save "$dir_temp/property_details_5_8.dta", replace
 end
-
 program combine_property_details_5_9
-    local property_details_5_9 "property_details_5_ownership_details_9_AsiaPacific.xls property_details_5_ownership_details_9_EuropeMiddleEast.xls property_details_5_ownership_details_9_LatinAmerica.xls property_details_5_ownership_details_9_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_9_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_9.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_9 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_9.dta"
-        save "$dir_temp/property_details_5_9.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_9_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1171,18 +1219,22 @@ program combine_property_details_5_9
 
     save "$dir_temp/property_details_5_9.dta", replace
 end
-
 program combine_property_details_5_10
-    local property_details_5_10 "property_details_5_ownership_details_10_AsiaPacific.xls property_details_5_ownership_details_10_EuropeMiddleEast.xls property_details_5_ownership_details_10_LatinAmerica.xls property_details_5_ownership_details_10_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_10_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_10.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_10 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_10.dta"
-        save "$dir_temp/property_details_5_10.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_10_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1259,18 +1311,22 @@ program combine_property_details_5_10
 
     save "$dir_temp/property_details_5_10.dta", replace
 end
-
 program combine_property_details_5_11
-    local property_details_5_11 "property_details_5_ownership_details_11_AsiaPacific.xls property_details_5_ownership_details_11_EuropeMiddleEast.xls property_details_5_ownership_details_11_LatinAmerica.xls property_details_5_ownership_details_11_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_11_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_11.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_11 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_11.dta"
-        save "$dir_temp/property_details_5_11.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_11_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1331,18 +1387,22 @@ program combine_property_details_5_11
 
     save "$dir_temp/property_details_5_11.dta", replace
 end
-
 program combine_property_details_5_12
-    local property_details_5_12 "property_details_5_ownership_details_12_AsiaPacific.xls property_details_5_ownership_details_12_EuropeMiddleEast.xls property_details_5_ownership_details_12_LatinAmerica.xls property_details_5_ownership_details_12_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_12_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_12.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_12 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_12.dta"
-        save "$dir_temp/property_details_5_12.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_12_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1419,18 +1479,22 @@ program combine_property_details_5_12
 
     save "$dir_temp/property_details_5_12.dta", replace
 end
-
 program combine_property_details_5_13
-    local property_details_5_13 "property_details_5_ownership_details_13_AsiaPacific.xls property_details_5_ownership_details_13_EuropeMiddleEast.xls property_details_5_ownership_details_13_LatinAmerica.xls property_details_5_ownership_details_13_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_13_Africa.xls", cellrange(A7) clear
-    save "$dir_temp/property_details_5_13.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_13 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        append using "$dir_temp/property_details_5_13.dta"
-        save "$dir_temp/property_details_5_13.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_13_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1507,20 +1571,23 @@ program combine_property_details_5_13
 
     save "$dir_temp/property_details_5_13.dta", replace
 end
-
 program combine_property_details_5_14
-    local property_details_5_14 "property_details_5_ownership_details_14_AsiaPacific.xls property_details_5_ownership_details_14_EuropeMiddleEast.xls property_details_5_ownership_details_14_LatinAmerica.xls property_details_5_ownership_details_14_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_14_Africa.xls", cellrange(A7) clear
-    tostring C-Z, replace
-    save "$dir_temp/property_details_5_14.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_14 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        tostring C-Z, replace
-        append using "$dir_temp/property_details_5_14.dta"
-        save "$dir_temp/property_details_5_14.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_14_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-Z, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1581,20 +1648,23 @@ program combine_property_details_5_14
 
     save "$dir_temp/property_details_5_14.dta", replace
 end
-
 program combine_property_details_5_15
-    local property_details_5_15 "property_details_5_ownership_details_15_AsiaPacific.xls property_details_5_ownership_details_15_EuropeMiddleEast.xls property_details_5_ownership_details_15_LatinAmerica.xls property_details_5_ownership_details_15_USCanada.xls"
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
-    import excel "property_details_5_ownership_details_15_Africa.xls", cellrange(A7) clear
-    tostring C-Z, replace
-    save "$dir_temp/property_details_5_15.dta", replace
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
 
-    foreach file of local property_details_5_15 {
-        display "Processing: `file'"
-        import excel "`file'", cellrange(A7) clear
-        tostring C-Z, replace
-        append using "$dir_temp/property_details_5_15.dta"
-        save "$dir_temp/property_details_5_15.dta", replace
+    foreach region of local regions {
+        local file_name "property_details_5_ownership_details_15_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-Z, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
     }
 
     * rename variables
@@ -1655,7 +1725,6 @@ program combine_property_details_5_15
 
     save "$dir_temp/property_details_5_15.dta", replace
 end
-
 program combine_property_details_6_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
     local years 2000/2022
@@ -1754,7 +1823,6 @@ program combine_property_details_6_1
 
     save "$dir_temp/property_details_6_1.dta", replace
 end
-
 program combine_property_details_6_2
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
     local years 2000/2022
@@ -1837,13 +1905,6 @@ program combine_property_details_6_2
     label var historical_owner_hq_1        "Owner HQ (Owner 1)"
     label var historical_owner_hq_2        "Owner HQ (Owner 2)"
     label var historical_owner_hq_3        "Owner HQ (Owner 3)"
-    label var historical_owner_hq_4        "Owner HQ (Owner 4)"
-    label var historical_owner_hq_5        "Owner HQ (Owner 5)"
-    label var historical_owner_hq_6        "Owner HQ (Owner 6)"
-    label var historical_owner_hq_7        "Owner HQ (Owner 7)"
-    label var historical_owner_hq_8        "Owner HQ (Owner 8)"
-    label var historical_owner_country_1   "Owner Country/Region (Owner 1)"
-    label var historical_owner_country_2   "Owner Country/Region (Owner 2)"
     label var historical_owner_country_3   "Owner Country/Region (Owner 3)"
     label var historical_owner_country_4   "Owner Country/Region (Owner 4)"
     label var historical_owner_country_5   "Owner Country/Region (Owner 5)"
@@ -1853,7 +1914,6 @@ program combine_property_details_6_2
 
     save "$dir_temp/property_details_6_2.dta", replace
 end
-
 program combine_property_details_7_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
@@ -1943,7 +2003,6 @@ program combine_property_details_7_1
 
     save "$dir_temp/property_details_7_1.dta", replace
 end
-
 program combine_property_details_7_2
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
@@ -2033,7 +2092,6 @@ program combine_property_details_7_2
 
     save "$dir_temp/property_details_7_2.dta", replace
 end
-
 program combine_property_details_7_3
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
@@ -2122,5 +2180,333 @@ program combine_property_details_7_3
     label var royalty_holder_website_10     "Royalty Holder Website (Royalty 10)"
 
     save "$dir_temp/property_details_7_3.dta", replace
+end
+program combine_property_details_8
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_8_location_claims_comments_history_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-J, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    * rename variables
+    rename A  prop_name
+    rename B  prop_id
+    rename C  location_comments
+    rename D  locale
+    rename E  district
+    rename F  description_claim
+    rename G  general_comments
+    rename H  full_work_history
+    rename I  enviro_comments
+    rename J  subcontractors
+
+    * label variables
+    label var prop_name             "Name of the mine or facility"
+    label var prop_id               "Unique key for the project"
+    label var location_comments     "Property location description"
+    label var locale                "General locale of a mining project"
+    label var district              "A district describing location"
+    label var description_claim     "Description of Claim"
+    label var general_comments      "General Comments"
+    label var full_work_history     "Full Work History"
+    label var enviro_comments       "Environmental Comments"
+    label var subcontractors        "Subcontractors"
+
+    save "$dir_temp/property_details_8.dta", replace
+end
+
+program combine_property_details_9_1
+    local regions "Africa LatinAmerica"
+    local roles "Assaying Assessment Blasting_and_explosives Contract_mining Contract_processing Data_management Development Drilling Engineering_procurement_and_construction_management Environmental Expansion_Assessment Exploration Feasibility_study General Geophysics Geotechnical Grade_control_and_reconciliation Hydrological Independent_project_review Infrastructure_and_construction Metallurgical Mine_design_planning_and_engineering Mine_development Mining Mining_fleet Operator Optimization Prefeasibility_study Processing_design_planning_and_engineering Quality_assurance_and_quality_control Remediation Remote_location_support Resources_estimation_and_modeling Risk_management Scoping_study_and_preliminary_economic_assessment Social_impact Tailings_and_waste_management Transportation_and_shipping"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_9_contractor1_ID_name_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring AO-BZ, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name             "Name of the mine or facility"
+    label var prop_id               "Unique key for the project"
+
+    * contractor_id columns
+    unab vars : C-AN
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "contractor_id_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor ID (Role: `role')"
+
+        local ++i
+    }
+    
+    * contractor_name columns
+    unab vars : AO-BZ
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "contractor_name_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor name (Role: `role')"
+
+        local ++i
+    }
+
+    save "$dir_temp/property_details_9_1.dta", replace
+end
+
+program combine_property_details_9_2
+    local regions "Africa LatinAmerica"
+    local roles "Assaying Assessment Blasting_and_explosives Contract_mining Contract_processing Data_management Development Drilling Engineering_procurement_and_construction_management Environmental Expansion_Assessment Exploration Feasibility_study General Geophysics Geotechnical Grade_control_and_reconciliation Hydrological Independent_project_review Infrastructure_and_construction Metallurgical Mine_design_planning_and_engineering Mine_development Mining Mining_fleet Operator Optimization Prefeasibility_study Processing_design_planning_and_engineering Quality_assurance_and_quality_control Remediation Remote_location_support Resources_estimation_and_modeling Risk_management Scoping_study_and_preliminary_economic_assessment Social_impact Tailings_and_waste_management Transportation_and_shipping"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_9_contractor1_HQ_verified_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-AN, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * contractor_hq columns
+    unab vars : C-AN
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "contractor_hq_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor HQ country (`role')"
+
+        local ++i
+    }
+
+    * contractor_last_verified columns
+    unab vars : AO-BZ
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "contractor_verified_`=lower("`role'")'" // shortened to fit
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        format `shortname' %tdnn/dd/CCYY
+        label var `shortname' "Contractor last verified date (`role')"
+        local ++i
+    }
+
+    save "$dir_temp/property_details_9_2.dta", replace
+end
+
+program combine_property_details_9_3
+    local regions "Africa LatinAmerica"
+    local roles "Assaying Assessment Blasting_and_explosives Contract_mining Contract_processing Data_management Development Drilling Engineering_procurement_and_construction_management Environmental Expansion_Assessment Exploration Feasibility_study General Geophysics Geotechnical Grade_control_and_reconciliation Hydrological Independent_project_review Infrastructure_and_construction Metallurgical Mine_design_planning_and_engineering Mine_development Mining Mining_fleet Operator Optimization Prefeasibility_study Processing_design_planning_and_engineering Quality_assurance_and_quality_control Remediation Remote_location_support Resources_estimation_and_modeling Risk_management Scoping_study_and_preliminary_economic_assessment Social_impact Tailings_and_waste_management Transportation_and_shipping"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_9_contractor1_begin_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * contractor_begin_year columns
+    unab vars : C-AN
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "begin_yr_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor begin year (`role')"
+
+        local ++i
+    }
+
+    * contractor_begin_month columns
+    unab vars : AO-BZ
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "begin_mo_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor begin month (`role')"
+
+        local ++i
+    }
+
+    save "$dir_temp/property_details_9_3.dta", replace
+end
+
+program combine_property_details_9_4
+    local regions "Africa LatinAmerica"
+    local roles "Assaying Assessment Blasting_and_explosives Contract_mining Contract_processing Data_management Development Drilling Engineering_procurement_and_construction_management Environmental Expansion_Assessment Exploration Feasibility_study General Geophysics Geotechnical Grade_control_and_reconciliation Hydrological Independent_project_review Infrastructure_and_construction Metallurgical Mine_design_planning_and_engineering Mine_development Mining Mining_fleet Operator Optimization Prefeasibility_study Processing_design_planning_and_engineering Quality_assurance_and_quality_control Remediation Remote_location_support Resources_estimation_and_modeling Risk_management Scoping_study_and_preliminary_economic_assessment Social_impact Tailings_and_waste_management Transportation_and_shipping"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_9_contractor1_end_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * contractor_end_year columns
+    unab vars : C-AN
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "end_yr_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor end year (`role')"
+
+        local ++i
+    }
+
+    * contractor_projected_end_month columns
+    unab vars : AO-BZ
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "proj_end_mo_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor projected end month (`role')"
+
+        local ++i
+    }
+
+    save "$dir_temp/property_details_9_4.dta", replace
+end
+
+program combine_property_details_9_5
+    local regions "Africa LatinAmerica"
+    local roles "Assaying Assessment Blasting_and_explosives Contract_mining Contract_processing Data_management Development Drilling Engineering_procurement_and_construction_management Environmental Expansion_Assessment Exploration Feasibility_study General Geophysics Geotechnical Grade_control_and_reconciliation Hydrological Independent_project_review Infrastructure_and_construction Metallurgical Mine_design_planning_and_engineering Mine_development Mining Mining_fleet Operator Optimization Prefeasibility_study Processing_design_planning_and_engineering Quality_assurance_and_quality_control Remediation Remote_location_support Resources_estimation_and_modeling Risk_management Scoping_study_and_preliminary_economic_assessment Social_impact Tailings_and_waste_management Transportation_and_shipping"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_9_contractor1_projected_end_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * contractor_projected_end_year columns
+    unab vars : C-AN
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "proj_end_yr_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor projected end year (`role')"
+
+        local ++i
+    }
+
+    * contractor_projected_end_month columns
+    unab vars : AO-BZ
+    local i = 1
+    foreach oldname of local vars {
+        local role : word `i' of `roles'
+        local newname = "proj_end_mo_`=lower("`role'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Contractor projected end month (`role')"
+
+        local ++i
+    }
+
+    save "$dir_temp/property_details_9_5.dta", replace
 end
 
