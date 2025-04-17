@@ -1,7 +1,7 @@
 **** construct property level cross-section data ****
 **** notes ****
 * some string variables should be converted to numeric
-* this script is for appending each property details data
+* this script appends each property details data
 * historical data is year data, but should be separately treated from time-invariant info
 **** environment ****
 clear all
@@ -59,11 +59,15 @@ program main
     combine_property_details_9_3
     combine_property_details_9_4
     combine_property_details_9_5
+    combine_property_details_10_1
+    combine_property_details_10_2
+    combine_property_details_10_3
+    combine_property_details_11_1
+    combine_property_details_11_2
 end
 
 **** property details ****
 program combine_property_details_1
-    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
     clear
     tempname temp_file
@@ -2510,3 +2514,272 @@ program combine_property_details_9_5
     save "$dir_temp/property_details_9_5.dta", replace
 end
 
+program combine_property_details_10_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_10_mine_econ_primary_power_source_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "mine_primary_power_source_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist mine_primary_power_source_2023-mine_primary_power_source_1991 {
+        label var `var' "Primary power source of a mine (`year')"
+        local year = `year' - 1
+    }
+
+    save "$dir_temp/property_details_10_1.dta", replace
+end
+
+program combine_property_details_10_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_10_mine_econ_secondary_power_source_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-AI, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "mine_secondary_power_source_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist mine_secondary_power_source_2023-mine_secondary_power_source_1991 {
+        label var `var' "Secondary power source of a mine (`year')"
+        local year = `year' - 1
+    }
+
+    save "$dir_temp/property_details_10_2.dta", replace
+end
+
+program combine_property_details_10_3
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_10_mine_econ_tertiary_power_source_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring C-AI, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "mine_tertiary_power_source_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist mine_tertiary_power_source_2023-mine_tertiary_power_source_1991 {
+        label var `var' "Tertiary power source of a mine (`year')"
+        local year = `year' - 1
+    }
+
+    save "$dir_temp/property_details_10_3.dta", replace
+end
+
+program combine_property_details_11_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_11_risk_scores_1_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            destring C-P, replace force
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A prop_name
+    rename B prop_id
+
+    label var prop_name             "Name of the mine or facility"
+    label var prop_id               "Unique key for the project"
+
+    * Rename variables for current and prior risk scores and levels
+    local categories "political economic social technological environmental legal operational security"
+    
+    unab vars : C-R
+    local i = 1
+
+    foreach cat of local categories {
+        local current : word `i' of `vars'
+        local ++i
+        local prior : word `i' of `vars'
+
+        rename `current' current_score_`cat'
+        label variable current_score_`cat' "Current country risk score (`cat')"
+
+        rename `prior' prior_score_`cat'
+        label variable prior_score_`cat' "Prior country risk score (`cat')"
+
+        local ++i
+    }
+
+    unab vars : S-AD
+    local i = 1
+
+    foreach cat of local categories {
+        local current : word `i' of `vars'
+        local ++i
+        local prior : word `i' of `vars'
+
+        rename `current' current_level_`cat'
+        label variable current_level_`cat' "Current country risk level (`cat')"
+
+        rename `prior' prior_level_`cat'
+        label variable prior_level_`cat' "Prior country risk level (`cat')"
+
+        local ++i
+    }
+
+
+    save "$dir_temp/property_details_11_1.dta", replace
+end
+
+
+program combine_property_details_11_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "property_details_11_risk_scores_2_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A prop_name
+    rename B prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    local categories "political economic social technological environmental legal operational security"
+
+    * risk outlook
+    unab vars : C-I
+    local i = 1
+    foreach oldname of local vars {
+        local cat : word `i' of `categories'
+        local newname = "risk_outlook_`=lower("`cat'")'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Projection of country risk (`cat')"
+
+        local ++i
+    }
+
+    * risk summary
+    rename J current_risk_summary
+    rename K prior_risk_summary
+
+    label var current_risk_summary "Current country risk summary of qualitative factors"
+    label var prior_risk_summary "Prior country risk summary of qualitative factors"
+
+    * score as of date
+    unab vars : L-Y
+    local i = 1
+    foreach cat of local categories {
+        local current : word `i' of `vars'
+        local ++i
+        local prior : word `i' of `vars'
+
+        rename `current' current_score_date_`cat'
+        label variable current_score_date_`cat' "Date the current score was last updated (`cat')"
+
+        rename `prior' prior_score_date_`cat'
+        label variable prior_score_date_`cat' "Date the prior score was last updated (`cat')"
+
+        local ++i
+    }
+
+    * summary as of date
+    rename Z current_summary_date
+    rename AA prior_summary_date
+
+    label var current_summary_date "Date the current summary was last updated"
+    label var prior_summary_date   "Date the prior summary was last updated"
+
+    save "$dir_temp/property_details_11_2.dta", replace
+
+end
