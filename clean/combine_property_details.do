@@ -23,7 +23,10 @@ global output_company_level "$dir_cleaned/company_level"
 * intermediates
 global temp_property_level "$dir_temp/property_level"
 global temp_company_level "$dir_temp/company_level"
+global temp_prop_details "$dir_temp/property_details"
 
+
+************************************************************************
 cd "$input_metals_mining/properties_property_details"
 
 * roadmap
@@ -152,7 +155,7 @@ program combine_property_details_1
     label var coordinate_accuracy   "Accuracy of latitude and longitude"
     label var distance_from         "Distance from the nearest town"
 
-    save "$dir_temp/property_details_1.dta", replace
+    save "$temp_prop_details/property_details_1.dta", replace
 end
 program combine_property_details_2
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -199,7 +202,7 @@ program combine_property_details_2
     label var coal_rank_abbrev           "Abbreviated standard classifications of coals by rank, as defined by ASTM D-388"
     label var coal_group                 "Standard classifications of coals by rank, as defined by ASTM D-388"
 
-    save "$dir_temp/property_details_2.dta", replace
+    save "$temp_prop_details/property_details_2.dta", replace
 end
 program combine_property_details_3_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -283,7 +286,7 @@ program combine_property_details_3_1
     label var operator_postal_code          "Postal code or routing code for non-U.S. addresses"
     label var operator_global_region        "Name of the global region where the operator is located"    
     
-    save "$dir_temp/property_details_3_1.dta", replace
+    save "$temp_prop_details/property_details_3_1.dta", replace
 end
 program combine_property_details_3_2
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -369,7 +372,7 @@ program combine_property_details_3_2
     label var operator_chief_geologist_age       "Operator Chief Geologist's Age"
     label var operator_chief_geologist_bio       "Operator Chief Geologist's Biography"
 
-    save "$dir_temp/property_details_3_2.dta", replace
+    save "$temp_prop_details/property_details_3_2.dta", replace
 end
 program combine_property_details_4
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -405,7 +408,7 @@ program combine_property_details_4
     label var num_royalty_holders    "Number of royalties which are held against a mining project"
     label var royalty_holder_list    "A list of the project's current royalty holders, including percent of revenue"
 
-    save "$dir_temp/property_details_4.dta", replace
+    save "$temp_prop_details/property_details_4.dta", replace
 end
 program combine_property_details_5_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -498,7 +501,7 @@ program combine_property_details_5_1
     label var current_owner_comp_name_abbr_7   "Shortened version of the company's name (Owner 7)"
     label var current_owner_comp_name_abbr_8   "Shortened version of the company's name (Owner 8)"
 
-    save "$dir_temp/property_details_5_1.dta", replace
+    save "$temp_prop_details/property_details_5_1.dta", replace
 end
 program combine_property_details_5_2
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -591,7 +594,7 @@ program combine_property_details_5_2
     label var owner_hq_7                    "Headquarter city (Owner 7)"
     label var owner_hq_8                    "Headquarter city (Owner 8)"
 
-    save "$dir_temp/property_details_5_2.dta", replace
+    save "$temp_prop_details/property_details_5_2.dta", replace
 end
 program combine_property_details_5_3
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -684,7 +687,7 @@ program combine_property_details_5_3
     label var owner_state_7             "State postal code (Owner 7)"
     label var owner_state_8             "State postal code (Owner 8)"
 
-    save "$dir_temp/property_details_5_3.dta", replace
+    save "$temp_prop_details/property_details_5_3.dta", replace
 
 end
 program combine_property_details_5_4
@@ -778,7 +781,7 @@ program combine_property_details_5_4
     label var owner_zip_7                "U.S. Postal Service Zip Code (Owner 7)"
     label var owner_zip_8                "U.S. Postal Service Zip Code (Owner 8)"
 
-    save "$dir_temp/property_details_5_4.dta", replace
+    save "$temp_prop_details/property_details_5_4.dta", replace
 end
 program combine_property_details_5_5
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -867,7 +870,7 @@ program combine_property_details_5_5
     label var owner_website_7           "Owner website URL (Owner 7)"
     label var owner_website_8           "Owner website URL (Owner 8)"
 
-    save "$dir_temp/property_details_5_5.dta", replace
+    save "$temp_prop_details/property_details_5_5.dta", replace
 end
 program combine_property_details_5_6
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -960,7 +963,7 @@ program combine_property_details_5_6
     label var owner_tev_7               "Total enterprise value (Owner 7)"
     label var owner_tev_8                   "Total enterprise value (Owner 8)"
 
-    save "$dir_temp/property_details_5_6.dta", replace
+    save "$temp_prop_details/property_details_5_6.dta", replace
 end
 program combine_property_details_5_7
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1052,7 +1055,7 @@ program combine_property_details_5_7
     label var owner_tev_to_ebitda_7     "TEV to EBITDA (Owner 7)"
     label var owner_tev_to_ebitda_8     "TEV to EBITDA (Owner 8)"
 
-    save "$dir_temp/property_details_5_7.dta", replace
+    save "$temp_prop_details/property_details_5_7.dta", replace
 end
 program combine_property_details_5_8
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1145,7 +1148,7 @@ program combine_property_details_5_8
     label var owner_total_debt_7            "Total debt (Owner 7)"
     label var owner_total_debt_8            "Total debt (Owner 8)"
 
-    save "$dir_temp/property_details_5_8.dta", replace
+    save "$temp_prop_details/property_details_5_8.dta", replace
 end
 program combine_property_details_5_9
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1221,7 +1224,7 @@ program combine_property_details_5_9
     label var cash_and_equiv_most_recent_qtr_7 "Cash & cash equivalents - Most Recent Quarter (Owner 7)"
     label var cash_and_equiv_most_recent_qtr_8 "Cash & cash equivalents - Most Recent Quarter (Owner 8)"
 
-    save "$dir_temp/property_details_5_9.dta", replace
+    save "$temp_prop_details/property_details_5_9.dta", replace
 end
 program combine_property_details_5_10
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1313,7 +1316,7 @@ program combine_property_details_5_10
     label var app5b_cash_end_qtr_7          "App5B: Cash at End of Period - Most Recent Quarter (Owner 7)"
     label var app5b_cash_end_qtr_8          "App5B: Cash at End of Period - Most Recent Quarter (Owner 8)"
 
-    save "$dir_temp/property_details_5_10.dta", replace
+    save "$temp_prop_details/property_details_5_10.dta", replace
 end
 program combine_property_details_5_11
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1389,7 +1392,7 @@ program combine_property_details_5_11
     label var app5b_est_cf_next_qtr_7       "App5B: Est Cash Outflow, Next Qtr (Owner 7)"
     label var app5b_est_cf_next_qtr_8       "App5B: Est Cash Outflow, Next Qtr (Owner 8)"
 
-    save "$dir_temp/property_details_5_11.dta", replace
+    save "$temp_prop_details/property_details_5_11.dta", replace
 end
 program combine_property_details_5_12
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1481,7 +1484,7 @@ program combine_property_details_5_12
     label var net_oper_profit_tax_qtr_7     "Net Operating Profit After Tax - Most Recent Quarter (Owner 7)"
     label var net_oper_profit_tax_qtr_8     "Net Operating Profit After Tax - Most Recent Quarter (Owner 8)"
 
-    save "$dir_temp/property_details_5_12.dta", replace
+    save "$temp_prop_details/property_details_5_12.dta", replace
 end
 program combine_property_details_5_13
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1573,7 +1576,7 @@ program combine_property_details_5_13
     label var ebitda_qtr_7          "EBITDA - Most Recent Quarter (Owner 7)"
     label var ebitda_qtr_8          "EBITDA - Most Recent Quarter (Owner 8)"
 
-    save "$dir_temp/property_details_5_13.dta", replace
+    save "$temp_prop_details/property_details_5_13.dta", replace
 end
 program combine_property_details_5_14
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1650,7 +1653,7 @@ program combine_property_details_5_14
     label var owner_trading_symbol_exchange_7 "Trading Symbol & Exchange (Primary) (Owner 7)"
     label var owner_trading_symbol_exchange_8 "Trading Symbol & Exchange (Primary) (Owner 8)"
 
-    save "$dir_temp/property_details_5_14.dta", replace
+    save "$temp_prop_details/property_details_5_14.dta", replace
 end
 program combine_property_details_5_15
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1727,7 +1730,7 @@ program combine_property_details_5_15
     label var owner_trading_symbol_ex_second_7 "Trading Symbol & Exchange (Secondary) (Owner 7)"
     label var owner_trading_symbol_ex_second_8 "Trading Symbol & Exchange (Secondary) (Owner 8)"
 
-    save "$dir_temp/property_details_5_15.dta", replace
+    save "$temp_prop_details/property_details_5_15.dta", replace
 end
 program combine_property_details_6_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1825,7 +1828,7 @@ program combine_property_details_6_1
     label var historical_owner_type_7      "Owner Type (Owner 7)"
     label var historical_owner_type_8      "Owner Type (Owner 8)"
 
-    save "$dir_temp/property_details_6_1.dta", replace
+    save "$temp_prop_details/property_details_6_1.dta", replace
 end
 program combine_property_details_6_2
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -1916,7 +1919,7 @@ program combine_property_details_6_2
     label var historical_owner_country_7   "Owner Country/Region (Owner 7)"
     label var historical_owner_country_8   "Owner Country/Region (Owner 8)"
 
-    save "$dir_temp/property_details_6_2.dta", replace
+    save "$temp_prop_details/property_details_6_2.dta", replace
 end
 program combine_property_details_7_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -2005,7 +2008,7 @@ program combine_property_details_7_1
     label var royalty_type_9            "Royalty Type (Royalty 9)"
     label var royalty_type_10           "Royalty Type (Royalty 10)"
 
-    save "$dir_temp/property_details_7_1.dta", replace
+    save "$temp_prop_details/property_details_7_1.dta", replace
 end
 program combine_property_details_7_2
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -2094,7 +2097,7 @@ program combine_property_details_7_2
     label var royalty_holder_country_9      "Royalty Holder Country/Region (Royalty 9)"
     label var royalty_holder_country_10     "Royalty Holder Country/Region (Royalty 10)"
 
-    save "$dir_temp/property_details_7_2.dta", replace
+    save "$temp_prop_details/property_details_7_2.dta", replace
 end
 program combine_property_details_7_3
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -2183,7 +2186,7 @@ program combine_property_details_7_3
     label var royalty_holder_website_9      "Royalty Holder Website (Royalty 9)"
     label var royalty_holder_website_10     "Royalty Holder Website (Royalty 10)"
 
-    save "$dir_temp/property_details_7_3.dta", replace
+    save "$temp_prop_details/property_details_7_3.dta", replace
 end
 program combine_property_details_8
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -2228,7 +2231,7 @@ program combine_property_details_8
     label var enviro_comments       "Environmental Comments"
     label var subcontractors        "Subcontractors"
 
-    save "$dir_temp/property_details_8.dta", replace
+    save "$temp_prop_details/property_details_8.dta", replace
 end
 
 program combine_property_details_9_1
@@ -2285,7 +2288,7 @@ program combine_property_details_9_1
         local ++i
     }
 
-    save "$dir_temp/property_details_9_1.dta", replace
+    save "$temp_prop_details/property_details_9_1.dta", replace
 end
 
 program combine_property_details_9_2
@@ -2343,7 +2346,7 @@ program combine_property_details_9_2
         local ++i
     }
 
-    save "$dir_temp/property_details_9_2.dta", replace
+    save "$temp_prop_details/property_details_9_2.dta", replace
 end
 
 program combine_property_details_9_3
@@ -2399,7 +2402,7 @@ program combine_property_details_9_3
         local ++i
     }
 
-    save "$dir_temp/property_details_9_3.dta", replace
+    save "$temp_prop_details/property_details_9_3.dta", replace
 end
 
 program combine_property_details_9_4
@@ -2455,7 +2458,7 @@ program combine_property_details_9_4
         local ++i
     }
 
-    save "$dir_temp/property_details_9_4.dta", replace
+    save "$temp_prop_details/property_details_9_4.dta", replace
 end
 
 program combine_property_details_9_5
@@ -2511,7 +2514,7 @@ program combine_property_details_9_5
         local ++i
     }
 
-    save "$dir_temp/property_details_9_5.dta", replace
+    save "$temp_prop_details/property_details_9_5.dta", replace
 end
 
 program combine_property_details_10_1
@@ -2553,7 +2556,7 @@ program combine_property_details_10_1
         local year = `year' - 1
     }
 
-    save "$dir_temp/property_details_10_1.dta", replace
+    save "$temp_prop_details/property_details_10_1.dta", replace
 end
 
 program combine_property_details_10_2
@@ -2596,7 +2599,7 @@ program combine_property_details_10_2
         local year = `year' - 1
     }
 
-    save "$dir_temp/property_details_10_2.dta", replace
+    save "$temp_prop_details/property_details_10_2.dta", replace
 end
 
 program combine_property_details_10_3
@@ -2639,7 +2642,7 @@ program combine_property_details_10_3
         local year = `year' - 1
     }
 
-    save "$dir_temp/property_details_10_3.dta", replace
+    save "$temp_prop_details/property_details_10_3.dta", replace
 end
 
 program combine_property_details_11_1
@@ -2705,7 +2708,7 @@ program combine_property_details_11_1
     }
 
 
-    save "$dir_temp/property_details_11_1.dta", replace
+    save "$temp_prop_details/property_details_11_1.dta", replace
 end
 
 
@@ -2780,6 +2783,6 @@ program combine_property_details_11_2
     label var current_summary_date "Date the current summary was last updated"
     label var prior_summary_date   "Date the prior summary was last updated"
 
-    save "$dir_temp/property_details_11_2.dta", replace
+    save "$temp_prop_details/property_details_11_2.dta", replace
 
 end
