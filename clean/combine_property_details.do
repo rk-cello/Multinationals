@@ -23,7 +23,7 @@ global output_company_level "$dir_cleaned/company_level"
 * intermediates
 global temp_property_level "$dir_temp/property_level"
 global temp_company_level "$dir_temp/company_level"
-global temp_prop_details "$dir_temp/property_details"
+global temp_prop_details "$dir_temp/temp_prop_details"
 
 
 ************************************************************************
