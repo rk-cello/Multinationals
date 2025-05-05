@@ -656,3 +656,309 @@ program combine_production_2_6
 
     save "$temp_production/production_2_6.dta", replace
 end
+
+
+program combine_production_3_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_3_ore_production_costs_1_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            //tostring C-AI, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "mining_process_cost_per_t_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist mining_process_cost_per_t_2023-mining_process_cost_per_t_1991 {
+        label var `var' "Total per unit cost associated with mining and processing ore (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_3_1.dta", replace
+end
+
+
+program combine_production_3_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_3_ore_production_costs_2_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            //tostring C-AI, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "mining_process_cost_cubic_m_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist mining_process_cost_cubic_m_2023-mining_process_cost_cubic_m_1991 {
+        label var `var' "Total per unit cost associated with mining and processing ore (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_3_2.dta", replace
+end
+    
+
+program combine_production_3_3
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_3_ore_production_costs_3_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            //tostring C-AI, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "production_cost_comments_`year'" 
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist production_cost_comments_2023-production_cost_comments_1991 {
+        label var `var' "Comments expanding on or clarifying production cost data (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_3_3.dta", replace
+end
+
+
+program combine_production_3_4
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_3_ore_production_costs_4_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "ore_processed_mass_`year'" 
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist ore_processed_mass_2023-ore_processed_mass_1991 {
+        label var `var' "Quantity of material processed through the facility (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_3_4.dta", replace
+end
+
+
+program combine_production_3_5
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_3_ore_production_costs_5_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "ore_processed_volume_`year'" 
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist ore_processed_volume_2023-ore_processed_volume_1991 {
+        label var `var' "Quantity of material processed through the facility (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_3_5.dta", replace
+end
+
+
+program combine_production_3_6
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_3_ore_production_costs_6_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "mining_production_comments_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist mining_production_comments_2023-mining_production_comments_1991 {
+        label var `var' "General comments that apply to a mining processing facility (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_3_6.dta", replace
+end
+
+
+program combine_production_3_7
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_3_ore_production_costs_7_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "production_certainty_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist production_certainty_2023-production_certainty_1991 {
+        label var `var' "Production certainty (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_3_7.dta", replace
+end
+
+
