@@ -3,6 +3,7 @@
 * some string variables should be converted to numeric
 * this script appends each production data
 * historical data is year data, but should be separately treated from time-invariant info
+* same variable names are used for Ore, Commodity, etc. should be renamed to add prefix later
 **** environment ****
 clear all
 set more off
@@ -34,6 +35,18 @@ program main
     combine_production_1
     combine_production_2_1
     combine_production_2_2
+    combine_production_2_3
+    combine_production_2_4
+    combine_production_2_5
+    combine_production_2_6
+    combine_production_3_1
+    combine_production_3_2
+    combine_production_3_3
+    combine_production_3_4
+    combine_production_3_5
+    combine_production_3_6
+    combine_production_3_7
+    combine_production_3_8
 end
 
 
@@ -128,6 +141,8 @@ program combine_production_1
     save "$temp_production/production_1.dta", replace
 end
 
+
+**** Commodity Capacity *********************************
 
 program combine_production_2_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
@@ -658,6 +673,7 @@ program combine_production_2_6
 end
 
 
+**** Ore Production and Costs *********************************
 program combine_production_3_1
     local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
@@ -943,7 +959,7 @@ program combine_production_3_7
     * Rename variables for years 2023 to 1991
     local year = 2023
     foreach var of varlist C-AI {
-        local newname = "production_certainty_`year'"
+        local newname = "production_certainty_`year'" // shortened to fit
         rename `var' `newname'
         local year = `year' - 1
     }
@@ -959,6 +975,135 @@ program combine_production_3_7
     }
 
     save "$temp_production/production_3_7.dta", replace
+end
+
+
+**** Commodity Production and Costs *********************************
+program combine_production_4_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_actual_estimate_forecast_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    * Rename variables for years 2023 to 1991
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "production_certainty_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * Add labels for renamed variables
+    local year = 2023
+    foreach var of varlist production_certainty_2023-production_certainty_1991 {
+        label var `var' "Production certainty (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_4_1.dta", replace
+end
+
+
+program combine_production_4_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_all_costs_diamonds_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring B, replace
+            keep A-ED
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * cash cost
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "cash_cost_per_ct_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist cash_cost_per_ct_2023-cash_cost_per_ct_1991 {
+        label var `var' "Variable per unit cost associated with mining, processing, refining of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    * total production cost
+    local year = 2023
+    foreach var of varlist AJ-BP {
+        local newname = "total_prod_cost_per_ct_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist total_prod_cost_per_ct_2023-total_prod_cost_per_ct_1991 {
+        label var `var' "Variable per unit cost associated with production of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    * all-in sustaining cost
+    local year = 2023
+    foreach var of varlist BQ-CW {
+        local newname = "all_sustain_cost_ct_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist all_sustain_cost_ct_2023-all_sustain_cost_ct_1991 {
+        label var `var' "Total per unit cost associated with sustaining production levels of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    * all-in cost
+    local year = 2023
+    foreach var of varlist CX-ED {
+        local newname = "all_cost_ct_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist all_cost_ct_2023-all_cost_ct_1991 {
+        label var `var' "Total per unit cost associated with production of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_4_2.dta", replace
 end
 
 
