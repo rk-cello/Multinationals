@@ -46,7 +46,10 @@ program main
     combine_production_3_5
     combine_production_3_6
     combine_production_3_7
-    combine_production_3_8
+    combine_production_4_1
+    combine_production_4_2
+    combine_production_4_3
+    combine_production_4_4
 end
 
 
@@ -1106,4 +1109,858 @@ program combine_production_4_2
     save "$temp_production/production_4_2.dta", replace
 end
 
+program combine_production_4_3
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_all_costs_U3O8_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            keep A-ED
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * cash cost
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "cash_cost_per_lb_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist cash_cost_per_lb_2023-cash_cost_per_lb_1991 {
+        label var `var' "Variable per unit cost associated with mining, processing, refining of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    * total production cost
+    local year = 2023
+    foreach var of varlist AJ-BP {
+        local newname = "total_prod_cost_per_lb_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist total_prod_cost_per_lb_2023-total_prod_cost_per_lb_1991 {
+        label var `var' "Variable per unit cost associated with production of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    * all-in sustaining cost
+    local year = 2023
+    foreach var of varlist BQ-CW {
+        local newname = "all_sustain_cost_lb_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist all_sustain_cost_lb_2023-all_sustain_cost_lb_1991 {
+        label var `var' "Total per unit cost associated with sustaining production levels of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    * all-in cost
+    local year = 2023
+    foreach var of varlist CX-ED {
+        local newname = "all_cost_lb_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist all_cost_lb_2023-all_cost_lb_1991 {
+        label var `var' "Total per unit cost associated with production of commodity (`year')"
+        local year = `year' - 1
+    }
+
+    save "$temp_production/production_4_3.dta", replace
+end
+
+program combine_production_4_4
+    local regions "Africa EmergingAsiaPacific LatinAmerica"
+    local metals "cobalt copper ferromolybdenum ferronickel lead molybdenum nickel tin zinc"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_all_in_costs_base_metals_1991_2005_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * all in cost
+    local year = 2005
+    unab vars : C-K
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+    
+    local year = `year' - 1
+    unab vars : L-T
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : U-AC
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  AD-AL
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  AM-AU
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  AV-BD
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  BE-BM
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  BN-BV
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : BW-CE
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  CF-CN
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  CO-CW
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  CX-DF
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :   DG-DO
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :   DP-DX
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  DY-EG
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    save "$temp_production/production_4_4.dta", replace
+end
+
+
+program combine_production_4_5
+    local regions "Africa EmergingAsiaPacific LatinAmerica"
+    local metals "cobalt copper ferromolybdenum ferronickel lead molybdenum nickel tin zinc"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_all_in_costs_base_metals_2006_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-K
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+    
+    local year = `year' - 1
+    unab vars : L-T
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : U-AC
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  AD-AL
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  AM-AU
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  AV-BD
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  BE-BM
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  BN-BV
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : BW-CE
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  CF-CN
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  CO-CW
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  CX-DF
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :   DG-DO
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :   DP-DX
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  DY-EG
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : EH-EP
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  EQ-EY
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars :  EZ-FH
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "all_in_cost_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`metal')"
+
+                local ++i
+            }
+
+
+    save "$temp_production/production_4_5.dta", replace
+end
+
+program combine_production_4_6
+    local regions "Africa China EmergingAsiaPacificOthers LatinAmerica"
+    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_all_in_costs_bulk_commodities_1992_2007_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * all in cost
+    local year = 2007
+    unab vars : C-N
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : O-Z
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+    
+    local year = `year' - 1
+    unab vars : AA-AL
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : AM-AX
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : AY-BJ
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : BK-BV
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : BW-CH
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : CI-CT
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : CU-DF
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : DG-DR
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : DS-ED
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : EE-EP
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+    
+    local year = `year' - 1
+    unab vars : EQ-FB
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+    
+    local year = `year' - 1
+    unab vars : FC-FN
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : FO-FZ
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    local year = `year' - 1
+    unab vars : GA-GL
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "all_in_cost_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')" 
+
+                local ++i
+            }
+
+    save "$temp_production/production_4_6.dta", replace
+end
+    
