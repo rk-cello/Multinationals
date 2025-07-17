@@ -29,6 +29,7 @@ global temp_prop_details "$dir_temp/temp_prop_details"
 ************************************************************************
 cd "$input_metals_mining/properties_property_details"
 
+
 * roadmap
 program main
     combine_property_details_1

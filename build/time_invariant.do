@@ -16,7 +16,7 @@ global input_metals_mining "$dir_raw/data_S&P/metals_mining"
 * outputs
 global output_property_level "$dir_cleaned/property_level"
 global output_company_level "$dir_cleaned/company_level"
-global output_property_crosssection "$dir_cleaned/property_level/property_level_crosssection"
+global output_property_crosssection "$dir_cleaned/S&P_cleaned/property_level/property_level_crosssection"
 
 
 ************************************************************************
@@ -24,6 +24,9 @@ global output_property_crosssection "$dir_cleaned/property_level/property_level_
 program main
     merge_time_invariant_prop_details
     merge_time_invariant_production
+    merge_time_invariant_reserves
+    merge_time_invariant_tech_geo
+    merge_time_invariant_financings //done
 end
 
 **** PROPERTY DETAILS DATA MERGE ****
@@ -83,3 +86,43 @@ program merge_time_invariant_production
 
 end
 
+program merge_time_invariant_reserves
+
+    use "$temp_reserves/RR6.dta"
+    save "$output_property_crosssection/merged_time_invariant_reserves.dta", replace
+
+end
+
+program merge_time_invariant_tech_geo
+
+    use "$temp_tech_geo/tech_geo.dta"
+    save "$output_property_crosssection/merged_time_invariant_tech_geo.dta", replace
+
+end
+
+program merge_time_invariant_financings
+    
+    clear all
+    set more off
+
+    cd "$dir_temp/temp_financings"
+
+    * List of files to merge
+    local files financings_1_1.dta financings_1_2.dta financings_1_3.dta financings_2.dta
+
+    * Use the first file as the master dataset
+    local first : word 1 of `files'
+    use `first', clear
+
+    * Loop through the rest and merge
+    local nfiles : word count `files'
+    forvalues i = 2/`nfiles' {
+        local f : word `i' of `files'
+        merge 1:1 prop_name prop_id using `f'
+        drop _merge
+    }
+
+    * Save the merged dataset
+    save "$output_property_crosssection/merged_time_invariant_financings.dta", replace
+
+end
