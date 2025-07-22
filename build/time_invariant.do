@@ -27,6 +27,7 @@ program main
     merge_time_invariant_reserves
     merge_time_invariant_tech_geo
     merge_time_invariant_financings //done
+    merge_time_invariant_most_recent_transactions //done
 end
 
 **** PROPERTY DETAILS DATA MERGE ****
@@ -124,5 +125,32 @@ program merge_time_invariant_financings
 
     * Save the merged dataset
     save "$output_property_crosssection/merged_time_invariant_financings.dta", replace
+
+end
+
+program merge_time_invariant_most_recent_transactions
+    
+    clear all
+    set more off
+
+    cd "$dir_temp/temp_most_recent_transactions"
+
+    * List of files to merge
+    local files transaction_details_1.dta transaction_details_2.dta transaction_details_3.dta transaction_details_4.dta transaction_details_5.dta
+
+    * Use the first file as the master dataset
+    local first : word 1 of `files'
+    use `first', clear
+
+    * Loop through the rest and merge
+    local nfiles : word count `files'
+    forvalues i = 2/`nfiles' {
+        local f : word `i' of `files'
+        merge 1:1 prop_name prop_id using `f'
+        drop _merge
+    }
+
+    * Save the merged dataset
+    save "$output_property_crosssection/merged_time_invariant_most_recent_transactions.dta", replace
 
 end
