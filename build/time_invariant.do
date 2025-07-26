@@ -22,12 +22,13 @@ global output_property_crosssection "$dir_cleaned/S&P_cleaned/property_level/pro
 ************************************************************************
 
 program main
-    merge_time_invariant_prop_details
-    merge_time_invariant_production
-    merge_time_invariant_reserves
-    merge_time_invariant_tech_geo
+    merge_time_invariant_prop_details //done
+    merge_time_invariant_production //done
+    merge_time_invariant_reserves //done
+    merge_time_invariant_tech_geo //done
     merge_time_invariant_financings //done
     merge_time_invariant_most_recent_transactions //done
+    merge_time_invariant_top_drill_results //done
 end
 
 **** PROPERTY DETAILS DATA MERGE ****
@@ -50,12 +51,13 @@ program merge_time_invariant_prop_details
     local nfiles : word count `files'
     forvalues i = 2/`nfiles' {
         local f : word `i' of `files'
+        display "Merging file: `f'"
         merge 1:1 prop_name prop_id using `f'
         drop _merge
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/merged_time_invariant_prop_details.dta", replace
+    save "$output_property_crosssection/properties_property_details_crosssection.dta", replace
 
 end
 
@@ -83,21 +85,21 @@ program merge_time_invariant_production
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/merged_time_invariant_production.dta", replace
+    save "$output_property_crosssection/properties_production_crosssection.dta", replace
 
 end
 
 program merge_time_invariant_reserves
 
-    use "$temp_reserves/RR6.dta"
-    save "$output_property_crosssection/merged_time_invariant_reserves.dta", replace
+    use "$dir_temp/temp_reserves_resources/RR6.dta"
+    save "$output_property_crosssection/properties_reserves_resources_crosssection.dta", replace
 
 end
 
 program merge_time_invariant_tech_geo
 
-    use "$temp_tech_geo/tech_geo.dta"
-    save "$output_property_crosssection/merged_time_invariant_tech_geo.dta", replace
+    use "$dir_temp/temp_tech_geo/tech_geo.dta"
+    save "$output_property_crosssection/properties_technical_geology_crosssection.dta", replace
 
 end
 
@@ -124,7 +126,7 @@ program merge_time_invariant_financings
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/merged_time_invariant_financings.dta", replace
+    save "$output_property_crosssection/properties_financings_crosssection.dta", replace
 
 end
 
@@ -151,6 +153,33 @@ program merge_time_invariant_most_recent_transactions
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/merged_time_invariant_most_recent_transactions.dta", replace
+    save "$output_property_crosssection/properties_most_recent_transactions_crosssection.dta", replace
+
+end
+
+program merge_time_invariant_top_drill_results
+    
+    clear all
+    set more off
+
+    cd "$dir_temp/temp_top_drill"
+
+    * List of files to merge
+    local files top_drill_1_1.dta top_drill_1_2.dta top_drill_1_3.dta top_drill_2_1.dta top_drill_2_2.dta top_drill_2_3.dta top_drill_2_4.dta top_drill_3_1.dta top_drill_3_2.dta top_drill_3_3.dta top_drill_3_4.dta top_drill_3_bulk_1.dta top_drill_3_bulk_2.dta top_drill_3_bulk_3.dta top_drill_3_bulk_4.dta top_drill_3_U3O8.dta most_recent_drill.dta
+
+    * Use the first file as the master dataset
+    local first : word 1 of `files'
+    use `first', clear
+
+    * Loop through the rest and merge
+    local nfiles : word count `files'
+    forvalues i = 2/`nfiles' {
+        local f : word `i' of `files'
+        merge 1:1 prop_name prop_id using `f'
+        drop _merge
+    }
+
+    * Save the merged dataset
+    save "$output_property_crosssection/properties_top_drill_results_crosssection.dta", replace
 
 end
