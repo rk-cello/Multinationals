@@ -14,9 +14,9 @@ global dir_cleaned "$dir/data/raw_cleaned"
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
 
 * outputs
-global output_property_level "$dir_cleaned/property_level"
-global output_company_level "$dir_cleaned/company_level"
-global output_property_crosssection "$dir_cleaned/S&P_cleaned/property_level/property_level_crosssection"
+global output_property_level "$dir_cleaned/S&P_cleaned/property_level"
+global output_company_level "$dir_cleaned/S&P_cleaned/company_level"
+global output_properties "$output_property_level/properties"
 
 
 ************************************************************************
@@ -29,6 +29,7 @@ program main
     merge_time_invariant_financings //done
     merge_time_invariant_most_recent_transactions //done
     merge_time_invariant_top_drill_results //done
+    merge_time_invariant_claims //done
 end
 
 **** PROPERTY DETAILS DATA MERGE ****
@@ -186,84 +187,7 @@ end
 
 program merge_time_invariant_claims
 
-    clear all
-    set more off
-
-    cd "$dir_temp/temp_claims"
-
-    * List of files to merge
-    tempfile merged_claims
-    local files claims_1.dta claims_2.dta
-
-    * Use the first file as the master dataset
-    local first : word 1 of `files'
-    use `first', clear
-
-    * Loop through the rest and merge
-    local nfiles : word count `files'
-    forvalues i = 2/`nfiles' {
-        local f : word `i' of `files'
-        merge 1:1 mining_claim_key using `f'
-        drop _merge
-    }
-
-    * Save as a temporary file
-    save `merged_claims', replace
-
-    * link to properties
-    cd "$input_metals_mining/claims"
-
-    local linkfiles ClaimsLinkedtoProperties_Africa.xlsx ClaimsLinkedtoProperties_Asia.xlsx ClaimsLinkedtoProperties_LatinAmerica.xlsx 
-
-        tempfile all_links
-        clear
-
-        // Loop through each link file, import, rename, label, and append
-        local first = 1
-        foreach f of local linkfiles {
-            import excel "`f'", firstrow clear
-
-            // Rename variables A-P to standard names in the specified order
-            rename (A B C D E F G H I J K L M N O P) ///
-                  (related_property property_key claim_name claim_owners claim_status country_region agency_claim_id claim_type claim_type_rptd commodities claim_area_ha application_date date_granted expiry_date source_as_of_date source)
-
-            // Label variables
-            label variable related_property "Related Property"
-            label variable property_key "Property Key"
-            label variable claim_name "Claim Name"
-            label variable claim_owners "Claim Owners"
-            label variable claim_status "Claim Status"
-            label variable country_region "Country/Region"
-            label variable agency_claim_id "Agency Claim ID"
-            label variable claim_type "Claim Type"
-            label variable claim_type_rptd "Claim Type (Reported)"
-            label variable commodities "Commodities"
-            label variable claim_area_ha "Claim Area (ha)"
-            label variable application_date "Application Date"
-            label variable date_granted "Date Granted"
-            label variable expiry_date "Expiry Date"
-            label variable source_as_of_date "Source As Of Date"
-            label variable source "Source"
-
-            // Keep only the variables in the specified order
-            //keep related_property property_key claim_name claim_owners claim_status country_region agency_claim_id claim_type claim_type_rptd commodities claim_area_ha application_date date_granted expiry_date source_as_of_date source
-
-            // Append to master
-            if `first' {
-                save `all_links', replace
-                local first = 0
-            }
-            else {
-                append using `all_links'
-                save `all_links', replace
-            }
-        }
-
-        // Merge with claims data
-        merge 1:m agency_claim_id using `all_links'
-        drop _merge
-
-
-    * Save the merged dataset
-    save "$output_property_crosssection/properties_claims_crosssection.dta", replace    
+    use "$dir_temp/temp_claims/claims_linked_to_properties.dta"
+    save "$output_property_level/claims_crosssection.dta", replace
+    
 end
