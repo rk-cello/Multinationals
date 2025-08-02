@@ -30,6 +30,8 @@ program main
     merge_time_invariant_most_recent_transactions //done
     merge_time_invariant_top_drill_results //done
     merge_time_invariant_claims //done
+    merge_time_invariant_drill_results //done
+    merge_time_invariant_capital_costs //done
 end
 
 **** PROPERTY DETAILS DATA MERGE ****
@@ -190,4 +192,18 @@ program merge_time_invariant_claims
     use "$dir_temp/temp_claims/claims_linked_to_properties.dta"
     save "$output_property_level/claims_crosssection.dta", replace
     
+end
+
+program merge_time_invariant_drill_results
+
+    use "$dir_temp/temp_drill_results/drill_results_1&2.dta", clear
+    save "$output_property_level/drill_results_crosssection.dta", replace
+
+end
+
+program merge_time_invariant_capital_costs
+
+    use "$dir_temp/temp_drill_results/capital_costs_global.dta", clear
+    save "$dir_cleaned/S&P_cleaned/capital_costs_crosssection.dta", replace
+
 end

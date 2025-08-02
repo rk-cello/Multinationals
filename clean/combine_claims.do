@@ -16,10 +16,6 @@ global dir_cleaned "$dir/data/raw_cleaned"
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
 
-* outputs
-global output_property_level "$dir_cleaned/property_level"
-global output_company_level "$dir_cleaned/company_level"
-
 * intermediates
 global temp_property_level "$dir_temp/property_level"
 global temp_company_level "$dir_temp/company_level"
