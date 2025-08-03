@@ -727,6 +727,631 @@ program combine_transactions_6
     save "$temp_transactions/transactions_6.dta", replace
 end
 
+program combine_transactions_7
+    clear all
+    set more off
 
-    local filenames "M_A_deals_terms_values_SNL_1 M_A_deals_terms_values_SNL_2 M_A_deals_ratios_multiples_SPIQ_metals_SNL M_A_metals_mining_deals_acquired_info_dates M_A_shareholder_value"
+    local regions "Africa EmergingAsiaPacific China EmergingAsiaPacificOthers EuropeMiddleEast LatinAmerica"
+    tempfile temp_all
+    save `temp_all', emptyok
+
+    foreach region of local regions {
+                local file M_A_deals_terms_values_SNL_1_`region'.xlsx
+
+                // Check if file exists; if not, continue to next iteration
+                capture confirm file "`file'"
+                if _rc != 0 {
+                    display "File `file' does not exist, skipping."
+                    continue
+                }
+                display "Processing: `file'"
+
+                // Read file1 main data (from row 7 down)
+                import excel "`file'", cellrange(A7) clear
+                //tostring A C-J, replace
+                // rename variables
+                rename A sptr_target_name
+                label variable sptr_target_name "Name of the target or issuer for the transaction"
+                rename B sptr_mi_transaction_id
+                label variable sptr_mi_transaction_id "Unique key to identify transactions"
+                rename C sptr_total_debt_announce
+                label variable sptr_total_debt_announce "The aggregate unpaid principal balance owed under financial obligations to other parties, required to be paid by a specified date or on demand (Announcement)"
+                rename D sptr_total_debt_complete
+                label variable sptr_total_debt_complete "The aggregate unpaid principal balance owed under financial obligations to other parties, required to be paid by a specified date or on demand (Completion)"
+                rename E sptr_st_curr_lt_debt_announce
+                label variable sptr_st_curr_lt_debt_announce "Principal amount of debt payable within the next calendar year, including the current portion of long-term debt (Announcement)"
+                rename F sptr_st_curr_lt_debt_complete
+                label variable sptr_st_curr_lt_debt_complete "Principal amount of debt payable within the next calendar year, including the current portion of long-term debt (Completion)"
+                rename G sptr_noncurr_lt_debt_announce
+                label variable sptr_noncurr_lt_debt_announce "Principal debt due more than one calendar year after the period end (Announcement)"
+                rename H sptr_noncurr_lt_debt_complete
+                label variable sptr_noncurr_lt_debt_complete "Principal debt due more than one calendar year after the period end (Completion)"
+                rename I sptr_cash_eq_announce
+                label variable sptr_cash_eq_announce "Cash and cash equivalents such as money orders, coins, and checks. For banks, this includes central bank balances. (Announcement)"
+                rename J sptr_cash_eq_complete
+                label variable sptr_cash_eq_complete "Cash and cash equivalents such as money orders, coins, and checks. For banks, this includes central bank balances. (Completion)"
+                rename K sptr_curr_invest_announce
+                label variable sptr_curr_invest_announce "The portion of investment securities classified as current assets (Announcement)"
+                rename L sptr_curr_invest_complete
+                label variable sptr_curr_invest_complete "The portion of investment securities classified as current assets (Completion)"
+                rename M sptr_curr_invent_announce
+                label variable sptr_curr_invent_announce "Current portion of materials and finished goods held for future use, sale, or lease to another party, or to be used in the operations of the company. This may include non-current inventories for Home Builder and North American Real Estate companies. (Announcement)"
+                rename N sptr_curr_invent_complete
+                label variable sptr_curr_invent_complete "Current portion of materials and finished goods held for future use, sale, or lease to another party, or to be used in the operations of the company. This may include non-current inventories for Home Builder and North American Real Estate companies. (Completion)"
+                rename O sptr_obl_cap_leases_announce
+                label variable sptr_obl_cap_leases_announce "Obligations payable under capital leases or operating leases, unless reported combined, then capital leases and operating leases (Announcement)"
+                rename P sptr_obl_cap_leases_complete
+                label variable sptr_obl_cap_leases_complete "Obligations payable under capital leases or operating leases, unless reported combined, then capital leases and operating leases (Completion)"
+                rename Q sptr_postret_benef_announce
+                label variable sptr_postret_benef_announce "Estimated future cost of postretirement benefits pursuant to FAS 106 or other pension benefits not included in comprehensive income (Announcement)"
+                rename R sptr_postret_benef_complete
+                label variable sptr_postret_benef_complete "Estimated future cost of postretirement benefits pursuant to FAS 106 or other pension benefits not included in comprehensive income (Completion)"
+                rename S sptr_nonconv_pref_red_announce
+                label variable sptr_nonconv_pref_red_announce "Value of redemption of non-convertible preferred equity (Announcement)"
+                rename T sptr_nonconv_pref_red_complete
+                label variable sptr_nonconv_pref_red_complete "Value of redemption of non-convertible preferred equity (Completion)"
+                rename U sptr_exch_ratio_c2c_announce
+                label variable sptr_exch_ratio_c2c_announce "Number of shares of the buyer's common stock to be exchanged for each share of seller's common stock (Announcement)"
+                rename V sptr_exch_ratio_c2c_complete
+                label variable sptr_exch_ratio_c2c_complete "Number of shares of the buyer's common stock to be exchanged for each share of seller's common stock (Completion)"
+                rename W sptr_exch_ratio_c2p_announce
+                label variable sptr_exch_ratio_c2p_announce "Number of shares of the buyer's common stock to be exchanged for each share of seller's preferred stock (Announcement)"
+                rename X sptr_exch_ratio_c2p_complete
+                label variable sptr_exch_ratio_c2p_complete "Number of shares of the buyer's common stock to be exchanged for each share of seller's preferred stock (Completion)"
+                rename Y sptr_exch_ratio_p2c_announce
+                label variable sptr_exch_ratio_p2c_announce "Number of shares of the buyer's preferred stock to be exchanged for each share of seller's common stock (Announcement)"
+                rename Z sptr_exch_ratio_p2c_complete
+                label variable sptr_exch_ratio_p2c_complete "Number of shares of the buyer's preferred stock to be exchanged for each share of seller's common stock (Completion)"
+                rename AA sptr_exch_ratio_p2p_announce
+                label variable sptr_exch_ratio_p2p_announce "Number of shares of the buyer's preferred stock to be exchanged for each share of seller's preferred stock (Announcement)"
+                rename AB sptr_exch_ratio_p2p_complete
+                label variable sptr_exch_ratio_p2p_complete "Number of shares of the buyer's preferred stock to be exchanged for each share of seller's preferred stock (Completion)"
+                rename AC sptr_in_money_opt_out_announce
+                label variable sptr_in_money_opt_out_announce "Total in-the-money options to be converted as part of the transaction (Announcement)"
+                rename AD sptr_in_money_opt_out_complete
+                label variable sptr_in_money_opt_out_complete "Total in-the-money options to be converted as part of the transaction (Completion)"
+                rename AE sptr_deal_val_shares_announce
+                label variable sptr_deal_val_shares_announce "Shares outstanding for the target, used in the derivation of the deal value. For Real Estate deals this includes both common and OP units outstanding. (Announcement)"
+                rename AF sptr_deal_val_shares_complete
+                label variable sptr_deal_val_shares_complete "Shares outstanding for the target, used in the derivation of the deal value. For Real Estate deals this includes both common and OP units outstanding. (Completion)"
+                rename AG sptr_cons_cash_announce
+                label variable sptr_cons_cash_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename AH sptr_cons_cash_complete
+                label variable sptr_cons_cash_complete "Value of the consideration incurred by the buyers (Completion)"
+                rename AI sptr_cons_common_stk_announce
+                label variable sptr_cons_common_stk_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename AJ sptr_cons_common_stk_complete
+                label variable sptr_cons_common_stk_complete "Value of the consideration incurred by the buyers (Completion)"
+                rename AK sptr_gross_proceeds
+                label variable sptr_gross_proceeds "Aggregate price paid to the sellers in the transaction for the equity of the target, as of the event in question. Where available, this is calculated as the number of diluted shares outstanding, excluding any shares already owned by the buyer or otherwise unsold in the deal, multiplied by the deal value per share, less the aggregate strike price of any in-the-money common-stock options, plus the consideration paid for the target's preferred equity. Deal value excludes debt assumption, employee retention pools, and the assumption of any other obligations of the target."
+                rename AL sptr_common_sh_issued_announce
+                label variable sptr_common_sh_issued_announce "The number of securities issued as consideration to the seller (Announcement)"
+                rename AM sptr_common_sh_issued_complete
+                label variable sptr_common_sh_issued_complete "The number of securities issued as consideration to the seller (Completion)"
+                rename AN sptr_cons_royalty_issued_ann
+                label variable sptr_cons_royalty_issued_ann "Value of the consideration incurred by the buyers (Announcement)"
+                rename AO sptr_cons_royalty_issued_comp
+                label variable sptr_cons_royalty_issued_comp "Value of the consideration incurred by the buyers (Completion)"
+                rename AP sptr_cons_capex_announce
+                label variable sptr_cons_capex_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename AQ sptr_cons_capex_complete
+                label variable sptr_cons_capex_complete "Value of the consideration incurred by the buyers (Completion)"
+                rename AR sptr_cons_pref_stk_announce
+                label variable sptr_cons_pref_stk_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename AS sptr_cons_pref_stk_complete
+                label variable sptr_cons_pref_stk_complete "Value of the consideration incurred by the buyers (Completion)"
+                rename AT sptr_cons_common_op_units_ann
+                label variable sptr_cons_common_op_units_ann "Value of the consideration incurred by the buyers (Announcement)"
+                rename AU sptr_cons_common_op_units_comp
+                label variable sptr_cons_common_op_units_comp "Value of the consideration incurred by the buyers (Completion)"
+                rename AV sptr_cons_pref_op_units_announce
+                label variable sptr_cons_pref_op_units_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename AW sptr_cons_pref_op_units_complete
+                label variable sptr_cons_pref_op_units_complete "Value of the consideration incurred by the buyers (Completion)"
+                rename AX sptr_pref_sh_issued_announce
+                label variable sptr_pref_sh_issued_announce "The number of securities issued as consideration to the seller (Announcement)"
+                rename AY sptr_pref_sh_issued_complete
+                label variable sptr_pref_sh_issued_complete "The number of securities issued as consideration to the seller (Completion)"
+
+                append using `temp_all'
+                save `temp_all', replace
+            }
+
+    drop AZ
+    save "$temp_transactions/transactions_7.dta", replace
+end
+
+program combine_transactions_8
+    clear all
+    set more off
+
+    local regions "Africa EmergingAsiaPacific China EmergingAsiaPacificOthers EuropeMiddleEast LatinAmerica"
+    tempfile temp_all
+    save `temp_all', emptyok
+
+    foreach region of local regions {
+                local file M_A_deals_terms_values_SNL_2_`region'.xlsx
+
+                // Check if file exists; if not, continue to next iteration
+                capture confirm file "`file'"
+                if _rc != 0 {
+                    display "File `file' does not exist, skipping."
+                    continue
+                }
+                display "Processing: `file'"
+
+                // Read file1 main data (from row 7 down)
+                import excel "`file'", cellrange(A7) clear
+                tostring AU, replace
+                // rename variables
+                rename A sptr_target_name
+                label variable sptr_target_name "Name of the target or issuer for the transaction"
+                rename B sptr_mi_transaction_id
+                label variable sptr_mi_transaction_id "Unique key to identify transactions"
+
+                rename C sptr_cons_debt_issued_announce
+                label variable sptr_cons_debt_issued_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename D sptr_cons_debt_issued_complete
+                label variable sptr_cons_debt_issued_complete "Value of the consideration incurred by the buyers (Completion)"
+
+                rename E sptr_cons_opt_announce
+                label variable sptr_cons_opt_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename F sptr_cons_opt_complete
+                label variable sptr_cons_opt_complete "Value of the consideration incurred by the buyers (Completion)"
+
+                rename G sptr_cons_unclass_announce
+                label variable sptr_cons_unclass_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename H sptr_cons_unclass_complete
+                label variable sptr_cons_unclass_complete "Value of the consideration incurred by the buyers (Completion)"
+
+                rename I sptr_cons_debt_assumed_announce
+                label variable sptr_cons_debt_assumed_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename J sptr_cons_debt_assumed_complete
+                label variable sptr_cons_debt_assumed_complete "Value of the consideration incurred by the buyers (Completion)"
+
+                rename K sptr_cons_earnout_announce
+                label variable sptr_cons_earnout_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename L sptr_cons_earnout_complete
+                label variable sptr_cons_earnout_complete "Value of the consideration incurred by the buyers (Completion)"
+
+                rename M sptr_cons_cap_infus_announce
+                label variable sptr_cons_cap_infus_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename N sptr_cons_cap_infus_complete
+                label variable sptr_cons_cap_infus_complete "Value of the consideration incurred by the buyers (Completion)"
+
+                rename O sptr_cons_div_tosel_announce
+                label variable sptr_cons_div_tosel_announce "Value of the consideration incurred by the buyers (Announcement)"
+                rename P sptr_cons_div_tosel_complete
+                label variable sptr_cons_div_tosel_complete "Value of the consideration incurred by the buyers (Completion)"
+
+                rename Q sptr_common_sh_issued_announce
+                label variable sptr_common_sh_issued_announce "The number of securities issued as consideration to the seller (Announcement)"
+                rename R sptr_common_sh_issued_complete
+                label variable sptr_common_sh_issued_complete "The number of securities issued as consideration to the seller (Completion)"
+
+                rename S sptr_opt_issued_announce
+                label variable sptr_opt_issued_announce "The number of securities issued as consideration to the seller (Announcement)"
+                rename T sptr_opt_issued_complete
+                label variable sptr_opt_issued_complete "The number of securities issued as consideration to the seller (Completion)"
+
+                rename U sptr_strkprc_in_money_opt_ann
+                label variable sptr_strkprc_in_money_opt_ann "Weighted average strike price of options in the money that will be converted as part of the transaction (Announcement)"
+                rename V sptr_strkprc_in_money_opt_comp
+                label variable sptr_strkprc_in_money_opt_comp "Weighted average strike price of options in the money that will be converted as part of the transaction (Completion)"
+
+                rename W sptr_conv_pref_eq_announce
+                label variable sptr_conv_pref_eq_announce "Preferred equity convertible into common equity at maturity, or at the discretion of the issuer or owner (Announcement)"
+                rename X sptr_conv_pref_eq_complete
+                label variable sptr_conv_pref_eq_complete "Preferred equity convertible into common equity at maturity, or at the discretion of the issuer or owner (Completion)"
+
+                rename Y sptr_sh_from_conv_pref_announce
+                label variable sptr_sh_from_conv_pref_announce "Number of new shares issued by the buyer in exchange for preferred equity of the target (Announcement)"
+                rename Z sptr_sh_from_conv_pref_complete
+                label variable sptr_sh_from_conv_pref_complete "Number of new shares issued by the buyer in exchange for preferred equity of the target (Completion)"
+
+                rename AA sptr_conv_debt_announce
+                label variable sptr_conv_debt_announce "Debt convertible to equity of the issuer, either at maturity or at the option of the debtholder (Announcement)"
+                rename AB sptr_conv_debt_complete
+                label variable sptr_conv_debt_complete "Debt convertible to equity of the issuer, either at maturity or at the option of the debtholder (Completion)"
+
+                rename AC sptr_sh_from_conv_debt_announce
+                label variable sptr_sh_from_conv_debt_announce "Number of new shares issued by the buyer in exchange for debt of the target (Announcement)"
+                rename AD sptr_sh_from_conv_debt_complete
+                label variable sptr_sh_from_conv_debt_complete "Number of new shares issued by the buyer in exchange for debt of the target (Completion)"
+
+                rename AE sptr_type_assets_cash
+                label variable sptr_type_assets_cash "Indicates that cash is one of the types of assets transferred to the buyer as part of the deal"
+
+                rename AF sptr_type_assets_loans
+                label variable sptr_type_assets_loans "Indicates that loans are one of the types of assets transferred to the buyer as part of the deal"
+
+                rename AG sptr_type_assets_mbs
+                label variable sptr_type_assets_mbs "Indicates that MBS are one of the types of assets transferred to the buyer as part of the deal"
+
+                rename AH sptr_core_deposits_lessjumbo
+                label variable sptr_core_deposits_lessjumbo "Deposits, less all deposit accounts with balances over $100,000 and foreign deposits"
+                
+                rename AI sptr_coredep_intang_announce
+                label variable sptr_coredep_intang_announce "Amount of core deposit intangibles created as a result of the transaction (Announcement)"
+                rename AJ sptr_coredep_intang_complete
+                label variable sptr_coredep_intang_complete "Amount of core deposit intangibles created as a result of the transaction (Completion)"
+
+                rename AK sptr_coredep_amort_announce
+                label variable sptr_coredep_amort_announce "Number of years over which the buyer will amortize the core deposit intangibles generated as a result of the transaction (Announcement)"
+                rename AL sptr_coredep_amort_complete
+                label variable sptr_coredep_amort_complete "Number of years over which the buyer will amortize the core deposit intangibles generated as a result of the transaction (Completion)"
+
+                rename AM sptr_amort_meth_announce
+                label variable sptr_amort_meth_announce "A method of amortization (Announcement)"
+                rename AN sptr_amort_meth_complete
+                label variable sptr_amort_meth_complete "A method of amortization (Completion)"
+
+                rename AO sptr_oth_sec_liabilities
+                label variable sptr_oth_sec_liabilities "Other secured liabilities assumed by the acquiring institution (Announcement)"
+        
+                rename AP sptr_dep_transfer
+                label variable sptr_dep_transfer "Total deposits from customers. For US banks, this is the total deposits from customers and banks. (Announcement)"
+               
+                rename AQ sptr_dep_assumed
+                label variable sptr_dep_assumed "Deposits transferred as part of the regulatory resolution. These deposits are generally all deposits less uninsured deposits less brokered deposits. (Announcement)"
+                
+                rename AR sptr_total_assets
+                label variable sptr_total_assets "All assets owned by the company as of the date indicated, as carried on the balance sheet and defined under the indicated accounting principles"
+
+                rename AS sptr_premium_paid
+                label variable sptr_premium_paid "Franchise premium paid. Equal to the value of consideration paid for the common equity, net of the tangible common equity acquired. For branch acquisitions, the value paid in excess of deposits acquired."
+
+                rename AT sptr_assets_sold
+                label variable sptr_assets_sold "Of the total assets of a resolved institution, the amount that is sold to the buyer"
+
+                rename AU sptr_royalty_type_acquired
+                label variable sptr_royalty_type_acquired "Type of royalty"
+
+                rename AV sptr_royalty_pct_acquired
+                label variable sptr_royalty_pct_acquired "Royalty interest in target acquired in a transaction"
+
+                append using `temp_all'
+                save `temp_all', replace
+            }
+
+    //drop AZ
+    save "$temp_transactions/transactions_8.dta", replace
+end
+
+program combine_transactions_9
+    clear all
+    set more off
+
+    local regions "Africa EmergingAsiaPacific China EmergingAsiaPacificOthers EuropeMiddleEast LatinAmerica"
+    tempfile temp_all
+    save `temp_all', emptyok
+
+    foreach region of local regions {
+                local file M_A_deals_ratios_multiples_SPIQ_metals_SNL_`region'.xlsx
+
+                // Check if file exists; if not, continue to next iteration
+                capture confirm file "`file'"
+                if _rc != 0 {
+                    display "File `file' does not exist, skipping."
+                    continue
+                }
+                display "Processing: `file'"
+
+                // Read file1 main data (from row 7 down)
+                import excel "`file'", cellrange(A7) clear
+                //tostring AU, replace
+                // rename variables
+                rename A sptr_target_name
+                label variable sptr_target_name "Name of the target or issuer for the transaction"
+                rename B sptr_mi_transaction_id
+                label variable sptr_mi_transaction_id "Unique key to identify transactions"
+
+                rename C sptr_ev_ebitda_ann
+                label variable sptr_ev_ebitda_ann "Target's implied total enterprise value as a multiple of last-twelve-month EBITDA (Announcement)"
+
+                rename D sptr_ev_ebitda_cmp
+                label variable sptr_ev_ebitda_cmp "Target's implied total enterprise value as a multiple of last-twelve-month EBITDA (Completion)"
+
+                rename E sptr_ev_rev_ann
+                label variable sptr_ev_rev_ann "Target's implied total enterprise value as a multiple of last-twelve-month revenue (Announcement)"
+
+                rename F sptr_ev_rev_cmp
+                label variable sptr_ev_rev_cmp "Target's implied total enterprise value as a multiple of last-twelve-month revenue (Completion)"
+
+                rename G sptr_ev_ebit_ann
+                label variable sptr_ev_ebit_ann "Target's implied total enterprise value as a multiple of last-twelve-month EBIT (Announcement)"
+
+                rename H sptr_ev_ebit_cmp
+                label variable sptr_ev_ebit_cmp "Target's implied total enterprise value as a multiple of last-twelve-month EBIT (Completion)"
+
+                rename I sptr_eq_ni_ltm_ann
+                label variable sptr_eq_ni_ltm_ann "Target's implied equity value as a multiple of last-twelve-month net income (Announcement)"
+
+                rename J sptr_eq_ni_ltm_cmp
+                label variable sptr_eq_ni_ltm_cmp "Target's implied equity value as a multiple of last-twelve-month net income (Completion)"
+
+                rename K sptr_eq_bv_ann
+                label variable sptr_eq_bv_ann "Target's implied equity value as a multiple of book value (Announcement)"
+
+                rename L sptr_eq_bv_cmp
+                label variable sptr_eq_bv_cmp "Target's implied equity value as a multiple of book value (Completion)"
+
+                rename M sptr_ev_rev_fwd_ann
+                label variable sptr_ev_rev_fwd_ann "Implied enterprise value as a multiple of the next twelve month revenue estimate of the company (Announcement)"
+
+                rename N sptr_ev_rev_fwd_cmp
+                label variable sptr_ev_rev_fwd_cmp "Implied enterprise value as a multiple of the next twelve month revenue estimate of the company (Completion)"
+
+                rename O sptr_ev_ebitda_fwd_ann
+                label variable sptr_ev_ebitda_fwd_ann "Implied enterprise value as a multiple of the next twelve month earnings before interest, taxes, depreciation and amortization estimate of the company (Announcement)"
+
+                rename P sptr_ev_ebitda_fwd_cmp
+                label variable sptr_ev_ebitda_fwd_cmp "Implied enterprise value as a multiple of the next twelve month earnings before interest, taxes, depreciation and amortization estimate of the company (Completion)"
+
+                rename Q sptr_ev_ebit_fwd_ann
+                label variable sptr_ev_ebit_fwd_ann "Implied enterprise value as a multiple of the next twelve month earnings before interest and taxes estimate of the company (Announcement)"
+
+                rename R sptr_ev_ebit_fwd_cmp
+                label variable sptr_ev_ebit_fwd_cmp "Implied enterprise value as a multiple of the next twelve month earnings before interest and taxes estimate of the company (Completion)"
+
+                rename S sptr_offer_pe_fwd_ann
+                label variable sptr_offer_pe_fwd_ann "Offer per share as a multiple of the earnings per share estimate of the company (Announcement)"
+
+                rename T sptr_offer_pe_fwd_cmp
+                label variable sptr_offer_pe_fwd_cmp "Offer per share as a multiple of the earnings per share estimate of the company (Completion)"
+
+                rename U sptr_offer_pbv_fwd_ann
+                label variable sptr_offer_pbv_fwd_ann "Offer per share as a multiple of the next fiscal year's consensus estimated book value per share (Announcement)"
+
+                rename V sptr_offer_pbv_fwd_cmp
+                label variable sptr_offer_pbv_fwd_cmp "Offer per share as a multiple of the next fiscal year's consensus estimated book value per share (Completion)"
+
+                rename W sptr_tv_reserves_ann
+                label variable sptr_tv_reserves_ann "Transaction value as a percent of the value of the equivalent reserve metals acquired (Announcement)"
+
+                rename X sptr_tv_reserves_cmp
+                label variable sptr_tv_reserves_cmp "Transaction value as a percent of the value of the equivalent reserve metals acquired (Completion)"
+
+                rename Y sptr_tv_resres_ann
+                label variable sptr_tv_resres_ann "Transaction value as a percent of the value of the equivalent reserve and resource metals acquired (Announcement)"
+
+                rename Z sptr_tv_resres_cmp
+                label variable sptr_tv_resres_cmp "Transaction value as a percent of the value of the equivalent reserve and resource metals acquired (Completion)"
+
+                
+                append using `temp_all'
+                save `temp_all', replace
+            }
+
+    drop AA
+    save "$temp_transactions/transactions_9.dta", replace
+end
+
+program combine_transactions_10
+    clear all
+    set more off
+
+    local regions "Africa EmergingAsiaPacific China EmergingAsiaPacificOthers EuropeMiddleEast LatinAmerica"
+    tempfile temp_all
+    save `temp_all', emptyok
+
+    foreach region of local regions {
+                local file M_A_metals_mining_deals_acquired_info_dates_`region'.xlsx
+
+                // Check if file exists; if not, continue to next iteration
+                capture confirm file "`file'"
+                if _rc != 0 {
+                    display "File `file' does not exist, skipping."
+                    continue
+                }
+                display "Processing: `file'"
+
+                // Read file1 main data (from row 7 down)
+                import excel "`file'", cellrange(A7) clear
+                //tostring AU, replace
+                // rename variables
+                rename A sptr_target_name
+                label variable sptr_target_name "Name of the target or issuer for the transaction"
+                rename B sptr_mi_transaction_id
+                label variable sptr_mi_transaction_id "Unique key to identify transactions"
+
+                rename C  sptr_deal_prim_commodity
+                label variable sptr_deal_prim_commodity "A type of valuable material that is extracted from the earth during the course of mining operations"
+
+                rename D  sptr_earn_in
+                label variable sptr_earn_in "Indicates that a company will agree to make an investment over a period of time in order to gain a portion of ownership. This may, but typically does not, happen at the same time that the company actually purchases an ownership stake outright."
+
+                rename E  sptr_metal_streaming
+                label variable sptr_metal_streaming "Indicates the purchase of all or part of the metals produced from mines"
+
+                rename F  sptr_deal_commodities
+                label variable sptr_deal_commodities "A type of valuable material that is extracted from the earth during the course of mining operations"
+
+                rename G  sptr_prim_resv_acq_tonne
+                label variable sptr_prim_resv_acq_tonne "The quantity of mineable product identified as reserves acquired"
+
+                rename H  sptr_prim_resv_eqv_tonne
+                label variable sptr_prim_resv_eqv_tonne "The quantity of all mineral products identified as reserves acquired, converted to the specified mineral"
+
+                rename I  sptr_prim_resv_acq_oz
+                label variable sptr_prim_resv_acq_oz "The quantity of mineable product identified as reserves acquired"
+
+                rename J  sptr_prim_resv_eqv_oz
+                label variable sptr_prim_resv_eqv_oz "The quantity of all mineral products identified as reserves acquired, converted to the specified mineral"
+
+                rename K  sptr_prim_resv_acq_ct
+                label variable sptr_prim_resv_acq_ct "The quantity of mineable product identified as reserves acquired"
+
+                rename L  sptr_prim_resv_acq_lb
+                label variable sptr_prim_resv_acq_lb "The quantity of mineable product identified as reserves acquired"
+
+                rename M  sptr_prim_resv_eqv_lb
+                label variable sptr_prim_resv_eqv_lb "The quantity of all mineral products identified as reserves acquired, converted to the specified mineral"
+
+                rename N  sptr_prim_resres_acq_ton
+                label variable sptr_prim_resres_acq_ton "The quantity of mineable product identified as reserves and resources acquired"
+
+                rename O  sptr_prim_resres_eqv_ton
+                label variable sptr_prim_resres_eqv_ton "The quantity of all mineral products identified as reserves and resources acquired, converted to the specified mineral"
+
+                rename P  sptr_prim_resres_acq_oz
+                label variable sptr_prim_resres_acq_oz "The quantity of mineable product identified as reserves and resources acquired"
+
+                rename Q  sptr_prim_resres_eqv_oz
+                label variable sptr_prim_resres_eqv_oz "The quantity of all mineral products identified as reserves and resources acquired, converted to the specified mineral"
+
+                rename R  sptr_prim_resres_acq_ct
+                label variable sptr_prim_resres_acq_ct "The quantity of mineable product identified as reserves and resources acquired"
+
+                rename S  sptr_prim_resres_acq_lb
+                label variable sptr_prim_resres_acq_lb "The quantity of mineable product identified as reserves and resources acquired"
+
+                rename T  sptr_prim_resres_eqv_lb
+                label variable sptr_prim_resres_eqv_lb "The quantity of all mineral products identified as reserves and resources acquired, converted to the specified mineral"
+
+                rename U  sptr_total_resv_val
+                label variable sptr_total_resv_val "The value of all reserve metals owned"
+
+                rename V  sptr_total_resres_val
+                label variable sptr_total_resres_val "The value of all reserve and resource metals owned"
+
+                rename W  sptr_prop_acquired
+                label variable sptr_prop_acquired "The name of the mine, or, if a stand-alone processing facility, the name of that facility"
+
+                rename X  sptr_acq_prop_ids
+                label variable sptr_acq_prop_ids "Key of mining project"
+
+                rename Y  sptr_acq_prop_region
+                label variable sptr_acq_prop_region "Name of the global region"
+
+                rename Z  sptr_acq_prop_country
+                label variable sptr_acq_prop_country "Common English name of a country"
+
+                rename AA sptr_acq_prop_state
+                label variable sptr_acq_prop_state "Common name of a country division"
+
+                rename AB sptr_acq_dev_stages
+                label variable sptr_acq_dev_stages "Development stages of a mining reserve; states in which a reserve goes through from exploration to production"
+
+                rename AC sptr_acq_prim_commodity
+                label variable sptr_acq_prim_commodity "A type of valuable material that is extracted from the earth during the course of mining operations"
+
+                rename AD sptr_price_paid_ton_resv
+                label variable sptr_price_paid_ton_resv "The price paid for the metal acquired in the transaction"
+
+                rename AE sptr_price_paid_ton_eqv
+                label variable sptr_price_paid_ton_eqv "Price paid for the equivalent metal acquired in the transaction"
+
+                rename AF sptr_price_paid_ton_rr
+                label variable sptr_price_paid_ton_rr "The price paid for the reserves and resouces acquired in the transaction"
+
+                rename AG sptr_price_paid_ton_rr_eqv
+                label variable sptr_price_paid_ton_rr_eqv "Price paid for the equivalent reserves and resources acquired in the transaction"
+
+                rename AH sptr_price_paid_oz_resv
+                label variable sptr_price_paid_oz_resv "The price paid for the metal acquired in the transaction"
+
+                rename AI sptr_price_paid_oz_eqv
+                label variable sptr_price_paid_oz_eqv "Price paid for the equivalent metal acquired in the transaction"
+
+                rename AJ sptr_price_paid_oz_rr
+                label variable sptr_price_paid_oz_rr "The price paid for the reserves and resouces acquired in the transaction"
+
+                rename AK sptr_price_paid_oz_rr_eqv
+                label variable sptr_price_paid_oz_rr_eqv "Price paid for the equivalent reserves and resources acquired in the transaction"
+
+                rename AL sptr_price_paid_ct_resv
+                label variable sptr_price_paid_ct_resv "The price paid for the metal acquired in the transaction"
+
+                rename AM sptr_price_paid_ct_rr
+                label variable sptr_price_paid_ct_rr "The price paid for the reserves and resouces acquired in the transaction"
+
+                rename AN sptr_price_paid_lb_resv
+                label variable sptr_price_paid_lb_resv "The price paid for the metal acquired in the transaction"
+
+                rename AO sptr_price_paid_lb_eqv
+                label variable sptr_price_paid_lb_eqv "Price paid for the equivalent metal acquired in the transaction"
+
+                rename AP sptr_price_paid_lb_rr
+                label variable sptr_price_paid_lb_rr "The price paid for the reserves and resouces acquired in the transaction"
+
+                rename AQ sptr_price_paid_lb_rr_eqv
+                label variable sptr_price_paid_lb_rr_eqv "Price paid for the equivalent reserves and resources acquired in the transaction"
+
+                rename AR sptr_val_to_total_resv
+                label variable sptr_val_to_total_resv "Deal value as a percent of the reserves acquired"
+
+                rename AS sptr_val_to_total_resres
+                label variable sptr_val_to_total_resres "Deal value as a percent of the value of the reserves and resources acquired"
+
+                rename AT sptr_ann_date_ma
+                label variable sptr_ann_date_ma "Date on which M&A Transaction was announced"
+
+                rename AU sptr_closed_date_ma
+                label variable sptr_closed_date_ma "Date on which M&A Transaction was completed"
+
+                rename AV sptr_cancelled_date_ma
+                label variable sptr_cancelled_date_ma "Date on which M&A Transaction was terminated"
+
+                rename AW sptr_end_marker_dummy
+                label variable sptr_end_marker_dummy "End marker or dummy variable (placeholder)"
+
+                
+                append using `temp_all'
+                save `temp_all', replace
+            }
+
+    drop AX
+    save "$temp_transactions/transactions_10.dta", replace
+end
+
+program combine_transactions_11
+    clear all
+    set more off
+
+    local regions "Africa EmergingAsiaPacific China EmergingAsiaPacificOthers EuropeMiddleEast LatinAmerica"
+    tempfile temp_all
+    save `temp_all', emptyok
+
+    foreach region of local regions {
+                local file M_A_shareholder_value_`region'.xlsx
+
+                // Check if file exists; if not, continue to next iteration
+                capture confirm file "`file'"
+                if _rc != 0 {
+                    display "File `file' does not exist, skipping."
+                    continue
+                }
+                display "Processing: `file'"
+
+                // Read file1 main data (from row 7 down)
+                import excel "`file'", cellrange(A7) clear
+                //tostring AU, replace
+                // rename variables
+                rename A sptr_target_name
+                label variable sptr_target_name "Name of the target or issuer for the transaction"
+                rename B sptr_mi_transaction_id
+                label variable sptr_mi_transaction_id "Unique key to identify transactions"
+
+                rename C sptr_tbv_dilution
+                label variable sptr_tbv_dilution "Dilution of tangible book value (TBV) that occurs as a result of a transaction. Negative value indicates accretion. Reported as of announcement date."
+
+                rename D sptr_tbv_ex_aoci_dil
+                label variable sptr_tbv_ex_aoci_dil "Dilution of tangible book value (TBV), excluding accumulated other comprehensive income (AOCI), that occurs as a result of a transaction. Negative value indicates accretion. Reported as of announcement date."
+
+                rename E sptr_tbv_earnback
+                label variable sptr_tbv_earnback "Years it takes to earn back the deal's tangible book value (TBV) dilution through incremental earnings. Reported as of announcement date."
+
+                rename F sptr_tbv_ex_aoci_earn
+                label variable sptr_tbv_ex_aoci_earn "Years it takes to earn back the deal's tangible book value (TBV) dilution, excluding accumulated other comprehensive income (AOCI), through incremental earnings. Reported as of announcement date."
+
+                
+                append using `temp_all'
+                save `temp_all', replace
+            }
+
+    drop G
+    save "$temp_transactions/transactions_11.dta", replace
+end
+
     
