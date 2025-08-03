@@ -25,114 +25,15 @@ cd "$input_metals_mining/transactions"
 program main
     combine_transactions_1
     combine_transactions_2
-end
-
-program combine_transactions_1
-    clear all
-    set more off
-
-    local regions "Africa EmergingAsiaPacific China EmergingAsiaPacificOthers EuropeMiddleEast LatinAmerica"
-    tempfile temp_all
-    save `temp_all', emptyok
-
-    foreach region of local regions {
-                local file general_transaction_details_1_general_info_`region'.xlsx
-
-                // Check if file exists; if not, continue to next iteration
-                capture confirm file "`file'"
-                if _rc != 0 {
-                    display "File `file' does not exist, skipping."
-                    continue
-                }
-                display "Processing: `file'"
-
-                // Read file1 main data (from row 7 down)
-                import excel "`file'", cellrange(A7) clear
-                //tostring A C-J, replace
-                // rename variables
-                rename A target_name
-                rename B mi_transaction_id
-                rename C buyer_target_name
-                rename D snl_deal_key
-                rename E snl_offering_key
-                rename F ciq_transaction_id
-                rename G target_id
-                rename H buyers_investors
-                rename I sellers
-                rename J transaction_type
-                rename K funding_type
-                rename L ma_feature_type
-                rename M buyback_features
-                rename N offerings_feature_type
-                rename O mi_target_primary_industry
-                rename P target_industry_group
-                rename Q second_level_primary_industry
-                rename R iq_target_primary_industry
-                rename S transaction_geography
-                rename T ann_date
-                rename U announced_agreement_date
-                rename V def_agrmt_date
-                rename W record_date
-                rename X expect_competion_date_begin
-                rename Y expect_competion_date_end
-                rename Z closed_date
-                rename AA cancelled_date
-                rename AB suspended_date
-                rename AC expired_plan_date
-                rename AD status
-                rename AE pe_involvement
-                rename AF deal_summary
-                rename AG security_desc
-                rename AH currency_code
-                rename AI transaction_value
-                rename AJ desc_consideration
-                rename AK sponsor_backed
-
-                // Label vars
-                label variable target_name "Name of the target or issuer for the transaction"
-                label variable mi_transaction_id "Unique key to identify transactions"
-                label variable buyer_target_name "Name of buyer and name of target"
-                label variable snl_deal_key "Publishable key of the M&A dataset to assist in pulling relevant information."
-                label variable snl_offering_key "Publishable key of the Capital Issues dataset to assist in pulling relevant information."
-                label variable ciq_transaction_id "Publishable key for CIQ Transaction"
-                label variable target_id "Key of the target or issuer for the transaction"
-                label variable buyers_investors "Complete name of the institution, as specified in its charter"
-                label variable sellers "Complete name of the institution, as specified in its charter"
-                label variable transaction_type "Concatenation of a given transaction entity type and its transaction entity type parent"
-                label variable funding_type "A funding type indicates the structure and liquidation preference of a security or other capital-raising instrument"
-                label variable ma_feature_type "Feature describing the transaction structure"
-                label variable buyback_features "Feature describing the transaction structure"
-                label variable offerings_feature_type "Feature describing the transaction structure"
-                label variable mi_target_primary_industry "Primary industry of the transaction target. Includes company and asset transactions."
-                label variable target_industry_group "A grouping of companies based on common operating characteristics"
-                label variable second_level_primary_industry "A grouping of companies based on common operating characteristics"
-                label variable iq_target_primary_industry "A grouping of companies based on common operating characteristics in CIQ"
-                label variable transaction_geography "Global region of the transaction target. Includes company and asset transactions. In multiple targets acquisition or unknown target location, it is the region of the seller or buyer."
-                label variable ann_date "Date on which the transaction was announced"
-                label variable announced_agreement_date "The date a transaction agreement was made public. If a deal is discovered after deal completion, the completion date is used as the announcement date"
-                label variable def_agrmt_date "The date the deal event occurred"
-                label variable record_date "The date, set by the distributing company, by which a distributing company shareholder must own shares in order to be eligible to receive the shares of the target company"
-                label variable expect_competion_date_begin "First date on which the deal is expected to close"
-                label variable expect_competion_date_end "Last date on which the deal is expected to close"
-                label variable closed_date "Date on which the transaction was completed"
-                label variable cancelled_date "Date on which the transaction was terminated"
-                label variable suspended_date "The date on which the transaction was suspended"
-                label variable expired_plan_date "The date on which the transaction was expired"
-                label variable status "Milestones in a deal's progress"
-                label variable pe_involvement "Indicates that a given deal, offering, funding or transaction has private equity involvement"
-                label variable deal_summary "Summary of the transaction"
-                label variable security_desc "A stand-alone description of the security, text to identify the different securities issued by a company, such as might be seen in the company's financial statements or cover of SEC filings"
-                label variable currency_code "Alphabetic code used to identify currencies pursuant to ISO-4217"
-                label variable transaction_value "Value of the transaction"
-                label variable desc_consideration "Text description of a Deal's consideration"
-                label variable sponsor_backed "Indicates the transaction is backed by a financial sponsor"
-
-                // Append to the accumulating dataset
-                append using `temp_all'
-                save `temp_all', replace
-            }
-
-    save "$temp_transactions/transactions_1.dta", replace
+    combine_transactions_3
+    combine_transactions_4
+    combine_transactions_5
+    combine_transactions_6
+    combine_transactions_7
+    combine_transactions_8
+    combine_transactions_9
+    combine_transactions_10
+    combine_transactions_11
 end
 
 program combine_transactions_1

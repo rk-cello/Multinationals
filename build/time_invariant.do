@@ -32,6 +32,7 @@ program main
     merge_time_invariant_claims //done
     merge_time_invariant_drill_results //done
     merge_time_invariant_capital_costs //done
+    merge_time_invariant_transactions //done
 end
 
 **** PROPERTY DETAILS DATA MERGE ****
@@ -60,7 +61,7 @@ program merge_time_invariant_prop_details
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/properties_property_details_crosssection.dta", replace
+    save "$output_properties/properties_property_details_crosssection.dta", replace
 
 end
 
@@ -88,21 +89,21 @@ program merge_time_invariant_production
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/properties_production_crosssection.dta", replace
+    save "$output_properties/properties_production_crosssection.dta", replace
 
 end
 
 program merge_time_invariant_reserves
 
     use "$dir_temp/temp_reserves_resources/RR6.dta"
-    save "$output_property_crosssection/properties_reserves_resources_crosssection.dta", replace
+    save "$output_properties/properties_reserves_resources_crosssection.dta", replace
 
 end
 
 program merge_time_invariant_tech_geo
 
     use "$dir_temp/temp_tech_geo/tech_geo.dta"
-    save "$output_property_crosssection/properties_technical_geology_crosssection.dta", replace
+    save "$output_properties/properties_technical_geology_crosssection.dta", replace
 
 end
 
@@ -129,7 +130,7 @@ program merge_time_invariant_financings
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/properties_financings_crosssection.dta", replace
+    save "$output_properties/properties_financings_crosssection.dta", replace
 
 end
 
@@ -156,7 +157,7 @@ program merge_time_invariant_most_recent_transactions
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/properties_most_recent_transactions_crosssection.dta", replace
+    save "$output_properties/properties_most_recent_transactions_crosssection.dta", replace
 
 end
 
@@ -183,7 +184,7 @@ program merge_time_invariant_top_drill_results
     }
 
     * Save the merged dataset
-    save "$output_property_crosssection/properties_top_drill_results_crosssection.dta", replace
+    save "$output_properties/properties_top_drill_results_crosssection.dta", replace
 
 end
 
@@ -205,5 +206,32 @@ program merge_time_invariant_capital_costs
 
     use "$dir_temp/temp_drill_results/capital_costs_global.dta", clear
     save "$dir_cleaned/S&P_cleaned/capital_costs_crosssection.dta", replace
+
+end
+
+program merge_time_invariant_transactions
+    clear all
+    set more off
+
+    cd "$dir_temp/temp_transactions"
+
+    * List of files to merge
+    local files transactions_1.dta transactions_2.dta transactions_3.dta transactions_4.dta transactions_5.dta transactions_6.dta transactions_7.dta transactions_8.dta transactions_9.dta transactions_10.dta transactions_11.dta
+
+    * Use the first file as the master dataset
+    local first : word 1 of `files'
+    use `first', clear
+
+    * Loop through the rest and merge
+    local nfiles : word count `files'
+    forvalues i = 2/`nfiles' {
+        local f : word `i' of `files'
+        merge 1:1 sptr_target_name sptr_mi_transaction_id using `f'
+        drop _merge
+    }
+
+    rename AW transaction_geography
+    * Save the merged dataset
+    save "$dir_cleaned/S&P_cleaned/transactions_crosssection.dta", replace
 
 end
