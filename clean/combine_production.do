@@ -721,6 +721,17 @@ program combine_production_3_1
     }
 
     save "$temp_production/production_3_1.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_3_1.dta"
+    
+    reshape long mining_process_cost_per_t_, i(prop_name prop_id) j(year)
+    rename mining_process_cost_per_t_ mining_process_cost_per_t
+    label var mining_process_cost_per_t "Total per unit cost associated with mining and processing ore"
+
+    save "$temp_production/production_3_1.dta", replace
+
 end
 
 
@@ -765,6 +776,16 @@ program combine_production_3_2
     }
 
     save "$temp_production/production_3_2.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_3_2.dta"
+    
+    reshape long mining_process_cost_cubic_m_, i(prop_name prop_id) j(year)
+    rename mining_process_cost_cubic_m_ mining_process_cost_cubic_m
+    label var mining_process_cost_cubic_m "Total per unit cost associated with mining and processing ore"
+
+    save "$temp_production/production_3_2.dta", replace
 end
     
 
@@ -807,6 +828,16 @@ program combine_production_3_3
         label var `var' "Comments expanding on or clarifying production cost data (`year')"
         local year = `year' - 1
     }
+
+    save "$temp_production/production_3_3.dta", replace
+
+    // wide to long // not run
+    clear
+    use "$temp_production/production_3_3.dta"
+    
+    reshape long production_cost_comments_, i(prop_name prop_id) j(year)
+    rename production_cost_comments_ production_cost_comments
+    label var production_cost_comments "Comments expanding on or clarifying production cost data"
 
     save "$temp_production/production_3_3.dta", replace
 end
