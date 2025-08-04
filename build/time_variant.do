@@ -73,13 +73,9 @@ program merge_time_variant_production
     forvalues i = 2/`nfiles' {
         local f : word `i' of `files'
         display "Merging file: `f'"
-        merge 1:1 prop_name prop_id using `f'
+        merge 1:1 prop_name prop_id year using `f'
         drop _merge
     }
-
-    // convert from wide to long
-    reshape long mining_process_cost_per_t_, i(prop_name prop_id) j(year)
-    rename mining_process_cost_per_t_ mining_process_cost_per_t
 
 
 end
