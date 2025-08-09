@@ -53,6 +53,9 @@ program main
     combine_production_4_5
     combine_production_4_6
     combine_production_4_7
+    combine_production_4_8
+    combine_production_4_9
+    combine_production_4_10
 end
 
 
@@ -2667,10 +2670,207 @@ program combine_production_4_9
     save "$temp_production/production_4_9.dta", replace
 end
 
+program combine_production_4_10
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
 
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_all_production_diamonds_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring B, replace
+            keep A-ED
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * millhead_grade_ct_per_t
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "millhead_grade_ct_per_t_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
     
+    local year = 2023
+    foreach var of varlist millhead_grade_ct_per_t_2023-millhead_grade_ct_per_t_1991 {
+        label var `var' "Concentration of commodity contained in material processed through the facility (`year')"
+        local year = `year' - 1
+    }
 
+    * recov_rate 
+    local year = 2023
+    foreach var of varlist AJ-BP {
+        local newname = "recov_rate_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist recov_rate_2023-recov_rate_1991 {
+        label var `var' "Quantity of commodity produced as a percent of the commodity in the material processed (`year')"
+        local year = `year' - 1
+    }
 
+    * commodity_production_ct
+    local year = 2023
+    foreach var of varlist BQ-CW {
+        local newname = "commodity_production_ct_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist commodity_production_ct_2023-commodity_production_ct_1991 {
+        label var `var' "Quantity of commodity produced (`year')"
+        local year = `year' - 1
+    }
+
+    * rptd_equiv
+    local year = 2023
+    foreach var of varlist CX-ED {
+        local newname = "rptd_equiv_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist rptd_equiv_2023-rptd_equiv_1991 {
+        label var `var' "Indicates that production is expressed on an equivalency basis (`year')"
+        local year = `year' - 1
+    }
+
+    //save "$temp_production/production_4_10.dta", replace
+
+    // wide to long
+    //clear
+    //use "$temp_production/production_4_10.dta"
+    
+    reshape long millhead_grade_ct_per_t_ recov_rate_ commodity_production_ct_ rptd_equiv_, i(prop_name prop_id) j(year)
+    rename millhead_grade_ct_per_t_ millhead_grade_ct_t_diamonds
+    rename recov_rate_ recov_rate_diamonds
+    rename commodity_production_ct_ commodity_prod_ct_diamonds
+    rename rptd_equiv_ rptd_equiv_diamonds
+
+    label var millhead_grade_ct_t_diamonds "Concentration of commodity contained in material processed through facility (diamonds)"
+    label var recov_rate_diamonds "Quantity of commodity produced as percent of commodity in material processed (diamonds)"
+    label var commodity_prod_ct_diamonds "Quantity of commodity produced (diamonds)"
+    label var rptd_equiv_diamonds "Indicates that production is expressed on an equivalency basis (diamonds)"
+
+    save "$temp_production/production_4_10.dta", replace
+end
+    
+program combine_production_4_11
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_all_production_U3O8_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring B, replace
+            keep A-ED
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * millhead_grade_pct
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "millhead_grade_pct_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist millhead_grade_pct_2023-millhead_grade_pct_1991 {
+        label var `var' "Concentration of commodity contained in material processed through the facility (`year')"
+        local year = `year' - 1
+    }
+
+    * recov_rate 
+    local year = 2023
+    foreach var of varlist AJ-BP {
+        local newname = "recov_rate_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist recov_rate_2023-recov_rate_1991 {
+        label var `var' "Quantity of commodity produced as a percent of the commodity in the material processed (`year')"
+        local year = `year' - 1
+    }
+
+    * commodity_production_lb
+    local year = 2023
+    foreach var of varlist BQ-CW {
+        local newname = "commodity_production_lb_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist commodity_production_lb_2023-commodity_production_lb_1991 {
+        label var `var' "Quantity of commodity produced (`year')"
+        local year = `year' - 1
+    }
+
+    * rptd_equiv
+    local year = 2023
+    foreach var of varlist CX-ED {
+        local newname = "rptd_equiv_`year'" // shortened to fit
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+    
+    local year = 2023
+    foreach var of varlist rptd_equiv_2023-rptd_equiv_1991 {
+        label var `var' "Indicates that production is expressed on an equivalency basis (`year')"
+        local year = `year' - 1
+    }
+
+    //save "$temp_production/production_4_11.dta", replace
+
+    // wide to long
+    //clear
+    //use "$temp_production/production_4_11.dta"
+    
+    reshape long millhead_grade_pct_ recov_rate_ commodity_production_lb_ rptd_equiv_, i(prop_name prop_id) j(year)
+    rename millhead_grade_pct_ millhead_grade_pct_U3O8
+    rename recov_rate_ recov_rate_U3O8
+    rename commodity_production_lb_ commodity_production_lb_U3O8
+    rename rptd_equiv_ rptd_equiv_U3O8
+
+    label var millhead_grade_pct_U3O8 "Concentration of commodity contained in material processed through facility (U3O8)"
+    label var recov_rate_U3O8 "Quantity of commodity produced as percent of commodity in material processed (U3O8)"
+    label var commodity_production_lb_U3O8 "Quantity of commodity produced (U3O8)"
+    label var rptd_equiv_U3O8 "Indicates that production is expressed on an equivalency basis (U3O8)"
+
+    save "$temp_production/production_4_11.dta", replace
+end
 
 
 
