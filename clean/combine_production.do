@@ -936,6 +936,16 @@ program combine_production_3_5
     }
 
     save "$temp_production/production_3_5.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_3_5.dta"
+    
+    reshape long ore_processed_volume_, i(prop_name prop_id) j(year)
+    rename ore_processed_volume_ ore_processed_volume
+    label var ore_processed_volume "Quantity of material processed through the facility"
+
+    save "$temp_production/production_3_5.dta", replace
 end
 
 
@@ -977,6 +987,16 @@ program combine_production_3_6
         label var `var' "General comments that apply to a mining processing facility (`year')"
         local year = `year' - 1
     }
+
+    save "$temp_production/production_3_6.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_3_6.dta"
+    
+    reshape long mining_production_comments_, i(prop_name prop_id) j(year)
+    rename mining_production_comments_ mining_production_comments
+    label var mining_production_comments "General comments that apply to a mining processing facility"
 
     save "$temp_production/production_3_6.dta", replace
 end
@@ -1022,6 +1042,16 @@ program combine_production_3_7
     }
 
     save "$temp_production/production_3_7.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_3_7.dta"
+    
+    reshape long production_certainty_, i(prop_name prop_id) j(year)
+    rename production_certainty_ production_certainty
+    label var production_certainty "Production certainty"
+
+    save "$temp_production/production_3_7.dta", replace
 end
 
 
@@ -1064,6 +1094,16 @@ program combine_production_4_1
         label var `var' "Production certainty (`year')"
         local year = `year' - 1
     }
+
+    save "$temp_production/production_4_1.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_1.dta"
+    
+    reshape long production_certainty_, i(prop_name prop_id) j(year)
+    rename production_certainty_ production_certainty
+    label var production_certainty "Production certainty"
 
     save "$temp_production/production_4_1.dta", replace
 end
@@ -1151,6 +1191,23 @@ program combine_production_4_2
     }
 
     save "$temp_production/production_4_2.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_2.dta"
+    
+    reshape long cash_cost_per_ct_ total_prod_cost_per_ct_ all_sustain_cost_ct_ all_cost_ct_, i(prop_name prop_id) j(year)
+    rename cash_cost_per_ct_ cash_cost_per_ct
+    rename total_prod_cost_per_ct_ total_prod_cost_per_ct
+    rename all_sustain_cost_ct_ all_sustain_cost_ct
+    rename all_cost_ct_ all_cost_ct
+
+    label var cash_cost_per_ct "Variable per unit cost associated with mining, processing, refining of commodity"
+    label var total_prod_cost_per_ct "Variable per unit cost associated with production of commodity"
+    label var all_sustain_cost_ct "Total per unit cost associated with sustaining production levels of commodity"
+    label var all_cost_ct "Total per unit cost associated with production of commodity"
+
+    save "$temp_production/production_4_2.dta", replace
 end
 
 program combine_production_4_3
@@ -1232,6 +1289,23 @@ program combine_production_4_3
         label var `var' "Total per unit cost associated with production of commodity (`year')"
         local year = `year' - 1
     }
+
+    save "$temp_production/production_4_3.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_3.dta"
+
+    reshape long cash_cost_per_lb_ total_prod_cost_per_lb_ all_sustain_cost_lb_ all_cost_lb_, i(prop_name prop_id) j(year)
+    rename cash_cost_per_lb_ cash_cost_per_lb
+    rename total_prod_cost_per_lb_ total_prod_cost_per_lb
+    rename all_sustain_cost_lb_ all_sustain_cost_lb
+    rename all_cost_lb_ all_cost_lb
+
+    label var cash_cost_per_lb "Variable per unit cost associated with mining, processing, refining of commodity"
+    label var total_prod_cost_per_lb "Variable per unit cost associated with production of commodity"
+    label var all_sustain_cost_lb "Total per unit cost associated with sustaining production levels of commodity"
+    label var all_cost_lb "Total per unit cost associated with production of commodity"
 
     save "$temp_production/production_4_3.dta", replace
 end
@@ -1472,6 +1546,27 @@ program combine_production_4_4
             }
 
     save "$temp_production/production_4_4.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_4.dta"
+
+    * 1. Reshape to long by metal-year combined
+    reshape long all_in_cost_t_, i(prop_name prop_id) j(metal_year) string
+
+    * 2. Split metal_year into year and metal
+    split metal_year, parse("_")
+    rename metal_year1 year
+    rename metal_year2 base_metal
+
+    rename all_in_cost_t_ all_in_cost_t
+    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+
+    replace base_metal = "ferromolybdenum" if base_metal == "ferromolybden"
+    drop metal_year
+
+    save "$temp_production/production_4_4.dta", replace
+    
 end
 
 
@@ -1754,6 +1849,26 @@ program combine_production_4_5
 
 
     save "$temp_production/production_4_5.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_5.dta"
+
+    * 1. Reshape to long by metal-year combined
+    reshape long all_in_cost_t_, i(prop_name prop_id) j(metal_year) string
+
+    * 2. Split metal_year into year and metal
+    split metal_year, parse("_")
+    rename metal_year1 year
+    rename metal_year2 base_metal
+
+    rename all_in_cost_t_ all_in_cost_t
+    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+
+    replace base_metal = "ferromolybdenum" if base_metal == "ferromolybden"
+    drop metal_year
+
+    save "$temp_production/production_4_5.dta", replace
 end
 
 program combine_production_4_6
@@ -2004,6 +2119,27 @@ program combine_production_4_6
 
                 local ++i
             }
+
+    save "$temp_production/production_4_6.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_6.dta"
+
+    * 1. Reshape to long by metal-year combined
+    reshape long all_in_cost_t_, i(prop_name prop_id) j(commodity_year) string
+
+    * 2. Split commodity_year into year and commodity
+    split commodity_year, parse("_")
+    rename commodity_year1 year
+    rename commodity_year2 commodity
+
+    rename all_in_cost_t_ all_in_cost_t
+    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+
+    replace commodity = "iron ore" if commodity == "iron"
+    replace commodity = "ferromanganese" if commodity == "ferromanganes"
+    drop commodity_year commodity_year3
 
     save "$temp_production/production_4_6.dta", replace
 end
@@ -2258,6 +2394,27 @@ program combine_production_4_7
             }
 
     save "$temp_production/production_4_7.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_7.dta"
+
+    * 1. Reshape to long by metal-year combined
+    reshape long all_in_cost_t_, i(prop_name prop_id) j(commodity_year) string
+
+    * 2. Split commodity_year into year and commodity
+    split commodity_year, parse("_")
+    rename commodity_year1 year
+    rename commodity_year2 commodity
+
+    rename all_in_cost_t_ all_in_cost_t
+    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+
+    replace commodity = "iron ore" if commodity == "iron"
+    replace commodity = "ferromanganese" if commodity == "ferromanganes"
+    drop commodity_year commodity_year3
+
+    save "$temp_production/production_4_7.dta", replace
 end
 
 program combine_production_4_8
@@ -2315,6 +2472,27 @@ program combine_production_4_8
             local year = `year' - 1
         }
     }
+
+    save "$temp_production/production_4_8.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_4_8.dta"
+
+    * 1. Reshape to long by metal-year combined
+    reshape long all_in_cost_oz_, i(prop_name prop_id) j(metal_year) string
+
+    * 2. Split metal_year into year and metal
+    split metal_year, parse("_")
+    rename metal_year1 year
+    rename metal_year2 precious_metal
+
+    rename all_in_cost_oz_ all_in_cost_oz
+    label var all_in_cost_oz "Total per unit cost associated with production of metal"
+
+    //replace precious_metal = "iron ore" if precious_metal == "iron"
+    //replace precious_metal = "ferromanganese" if precious_metal == "ferromanganes"
+    drop metal_year
 
     save "$temp_production/production_4_8.dta", replace
 end
