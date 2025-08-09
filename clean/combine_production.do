@@ -2473,11 +2473,7 @@ program combine_production_4_8
         }
     }
 
-    save "$temp_production/production_4_8.dta", replace
-
     // wide to long
-    clear
-    use "$temp_production/production_4_8.dta"
 
     * 1. Reshape to long by metal-year combined
     reshape long all_in_cost_oz_, i(prop_name prop_id) j(metal_year) string
@@ -2486,35 +2482,191 @@ program combine_production_4_8
     split metal_year, parse("_")
     rename metal_year1 year
     rename metal_year2 precious_metal
-
-    rename all_in_cost_oz_ all_in_cost_oz
-    label var all_in_cost_oz "Total per unit cost associated with production of metal"
-
-    //replace precious_metal = "iron ore" if precious_metal == "iron"
-    //replace precious_metal = "ferromanganese" if precious_metal == "ferromanganes"
     drop metal_year
+
+    reshape wide all_in_cost_oz_, i(prop_name prop_id year) j(precious_metal) string
+    label var all_in_cost_oz_gold "Total per unit cost associated with production of gold"
+    label var all_in_cost_oz_palladium "Total per unit cost associated with production of palladium"
+    label var all_in_cost_oz_platinum "Total per unit cost associated with production of platinum"
+    label var all_in_cost_oz_silver "Total per unit cost associated with production of silver"
 
     save "$temp_production/production_4_8.dta", replace
 end
 
 program combine_production_4_9
-    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
-    local timespan "1991_2001 2002_2012 2013_2023"
-
     clear
     tempname temp_file
     tempfile temp_file
     save `temp_file', emptyok
 
-    foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_in_costs_specialty_commodities_`timespan'_AfricaEmergingAsiaPacificLatinAmerica.xls"
-        if (fileexists("`file_name'")) {
-            display "Processing: `file_name'"
-            import excel "`file_name'", cellrange(A7) clear
-            append using `temp_file'
-            save `temp_file', replace
+ // 1991-2001
+    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
+    import excel "production_4_commodity_production_costs_all_in_costs_specialty_commodities_1991_2001_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    local year = 2001
+    unab vars : C-ED
+    local i = 1
+    foreach oldname of local vars {
+        local commodity : word `i' of `commodities'
+        local newname = "all_in_cost_t_`year'_`commodity'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')"
+
+        local i = `i' + 1
+        if (`i' > 12) {
+            local i = 1
+            local year = `year' - 1
         }
     }
+
+    * 1. Reshape to long by commodity-year combined
+    reshape long all_in_cost_t_, i(prop_name prop_id) j(commodity_year) string
+
+    * 2. Split commodity_year into year and commodity
+    split commodity_year, parse("_")
+    rename commodity_year1 year
+    rename commodity_year2 commodity
+
+    replace commodity = "iron_ore" if commodity == "iron"
+    replace commodity = "ferromanganese" if commodity == "ferromanganes"
+    drop commodity_year commodity_year3
+
+    save temp_file, replace
+
+ // 2002_2012
+    clear
+    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
+    import excel "production_4_commodity_production_costs_all_in_costs_specialty_commodities_2002_2012_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    local year = 2012
+    unab vars : C-ED
+    local i = 1
+    foreach oldname of local vars {
+        local commodity : word `i' of `commodities'
+        local newname = "all_in_cost_t_`year'_`commodity'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')"
+
+        local i = `i' + 1
+        if (`i' > 12) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    * 1. Reshape to long by commodity-year combined
+    reshape long all_in_cost_t_, i(prop_name prop_id) j(commodity_year) string
+
+    * 2. Split commodity_year into year and commodity
+    split commodity_year, parse("_")
+    rename commodity_year1 year
+    rename commodity_year2 commodity
+
+    replace commodity = "iron_ore" if commodity == "iron"
+    replace commodity = "ferromanganese" if commodity == "ferromanganes"
+    drop commodity_year commodity_year3
+    
+    append using temp_file
+    save temp_file, replace
+
+ // 2013_2023
+    clear
+    local commodities "antimony ferrotungsten ferrovanadium graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
+    import excel "production_4_commodity_production_costs_all_in_costs_specialty_commodities_2013_2023_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
+
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    local year = 2023
+    unab vars : C-GG
+    local i = 1
+    foreach oldname of local vars {
+        local commodity : word `i' of `commodities'
+        local newname = "all_in_cost_t_`year'_`commodity'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        label var `shortname' "Total per unit cost associated with production of commodity in `year' (`commodity')"
+
+        local i = `i' + 1
+        if (`i' > 17) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    * 1. Reshape to long by commodity-year combined
+    reshape long all_in_cost_t_, i(prop_name prop_id) j(commodity_year) string
+
+    * 2. Split commodity_year into year and commodity
+    split commodity_year, parse("_")
+    rename commodity_year1 year
+    rename commodity_year2 commodity
+    replace commodity = "heavy_mineral" if commodity == "heavy"
+    drop commodity_year commodity_year3
+    
+    append using temp_file
+    save temp_file, replace
+
+    //save "$temp_production/production_4_9.dta", replace
+
+ // long to wide
+    //clear
+    //use "$temp_production/production_4_9.dta"
+    //rename all_in_cost_t all_in_cost_t_
+    //replace commodity = "heavy_mineral" if commodity == "heavy_mineral_sands"
+
+    reshape wide all_in_cost_t_, i(prop_name prop_id year) j(commodity) string
+
+    label var all_in_cost_t_antimony "Total per unit cost associated with production of antimony"
+    label var all_in_cost_t_ferrotungsten "Total per unit cost associated with production of ferrotungsten"
+    label var all_in_cost_t_ferrovanadium "Total per unit cost associated with production of ferrovanadium"
+    label var all_in_cost_t_graphite "Total per unit cost associated with production of graphite"
+    label var all_in_cost_t_heavy_mineral "Total per unit cost associated with production of heavy mineral sands"
+    label var all_in_cost_t_ilmenite "Total per unit cost associated with production of ilmenite"
+    label var all_in_cost_t_lanthanides "Total per unit cost associated with production of lanthanides"
+    label var all_in_cost_t_lithium "Total per unit cost associated with production of lithium"
+    label var all_in_cost_t_niobium "Total per unit cost associated with production of niobium"
+    label var all_in_cost_t_rutile "Total per unit cost associated with production of rutile"
+    label var all_in_cost_t_scandium "Total per unit cost associated with production of scandium"
+    label var all_in_cost_t_tantalum "Total per unit cost associated with production of tantalum"
+    label var all_in_cost_t_titanium "Total per unit cost associated with production of titanium"
+    label var all_in_cost_t_tungsten "Total per unit cost associated with production of tungsten"
+    label var all_in_cost_t_vanadium "Total per unit cost associated with production of vanadium"
+    label var all_in_cost_t_yttrium "Total per unit cost associated with production of yttrium"
+    label var all_in_cost_t_zircon "Total per unit cost associated with production of zircon"
+    label var all_in_cost_t_alumina "Total per unit cost associated with production of alumina"
+    label var all_in_cost_t_aluminum "Total per unit cost associated with production of aluminum
+    label var all_in_cost_t_bauxite "Total per unit cost associated with production of bauxite"
+    label var all_in_cost_t_chromite "Total per unit cost associated with production of chromite"
+    label var all_in_cost_t_chromium "Total per unit cost associated with production of chromium"
+    label var all_in_cost_t_coal "Total per unit cost associated with production of coal"
+    label var all_in_cost_t_ferrochrome "Total per unit cost associated with production of ferrochrome"
+    label var all_in_cost_t_ferromanganese "Total per unit cost associated with production of ferromanganese"
+    label var all_in_cost_t_iron_ore "Total per unit cost associated with production of iron ore"
+    label var all_in_cost_t_manganese "Total per unit cost associated with production of manganese"
+    label var all_in_cost_t_phosphate "Total per unit cost associated with production of phosphate"
+    label var all_in_cost_t_potash "Total per unit cost associated with production of potash"
+
+    save "$temp_production/production_4_9.dta", replace
+end
+
 
     
 
