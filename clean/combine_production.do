@@ -831,7 +831,7 @@ program combine_production_3_3
 
     save "$temp_production/production_3_3.dta", replace
 
-    // wide to long // not run
+    // wide to long
     clear
     use "$temp_production/production_3_3.dta"
     
@@ -881,6 +881,16 @@ program combine_production_3_4
         label var `var' "Quantity of material processed through the facility (`year')"
         local year = `year' - 1
     }
+
+    save "$temp_production/production_3_4.dta", replace
+
+    // wide to long
+    clear
+    use "$temp_production/production_3_4.dta"
+    
+    reshape long ore_processed_mass_, i(prop_name prop_id) j(year)
+    rename ore_processed_mass_ ore_processed_mass
+    label var ore_processed_mass "Quantity of material processed through the facility"
 
     save "$temp_production/production_3_4.dta", replace
 end
