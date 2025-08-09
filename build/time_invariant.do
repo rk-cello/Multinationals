@@ -80,6 +80,20 @@ program merge_time_invariant_production
     local first : word 1 of `files'
     use `first', clear
 
+    rename mill_capacity_tonnes_per_day mill_capacity_t_per_dy
+    rename mill_capacity_tonnes_per_year mill_capacity_t_per_yr
+    rename mill_capacity_cubic_m_per_day mill_capacity_cubic_m_per_dy
+    rename mill_capacity_cubic_m_per_year mill_capacity_cubic_m_per_yr
+    rename mining_produ_general_comments mining_prod_gen_comments
+    rename mining_processing_cost_mt mining_process_cost_mt
+    rename mining_processing_cost_cubic_m mining_process_cost_cubic_m
+    local suffix "ore"
+    foreach var of varlist start_up_yr-mining_process_cost_cubic_m {
+        local newname = "`var'_`suffix'"
+        rename `var' `newname'
+        label var `newname' "`: variable label `var'' (`suffix')"
+    }
+
     * Loop through the rest and merge
     local nfiles : word count `files'
     forvalues i = 2/`nfiles' {

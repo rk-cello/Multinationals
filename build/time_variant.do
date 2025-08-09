@@ -26,6 +26,7 @@ program main
 
 end
 
+***** property details ****
 program merge_time_variant_prop_details
     clear all
     set more off
@@ -56,6 +57,7 @@ program merge_time_variant_prop_details
 
 end
 
+***** production *****
 program commodity_production_base_metals
     clear all
     set more off
@@ -209,22 +211,46 @@ program merge_time_variant_production
     clear all
     set more off
 
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
     cd "$dir_temp/temp_production"
 
-    * List of files to merge
-    local files production_3_1.dta production_3_2.dta production_3_3.dta production_3_4.dta production_3_5.dta production_3_6.dta production_3_7.dta production_4_1.dta production_4_2.dta production_4_3.dta production_4_4.dta production_4_5.dta production_4_6.dta production_4_7.dta production_4_8.dta 
-    * Use the first file as the master dataset
-    local first : word 1 of `files'
-    use `first', clear
+    * First group of files
+        local files production_3_1.dta production_3_2.dta production_3_3.dta production_3_4.dta production_3_5.dta production_3_6.dta production_3_7.dta production_4_1.dta production_4_2.dta production_4_3.dta production_4_4.dta production_4_5.dta production_4_6.dta production_4_7.dta production_4_8.dta production_4_9.dta production_4_10.dta production_4_11.dta production_4_12.dta production_5_1.dta production_5_2.dta
+        local first : word 1 of `files'
+        use `first', clear
 
-    * Loop through the rest and merge
-    local nfiles : word count `files'
-    forvalues i = 2/`nfiles' {
-        local f : word `i' of `files'
-        display "Merging file: `f'"
-        merge 1:1 prop_name prop_id year using `f'
-        drop _merge
-    }
+        local nfiles : word count `files'
+        forvalues i = 2/`nfiles' {
+            local f : word `i' of `files'
+            display "Merging file: `f'"
+            merge 1:1 prop_name prop_id year using `f'
+            drop _merge
+        }
 
+        save `temp_file', replace
+
+    * Second group of files
+        local files commodity_production_base_metals.dta commodity_production_bulk_commodities.dta commodity_production_precious_metals.dta commodity_production_specialty_commodities.dta
+        local first : word 1 of `files'
+        use `first', clear
+
+        local nfiles : word count `files'
+        forvalues i = 2/`nfiles' {
+            local f : word `i' of `files'
+            display "Merging file: `f'"
+            merge 1:1 prop_name prop_id year using `f'
+            drop _merge
+        }
+
+        merge 1:1 prop_name prop_id year using `temp_file'
+        save `temp_file', replace
+
+    order prop_name prop_id year, first
+
+    * Save the merged dataset
+    save "$output_properties/properties_production_panel.dta", replace
 
 end
