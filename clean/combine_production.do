@@ -56,6 +56,23 @@ program main
     combine_production_4_8
     combine_production_4_9
     combine_production_4_10
+    combine_production_4_11
+    combine_production_4_12
+    combine_production_4_13
+    combine_production_4_14
+    combine_production_4_15
+    combine_production_4_16
+    combine_production_4_17
+    combine_production_4_18
+    combine_production_4_19
+    combine_production_4_20
+    combine_production_4_21
+    combine_production_4_22
+    combine_production_4_23
+    combine_production_4_24
+    combine_production_4_25
+    combine_production_5_1
+    combine_production_5_2
 end
 
 
@@ -1137,7 +1154,7 @@ program combine_production_4_2
     label var prop_name                "Name of the mine or facility"
     label var prop_id                  "Unique key for the project"
 
-    * cash cost
+ * cash cost
     local year = 2023
     foreach var of varlist C-AI {
         local newname = "cash_cost_per_ct_`year'" // shortened to fit
@@ -1151,7 +1168,7 @@ program combine_production_4_2
         local year = `year' - 1
     }
 
-    * total production cost
+ * total production cost
     local year = 2023
     foreach var of varlist AJ-BP {
         local newname = "total_prod_cost_per_ct_`year'" // shortened to fit
@@ -1165,7 +1182,7 @@ program combine_production_4_2
         local year = `year' - 1
     }
 
-    * all-in sustaining cost
+ * all-in sustaining cost
     local year = 2023
     foreach var of varlist BQ-CW {
         local newname = "all_sustain_cost_ct_`year'" // shortened to fit
@@ -1179,7 +1196,7 @@ program combine_production_4_2
         local year = `year' - 1
     }
 
-    * all-in cost
+ * all-in cost
     local year = 2023
     foreach var of varlist CX-ED {
         local newname = "all_cost_ct_`year'" // shortened to fit
@@ -1193,12 +1210,7 @@ program combine_production_4_2
         local year = `year' - 1
     }
 
-    save "$temp_production/production_4_2.dta", replace
-
-    // wide to long
-    clear
-    use "$temp_production/production_4_2.dta"
-    
+ // wide to long
     reshape long cash_cost_per_ct_ total_prod_cost_per_ct_ all_sustain_cost_ct_ all_cost_ct_, i(prop_name prop_id) j(year)
     rename cash_cost_per_ct_ cash_cost_per_ct
     rename total_prod_cost_per_ct_ total_prod_cost_per_ct
@@ -1210,6 +1222,17 @@ program combine_production_4_2
     label var all_sustain_cost_ct "Total per unit cost associated with sustaining production levels of commodity"
     label var all_cost_ct "Total per unit cost associated with production of commodity"
 
+ // add suffix to variable names
+    //clear
+    //use "$temp_production/production_4_2.dta"
+
+    local suffix "diamonds"
+    foreach var of varlist cash_cost_per_ct total_prod_cost_per_ct all_sustain_cost_ct all_cost_ct {
+        local newname = "`var'_`suffix'"
+        rename `var' `newname'
+        label var `newname' "`: variable label `var'' (`suffix')"
+    }
+    
     save "$temp_production/production_4_2.dta", replace
 end
 
@@ -1293,12 +1316,7 @@ program combine_production_4_3
         local year = `year' - 1
     }
 
-    save "$temp_production/production_4_3.dta", replace
-
     // wide to long
-    clear
-    use "$temp_production/production_4_3.dta"
-
     reshape long cash_cost_per_lb_ total_prod_cost_per_lb_ all_sustain_cost_lb_ all_cost_lb_, i(prop_name prop_id) j(year)
     rename cash_cost_per_lb_ cash_cost_per_lb
     rename total_prod_cost_per_lb_ total_prod_cost_per_lb
@@ -1310,7 +1328,15 @@ program combine_production_4_3
     label var all_sustain_cost_lb "Total per unit cost associated with sustaining production levels of commodity"
     label var all_cost_lb "Total per unit cost associated with production of commodity"
 
+    // add suffix to variable names
+    local suffix "U3O8"
+    foreach var of varlist cash_cost_per_lb total_prod_cost_per_lb all_sustain_cost_lb all_cost_lb {
+        local newname = "`var'_`suffix'"
+        rename `var' `newname'
+        label var `newname' "`: variable label `var'' (`suffix')"
+    }
     save "$temp_production/production_4_3.dta", replace
+
 end
 
 program combine_production_4_4
@@ -2872,5 +2898,974 @@ program combine_production_4_11
     save "$temp_production/production_4_11.dta", replace
 end
 
+program combine_production_4_12
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local metals "cobalt copper ferromolybdenum ferronickel lead molybdenum nickel tin zinc"
 
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_1991_1999_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 1999
+            unab vars : C-CE
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "commodity_prod_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`metal')"
+
+                local i = `i' + 1
+                if (`i' > 9) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(metal_year) string
+
+            * 2. Split
+            split metal_year, parse("_")
+            rename metal_year1 year
+            rename metal_year2 base_metal
+
+            replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
+            label var commodity_prod_t "Quantity of commodity produced"
+            drop metal_year
+
+            save "$temp_production/production_4_12.dta", replace
+end
+
+program combine_production_4_13
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local metals "cobalt copper ferromolybdenum ferronickel lead molybdenum nickel tin zinc"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_2000_2008_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2008
+            unab vars : C-CE
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "commodity_prod_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`metal')"
+
+                local i = `i' + 1
+                if (`i' > 9) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(metal_year) string
+
+            * 2. Split
+            split metal_year, parse("_")
+            rename metal_year1 year
+            rename metal_year2 base_metal
+
+            replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
+            label var commodity_prod_t "Quantity of commodity produced"
+            drop metal_year
+
+            save "$temp_production/production_4_13.dta", replace
+end
+
+program combine_production_4_14
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local metals "cobalt copper ferromolybdenum ferronickel lead molybdenum nickel tin zinc"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_2009_2017_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2017
+            unab vars : C-CE
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "commodity_prod_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`metal')"
+
+                local i = `i' + 1
+                if (`i' > 9) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(metal_year) string
+
+            * 2. Split
+            split metal_year, parse("_")
+            rename metal_year1 year
+            rename metal_year2 base_metal
+
+            replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
+            //rename commodity_prod_t_ commodity_prod_t
+            label var commodity_prod_t "Quantity of commodity produced"
+            drop metal_year
+
+            save "$temp_production/production_4_14.dta", replace
+end
+
+program combine_production_4_15
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local metals "cobalt copper ferromolybdenum ferronickel lead molybdenum nickel tin zinc"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_2018_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2023
+            unab vars : C-BD
+            local i = 1
+            foreach oldname of local vars {
+                local metal : word `i' of `metals'
+                local newname = "commodity_prod_t_`year'_`metal'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`metal')"
+
+                local i = `i' + 1
+                if (`i' > 9) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(metal_year) string
+
+            * 2. Split
+            split metal_year, parse("_")
+            rename metal_year1 year
+            rename metal_year2 base_metal
+
+            replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
+            //rename commodity_prod_t_ commodity_prod_t
+            label var commodity_prod_t "Quantity of commodity produced"
+            drop metal_year
+
+            save "$temp_production/production_4_15.dta", replace
+        
+end
+
+program combine_production_4_16
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_1992_1999_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 1999
+            unab vars : C-CT
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 12) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 commodity
+
+            replace commodity = "ferromanganese" if commodity == "ferromanga"
+            replace commodity = "ferrochrome" if commodity == "ferrochrom"
+            replace commodity = "iron_ore" if commodity == "iron"
+            //rename commodity_prod_t_ commodity_prod_t
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year commodity_year3
+
+            save "$temp_production/production_4_16.dta", replace
+        
+end
+
+program combine_production_4_17
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_2000_2007_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2007
+            unab vars : C-CT
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 12) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 commodity
+
+            replace commodity = "ferromanganese" if commodity == "ferromanga"
+            replace commodity = "ferrochrome" if commodity == "ferrochrom"
+            replace commodity = "iron_ore" if commodity == "iron"
+            //rename commodity_prod_t_ commodity_prod_t
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year commodity_year3
+
+            save "$temp_production/production_4_17.dta", replace
+        
+end
+
+program combine_production_4_18
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_2008_2015_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2015
+            unab vars : C-CT
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 12) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 commodity
+
+            replace commodity = "ferromanganese" if commodity == "ferromanga"
+            replace commodity = "ferrochrome" if commodity == "ferrochrom"
+            replace commodity = "iron_ore" if commodity == "iron"
+            //rename commodity_prod_t_ commodity_prod_t
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year commodity_year3
+
+            save "$temp_production/production_4_18.dta", replace
+        
+end
+
+program combine_production_4_19
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_2016_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2023
+            unab vars : C-CT
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 12) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 commodity
+
+            replace commodity = "ferromanganese" if commodity == "ferromanga"
+            replace commodity = "ferrochrome" if commodity == "ferrochrom"
+            replace commodity = "iron_ore" if commodity == "iron"
+            //rename commodity_prod_t_ commodity_prod_t
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year commodity_year3
+
+            save "$temp_production/production_4_19.dta", replace
+        
+end
+
+program combine_production_4_20
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "gold palladium platinum silver"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_precious_metals_1991_2000_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2000
+            unab vars : C-AP
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 4) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 precious_metal
+            //replace commodity = "ferromanganese" if commodity == "ferromanga"
+            
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year
+
+            save "$temp_production/production_4_20.dta", replace
+        
+end
+
+program combine_production_4_21
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "gold palladium platinum silver"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_precious_metals_2001_2010_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2010
+            unab vars : C-AP
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 4) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 precious_metal
+            //replace commodity = "ferromanganese" if commodity == "ferromanga"
+            
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year
+
+            save "$temp_production/production_4_21.dta", replace
+        
+end
+
+program combine_production_4_22
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "gold palladium platinum silver"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_precious_metals_2011_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2023
+            unab vars : C-BB
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 4) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 precious_metal
+            //replace commodity = "ferromanganese" if commodity == "ferromanga"
+            
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year
+
+            save "$temp_production/production_4_22.dta", replace
+        
+end
+
+program combine_production_4_23
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "antimony ferrotungsten ferrovanadium graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_specialty_commodities_1991_2001_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2001
+            unab vars : C-GG
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 17) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 specialty_commodity
+            replace specialty_commodity = "ferrotungsten" if specialty_commodity == "ferrotungs"
+            replace specialty_commodity = "ferrovanadium" if specialty_commodity == "ferrovanad"
+            replace specialty_commodity = "heavy_mineral" if specialty_commodity == "heavy"
+            
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year commodity_year3
+
+            save "$temp_production/production_4_23.dta", replace
+        
+end
+
+program combine_production_4_24
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "antimony ferrotungsten ferrovanadium graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_specialty_commodities_2002_2012_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2012
+            unab vars : C-GG
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 17) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 specialty_commodity
+            replace specialty_commodity = "ferrotungsten" if specialty_commodity == "ferrotungs"
+            replace specialty_commodity = "ferrovanadium" if specialty_commodity == "ferrovanad"
+            replace specialty_commodity = "heavy_mineral" if specialty_commodity == "heavy"
+
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year commodity_year3
+
+            save "$temp_production/production_4_24.dta", replace
+        
+end
+
+program combine_production_4_25
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+    local commodities "antimony ferrotungsten ferrovanadium graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_4_commodity_production_costs_commodity_production_specialty_commodities_2013_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+            rename A  prop_name
+            rename B  prop_id
+            label var prop_name                          "Name of the mine or facility"
+            label var prop_id                            "Unique key for the project"
+
+            local year = 2023
+            unab vars : C-GG
+            local i = 1
+            foreach oldname of local vars {
+                local commodity : word `i' of `commodities'
+                local newname = "commodity_prod_t_`year'_`commodity'"
+                local shortname = substr("`newname'", 1, 32)
+
+                rename `oldname' `shortname'
+                label var `shortname' "Quantity of commodity produced in `year' (`commodity')"
+
+                local i = `i' + 1
+                if (`i' > 17) {
+                    local i = 1
+                    local year = `year' - 1
+                }
+            }
+
+            * 1. Reshape to long
+            reshape long commodity_prod_t_, i(prop_name prop_id) j(commodity_year) string
+
+            * 2. Split
+            split commodity_year, parse("_")
+            rename commodity_year1 year
+            rename commodity_year2 specialty_commodity
+            replace specialty_commodity = "ferrotungsten" if specialty_commodity == "ferrotungs"
+            replace specialty_commodity = "ferrovanadium" if specialty_commodity == "ferrovanad"
+            replace specialty_commodity = "heavy_mineral" if specialty_commodity == "heavy"
+
+            label var commodity_prod_t_ "Quantity of commodity produced"
+            drop commodity_year commodity_year3
+
+            save "$temp_production/production_4_25.dta", replace
+        
+end
+
+program combine_production_5_1
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_5_production_rank_value_all_1_2010_2022_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            //tostring C-AI, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    * Rename and label variables
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * as_of_date
+    local year = 2022
+    foreach var of varlist C-O {
+        local newname = "as_of_date_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2022
+    foreach var of varlist as_of_date_2022-as_of_date_2010 {
+        label var `var' "Date on which the fiscal period ended (`year')"
+        local year = `year' - 1
+    }
+
+    * global_rank_all_commodities
+    local year = 2022
+    foreach var of varlist P-AB {
+        local newname = "global_rank_all_commodities_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2022
+    foreach var of varlist global_rank_all_commodities_2022-global_rank_all_commodities_2010 {
+        label var `var' "Rank when compared to global production totals (`year')"
+        local year = `year' - 1
+    }
+
+    // wide to long
+    reshape long as_of_date_ global_rank_all_commodities_, i(prop_name prop_id) j(year)
+    rename as_of_date_ as_of_date
+    rename global_rank_all_commodities_ global_rank_all_commodities
+    label var as_of_date "Date on which the fiscal period ended"
+    label var global_rank_all_commodities "Rank when compared to global production totals"
+
+    save "$temp_production/production_5_1.dta", replace
+
+end
+
+program combine_production_5_2
+    local regions "AsiaPacific EuropeMiddleEast LatinAmerica USCanada Africa"
+
+    clear
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "production_5_production_rank_value_all_2_2010_2022_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            //tostring C-AI, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    * Rename and label variables
+    rename A  prop_name
+    rename B  prop_id
+    label var prop_name                "Name of the mine or facility"
+    label var prop_id                  "Unique key for the project"
+
+    * global_production_value_all_comm
+    local year = 2022
+    foreach var of varlist C-O {
+        local newname = "global_prod_val_all_comm_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2022
+    foreach var of varlist global_prod_val_all_comm_2022-global_prod_val_all_comm_2010 {
+        label var `var' "Value of production (`year')"
+        local year = `year' - 1
+    }
+
+    * share_of_world_all_comm
+    local year = 2022
+    foreach var of varlist P-AB {
+        local newname = "share_world_all_comm_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2022
+    foreach var of varlist share_world_all_comm_2022-share_world_all_comm_2010 {
+        label var `var' "Production value as a percent of total estimated or third-party reported global production value (`year')"
+        local year = `year' - 1
+    }
+
+    // wide to long
+    reshape long global_prod_val_all_comm_ share_world_all_comm_, i(prop_name prop_id) j(year)
+    rename global_prod_val_all_comm_ global_prod_val_all_commodities
+    rename share_world_all_comm_ share_of_world_all_commodities
+    label var global_prod_val_all_commodities "Value of production"
+    label var share_of_world_all_commodities "Production value as a percent of total estimated or third-party reported global production value"
+
+    save "$temp_production/production_5_2.dta", replace
+
+end
 
