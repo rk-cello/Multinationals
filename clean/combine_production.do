@@ -1363,7 +1363,7 @@ program combine_production_4_4
     label var prop_name                "Name of the mine or facility"
     label var prop_id                  "Unique key for the project"
 
-    * all in cost
+ * all in cost
     local year = 2005
     unab vars : C-K
             local i = 1
@@ -1574,26 +1574,34 @@ program combine_production_4_4
                 local ++i
             }
 
-    save "$temp_production/production_4_4.dta", replace
 
-    // wide to long
-    clear
-    use "$temp_production/production_4_4.dta"
 
+ // wide to long
     * 1. Reshape to long by metal-year combined
     reshape long all_in_cost_t_, i(prop_name prop_id) j(metal_year) string
-
     * 2. Split metal_year into year and metal
     split metal_year, parse("_")
     rename metal_year1 year
     rename metal_year2 base_metal
-
-    rename all_in_cost_t_ all_in_cost_t
-    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+    label var all_in_cost_t_ "Total per unit cost associated with production of commodity"
 
     replace base_metal = "ferromolybdenum" if base_metal == "ferromolybden"
     drop metal_year
 
+    //save "$temp_production/production_4_4.dta", replace
+
+ // long to wide
+    reshape wide all_in_cost_t_, i(prop_name prop_id year) j(base_metal) string
+    label var all_in_cost_t_cobalt "Total per unit cost associated with production of commodity (cobalt)"
+    label var all_in_cost_t_copper "Total per unit cost associated with production of commodity (copper)"
+    label var all_in_cost_t_ferromolybdenum "Total per unit cost associated with production of commodity (ferromolybdenum)"
+    label var all_in_cost_t_ferronickel "Total per unit cost associated with production of commodity (ferronickel)"
+    label var all_in_cost_t_lead "Total per unit cost associated with production of commodity (lead)"
+    label var all_in_cost_t_molybdenum "Total per unit cost associated with production of commodity (molybdenum)"
+    label var all_in_cost_t_nickel "Total per unit cost associated with production of commodity (nickel)"
+    label var all_in_cost_t_tin "Total per unit cost associated with production of commodity (tin)"
+    label var all_in_cost_t_zinc "Total per unit cost associated with production of commodity (zinc)"
+    
     save "$temp_production/production_4_4.dta", replace
     
 end
@@ -1623,7 +1631,7 @@ program combine_production_4_5
     label var prop_name                "Name of the mine or facility"
     label var prop_id                  "Unique key for the project"
 
-    * all in cost
+ * all in cost
     local year = 2023
     unab vars : C-K
             local i = 1
@@ -1879,7 +1887,7 @@ program combine_production_4_5
 
     save "$temp_production/production_4_5.dta", replace
 
-    // wide to long
+ // wide to long
     clear
     use "$temp_production/production_4_5.dta"
 
@@ -1891,13 +1899,26 @@ program combine_production_4_5
     rename metal_year1 year
     rename metal_year2 base_metal
 
-    rename all_in_cost_t_ all_in_cost_t
-    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+    //rename all_in_cost_t_ all_in_cost_t
+    label var all_in_cost_t_ "Total per unit cost associated with production of commodity"
 
     replace base_metal = "ferromolybdenum" if base_metal == "ferromolybden"
     drop metal_year
 
+ // long to wide
+    reshape wide all_in_cost_t_, i(prop_name prop_id year) j(base_metal) string
+    label var all_in_cost_t_cobalt "Total per unit cost associated with production of commodity (cobalt)"
+    label var all_in_cost_t_copper "Total per unit cost associated with production of commodity (copper)"
+    label var all_in_cost_t_ferromolybdenum "Total per unit cost associated with production of commodity (ferromolybdenum)"
+    label var all_in_cost_t_ferronickel "Total per unit cost associated with production of commodity (ferronickel)"
+    label var all_in_cost_t_lead "Total per unit cost associated with production of commodity (lead)"
+    label var all_in_cost_t_molybdenum "Total per unit cost associated with production of commodity (molybdenum)"
+    label var all_in_cost_t_nickel "Total per unit cost associated with production of commodity (nickel)"
+    label var all_in_cost_t_tin "Total per unit cost associated with production of commodity (tin)"
+    label var all_in_cost_t_zinc "Total per unit cost associated with production of commodity (zinc)"
+
     save "$temp_production/production_4_5.dta", replace
+
 end
 
 program combine_production_4_6
@@ -1924,7 +1945,7 @@ program combine_production_4_6
     label var prop_name                "Name of the mine or facility"
     label var prop_id                  "Unique key for the project"
 
-    * all in cost
+  * all in cost
     local year = 2007
     unab vars : C-N
             local i = 1
@@ -2151,7 +2172,7 @@ program combine_production_4_6
 
     save "$temp_production/production_4_6.dta", replace
 
-    // wide to long
+ // wide to long
     clear
     use "$temp_production/production_4_6.dta"
 
@@ -2163,12 +2184,25 @@ program combine_production_4_6
     rename commodity_year1 year
     rename commodity_year2 commodity
 
-    rename all_in_cost_t_ all_in_cost_t
-    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+    label var all_in_cost_t_ "Total per unit cost associated with production of commodity"
 
-    replace commodity = "iron ore" if commodity == "iron"
+    replace commodity = "iron_ore" if commodity == "iron"
     replace commodity = "ferromanganese" if commodity == "ferromanganes"
     drop commodity_year commodity_year3
+
+    reshape wide all_in_cost_t_, i(prop_name prop_id year) j(commodity) string
+    label var all_in_cost_t_alumina "Total per unit cost associated with production of commodity (alumina)"
+    label var all_in_cost_t_aluminum "Total per unit cost associated with production of commodity (aluminum)"
+    label var all_in_cost_t_bauxite "Total per unit cost associated with production of commodity (bauxite)"
+    label var all_in_cost_t_chromite "Total per unit cost associated with production of commodity (chromite)"
+    label var all_in_cost_t_chromium "Total per unit cost associated with production of commodity (chromium)"
+    label var all_in_cost_t_coal "Total per unit cost associated with production of commodity (coal)"
+    label var all_in_cost_t_ferrochrome "Total per unit cost associated with production of commodity (ferrochrome)"
+    label var all_in_cost_t_ferromanganese "Total per unit cost associated with production of commodity (ferromanganese)"
+    label var all_in_cost_t_iron_ore "Total per unit cost associated with production of commodity (iron ore)"
+    label var all_in_cost_t_manganese "Total per unit cost associated with production of commodity (manganese)"
+    label var all_in_cost_t_phosphate "Total per unit cost associated with production of commodity (phosphate)"
+    label var all_in_cost_t_potash "Total per unit cost associated with production of commodity (potash)"
 
     save "$temp_production/production_4_6.dta", replace
 end
@@ -2197,7 +2231,7 @@ program combine_production_4_7
     label var prop_name                "Name of the mine or facility"
     label var prop_id                  "Unique key for the project"
 
-    * all in cost
+ * all in cost
     local year = 2023
     unab vars : C-N
             local i = 1
@@ -2424,7 +2458,7 @@ program combine_production_4_7
 
     save "$temp_production/production_4_7.dta", replace
 
-    // wide to long
+ // wide to long
     clear
     use "$temp_production/production_4_7.dta"
 
@@ -2436,14 +2470,35 @@ program combine_production_4_7
     rename commodity_year1 year
     rename commodity_year2 commodity
 
-    rename all_in_cost_t_ all_in_cost_t
-    label var all_in_cost_t "Total per unit cost associated with production of commodity"
+    //rename all_in_cost_t_ all_in_cost_t
+    label var all_in_cost_t_ "Total per unit cost associated with production of commodity"
 
-    replace commodity = "iron ore" if commodity == "iron"
+    replace commodity = "iron_ore" if commodity == "iron"
     replace commodity = "ferromanganese" if commodity == "ferromanganes"
     drop commodity_year commodity_year3
 
+    //save "$temp_production/production_4_7.dta", replace
+
+    //clear
+    //use "$temp_production/production_4_7.dta"
+    //replace commodity = "iron_ore" if commodity == "iron ore"
+    //rename all_in_cost_t all_in_cost_t_
+    reshape wide all_in_cost_t_, i(prop_name prop_id year) j(commodity) string
+    label var all_in_cost_t_alumina "Total per unit cost associated with production of commodity (alumina)"
+    label var all_in_cost_t_aluminum "Total per unit cost associated with production of commodity (aluminum)"
+    label var all_in_cost_t_bauxite "Total per unit cost associated with production of commodity (bauxite)"
+    label var all_in_cost_t_chromite "Total per unit cost associated with production of commodity (chromite)"
+    label var all_in_cost_t_chromium "Total per unit cost associated with production of commodity (chromium)"
+    label var all_in_cost_t_coal "Total per unit cost associated with production of commodity (coal)"
+    label var all_in_cost_t_ferrochrome "Total per unit cost associated with production of commodity (ferrochrome)"
+    label var all_in_cost_t_ferromanganese "Total per unit cost associated with production of commodity (ferromanganese)"
+    label var all_in_cost_t_iron_ore "Total per unit cost associated with production of commodity (iron ore)"
+    label var all_in_cost_t_manganese "Total per unit cost associated with production of commodity (manganese)"
+    label var all_in_cost_t_phosphate "Total per unit cost associated with production of commodity (phosphate)"
+    label var all_in_cost_t_potash "Total per unit cost associated with production of commodity (potash)"
     save "$temp_production/production_4_7.dta", replace
+
+
 end
 
 program combine_production_4_8
@@ -2950,8 +3005,26 @@ program combine_production_4_12
             rename metal_year2 base_metal
 
             replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
-            label var commodity_prod_t "Quantity of commodity produced"
+            replace base_metal = "ferronickel" if base_metal == "ferronicke"
+            label var commodity_prod_t_ "Quantity of commodity produced"
             drop metal_year
+
+            //clear
+            //use "$temp_production/production_4_12.dta"
+            //rename commodity_prod_t commodity_prod_t_
+            /*
+            reshape wide commodity_prod_t_, i(prop_name prop_id year) j(base_metal) string
+            //rename commodity_prod_t_ferronicke commodity_prod_t_ferronickel
+            label var commodity_prod_t_cobalt "Quantity of commodity produced (cobalt)"
+            label var commodity_prod_t_copper "Quantity of commodity produced (copper)"
+            label var commodity_prod_t_ferromolybdenum "Quantity of commodity produced (ferromolybdenum)"
+            label var commodity_prod_t_ferronickel "Quantity of commodity produced (ferronickel)"
+            label var commodity_prod_t_lead "Quantity of commodity produced (lead)"
+            label var commodity_prod_t_molybdenum "Quantity of commodity produced (molybdenum)"
+            label var commodity_prod_t_nickel "Quantity of commodity produced (nickel)"
+            label var commodity_prod_t_tin "Quantity of commodity produced (tin)"
+            label var commodity_prod_t_zinc "Quantity of commodity produced (zinc)"
+            */
 
             save "$temp_production/production_4_12.dta", replace
 end
@@ -3008,8 +3081,23 @@ program combine_production_4_13
             rename metal_year2 base_metal
 
             replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
-            label var commodity_prod_t "Quantity of commodity produced"
+            replace base_metal = "ferronickel" if base_metal == "ferronicke"
+            label var commodity_prod_t_ "Quantity of commodity produced"
             drop metal_year
+
+            /*
+            reshape wide commodity_prod_t_, i(prop_name prop_id year) j(base_metal) string
+            rename commodity_prod_t_ferronicke commodity_prod_t_ferronickel
+            label var commodity_prod_t_cobalt "Quantity of commodity produced (cobalt)"
+            label var commodity_prod_t_copper "Quantity of commodity produced (copper)"
+            label var commodity_prod_t_ferromolybdenum "Quantity of commodity produced (ferromolybdenum)"
+            label var commodity_prod_t_ferronickel "Quantity of commodity produced (ferronickel)"
+            label var commodity_prod_t_lead "Quantity of commodity produced (lead)"
+            label var commodity_prod_t_molybdenum "Quantity of commodity produced (molybdenum)"
+            label var commodity_prod_t_nickel "Quantity of commodity produced (nickel)"
+            label var commodity_prod_t_tin "Quantity of commodity produced (tin)"
+            label var commodity_prod_t_zinc "Quantity of commodity produced (zinc)"
+            */
 
             save "$temp_production/production_4_13.dta", replace
 end
@@ -3066,9 +3154,26 @@ program combine_production_4_14
             rename metal_year2 base_metal
 
             replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
-            //rename commodity_prod_t_ commodity_prod_t
-            label var commodity_prod_t "Quantity of commodity produced"
+            replace base_metal = "ferronickel" if base_metal == "ferronicke"
+            label var commodity_prod_t_ "Quantity of commodity produced"
             drop metal_year
+
+            /*
+            clear
+            use "$temp_production/production_4_14.dta"
+            //rename commodity_prod_t commodity_prod_t_
+            reshape wide commodity_prod_t_, i(prop_name prop_id year) j(base_metal) string
+            rename commodity_prod_t_ferronicke commodity_prod_t_ferronickel
+            label var commodity_prod_t_cobalt "Quantity of commodity produced (cobalt)"
+            label var commodity_prod_t_copper "Quantity of commodity produced (copper)"
+            label var commodity_prod_t_ferromolybdenum "Quantity of commodity produced (ferromolybdenum)"
+            label var commodity_prod_t_ferronickel "Quantity of commodity produced (ferronickel)"
+            label var commodity_prod_t_lead "Quantity of commodity produced (lead)"
+            label var commodity_prod_t_molybdenum "Quantity of commodity produced (molybdenum)"
+            label var commodity_prod_t_nickel "Quantity of commodity produced (nickel)"
+            label var commodity_prod_t_tin "Quantity of commodity produced (tin)"
+            label var commodity_prod_t_zinc "Quantity of commodity produced (zinc)"
+            */
 
             save "$temp_production/production_4_14.dta", replace
 end
@@ -3125,9 +3230,26 @@ program combine_production_4_15
             rename metal_year2 base_metal
 
             replace base_metal = "ferromolybdenum" if base_metal == "ferromolyb"
-            //rename commodity_prod_t_ commodity_prod_t
-            label var commodity_prod_t "Quantity of commodity produced"
+            replace base_metal = "ferronickel" if base_metal == "ferronicke"
+            label var commodity_prod_t_ "Quantity of commodity produced"
             drop metal_year
+
+            /*
+            //clear
+            //use "$temp_production/production_4_15.dta"
+            //rename commodity_prod_t commodity_prod_t_
+            reshape wide commodity_prod_t_, i(prop_name prop_id year) j(base_metal) string
+            rename commodity_prod_t_ferronicke commodity_prod_t_ferronickel
+            label var commodity_prod_t_cobalt "Quantity of commodity produced (cobalt)"
+            label var commodity_prod_t_copper "Quantity of commodity produced (copper)"
+            label var commodity_prod_t_ferromolybdenum "Quantity of commodity produced (ferromolybdenum)"
+            label var commodity_prod_t_ferronickel "Quantity of commodity produced (ferronickel)"
+            label var commodity_prod_t_lead "Quantity of commodity produced (lead)"
+            label var commodity_prod_t_molybdenum "Quantity of commodity produced (molybdenum)"
+            label var commodity_prod_t_nickel "Quantity of commodity produced (nickel)"
+            label var commodity_prod_t_tin "Quantity of commodity produced (tin)"
+            label var commodity_prod_t_zinc "Quantity of commodity produced (zinc)"
+            */
 
             save "$temp_production/production_4_15.dta", replace
         
@@ -3191,7 +3313,28 @@ program combine_production_4_16
             label var commodity_prod_t_ "Quantity of commodity produced"
             drop commodity_year commodity_year3
 
-            save "$temp_production/production_4_16.dta", replace
+
+        /*
+        clear
+        use "$temp_production/production_4_16.dta"
+        //replace commodity = "iron_ore" if commodity == "iron ore"
+        //rename all_in_cost_t all_in_cost_t_
+        reshape wide commodity_prod_t_, i(prop_name prop_id year) j(commodity) string
+        label var commodity_prod_t_alumina "Total per unit cost associated with production of commodity (alumina)"
+        label var commodity_prod_t_aluminum "Total per unit cost associated with production of commodity (aluminum)"
+        label var commodity_prod_t_bauxite "Total per unit cost associated with production of commodity (bauxite)"
+        label var commodity_prod_t_chromite "Total per unit cost associated with production of commodity (chromite)"
+        label var commodity_prod_t_chromium "Total per unit cost associated with production of commodity (chromium)"
+        label var commodity_prod_t_coal "Total per unit cost associated with production of commodity (coal)"
+        label var commodity_prod_t_ferrochrome "Total per unit cost associated with production of commodity (ferrochrome)"
+        label var commodity_prod_t_ferromanganese "Total per unit cost associated with production of commodity (ferromanganese)"
+        label var commodity_prod_t_iron_ore "Total per unit cost associated with production of commodity (iron ore)"
+        label var commodity_prod_t_manganese "Total per unit cost associated with production of commodity (manganese)"
+        label var commodity_prod_t_phosphate "Total per unit cost associated with production of commodity (phosphate)"
+        label var commodity_prod_t_potash "Total per unit cost associated with production of commodity (potash)"
+        */
+        
+        save "$temp_production/production_4_16.dta", replace
         
 end
 
@@ -3252,6 +3395,26 @@ program combine_production_4_17
             //rename commodity_prod_t_ commodity_prod_t
             label var commodity_prod_t_ "Quantity of commodity produced"
             drop commodity_year commodity_year3
+
+            /*
+            clear
+            use "$temp_production/production_4_17.dta"
+            //replace commodity = "iron_ore" if commodity == "iron ore"
+            //rename all_in_cost_t all_in_cost_t_
+            reshape wide commodity_prod_t_, i(prop_name prop_id year) j(commodity) string
+            label var commodity_prod_t_alumina "Total per unit cost associated with production of commodity (alumina)"
+            label var commodity_prod_t_aluminum "Total per unit cost associated with production of commodity (aluminum)"
+            label var commodity_prod_t_bauxite "Total per unit cost associated with production of commodity (bauxite)"
+            label var commodity_prod_t_chromite "Total per unit cost associated with production of commodity (chromite)"
+            label var commodity_prod_t_chromium "Total per unit cost associated with production of commodity (chromium)"
+            label var commodity_prod_t_coal "Total per unit cost associated with production of commodity (coal)"
+            label var commodity_prod_t_ferrochrome "Total per unit cost associated with production of commodity (ferrochrome)"
+            label var commodity_prod_t_ferromanganese "Total per unit cost associated with production of commodity (ferromanganese)"
+            label var commodity_prod_t_iron_ore "Total per unit cost associated with production of commodity (iron ore)"
+            label var commodity_prod_t_manganese "Total per unit cost associated with production of commodity (manganese)"
+            label var commodity_prod_t_phosphate "Total per unit cost associated with production of commodity (phosphate)"
+            label var commodity_prod_t_potash "Total per unit cost associated with production of commodity (potash)"
+            */
 
             save "$temp_production/production_4_17.dta", replace
         
@@ -3315,6 +3478,26 @@ program combine_production_4_18
             label var commodity_prod_t_ "Quantity of commodity produced"
             drop commodity_year commodity_year3
 
+            /*
+            clear
+            use "$temp_production/production_4_18.dta"
+            //replace commodity = "iron_ore" if commodity == "iron ore"
+            //rename all_in_cost_t all_in_cost_t_
+            reshape wide commodity_prod_t_, i(prop_name prop_id year) j(commodity) string
+            label var commodity_prod_t_alumina "Total per unit cost associated with production of commodity (alumina)"
+            label var commodity_prod_t_aluminum "Total per unit cost associated with production of commodity (aluminum)"
+            label var commodity_prod_t_bauxite "Total per unit cost associated with production of commodity (bauxite)"
+            label var commodity_prod_t_chromite "Total per unit cost associated with production of commodity (chromite)"
+            label var commodity_prod_t_chromium "Total per unit cost associated with production of commodity (chromium)"
+            label var commodity_prod_t_coal "Total per unit cost associated with production of commodity (coal)"
+            label var commodity_prod_t_ferrochrome "Total per unit cost associated with production of commodity (ferrochrome)"
+            label var commodity_prod_t_ferromanganese "Total per unit cost associated with production of commodity (ferromanganese)"
+            label var commodity_prod_t_iron_ore "Total per unit cost associated with production of commodity (iron ore)"
+            label var commodity_prod_t_manganese "Total per unit cost associated with production of commodity (manganese)"
+            label var commodity_prod_t_phosphate "Total per unit cost associated with production of commodity (phosphate)"
+            label var commodity_prod_t_potash "Total per unit cost associated with production of commodity (potash)"
+            */
+
             save "$temp_production/production_4_18.dta", replace
         
 end
@@ -3376,6 +3559,26 @@ program combine_production_4_19
             //rename commodity_prod_t_ commodity_prod_t
             label var commodity_prod_t_ "Quantity of commodity produced"
             drop commodity_year commodity_year3
+
+            /*
+            clear
+            use "$temp_production/production_4_19.dta"
+            //replace commodity = "iron_ore" if commodity == "iron ore"
+            //rename all_in_cost_t all_in_cost_t_
+            reshape wide commodity_prod_t_, i(prop_name prop_id year) j(commodity) string
+            label var commodity_prod_t_alumina "Total per unit cost associated with production of commodity (alumina)"
+            label var commodity_prod_t_aluminum "Total per unit cost associated with production of commodity (aluminum)"
+            label var commodity_prod_t_bauxite "Total per unit cost associated with production of commodity (bauxite)"
+            label var commodity_prod_t_chromite "Total per unit cost associated with production of commodity (chromite)"
+            label var commodity_prod_t_chromium "Total per unit cost associated with production of commodity (chromium)"
+            label var commodity_prod_t_coal "Total per unit cost associated with production of commodity (coal)"
+            label var commodity_prod_t_ferrochrome "Total per unit cost associated with production of commodity (ferrochrome)"
+            label var commodity_prod_t_ferromanganese "Total per unit cost associated with production of commodity (ferromanganese)"
+            label var commodity_prod_t_iron_ore "Total per unit cost associated with production of commodity (iron ore)"
+            label var commodity_prod_t_manganese "Total per unit cost associated with production of commodity (manganese)"
+            label var commodity_prod_t_phosphate "Total per unit cost associated with production of commodity (phosphate)"
+            label var commodity_prod_t_potash "Total per unit cost associated with production of commodity (potash)"
+            */
 
             save "$temp_production/production_4_19.dta", replace
         
