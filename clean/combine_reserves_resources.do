@@ -8,12 +8,13 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_reserves "$input_metals_mining/properties_reserves_resources"
 
 * outputs
 global output_property_level "$dir_cleaned/property_level"
@@ -26,7 +27,6 @@ global temp_reserves "$dir_temp/temp_reserves_resources"
 
 
 ************************************************************************
-cd "$input_metals_mining/properties_reserves_resources"
 
 * roadmap
 program main
@@ -39,7 +39,7 @@ program combine_RR6 // time invariant data for reserves and resources
     clear all
     set more off
 
-    local files RR_6_in-situ_evalutation_prices_Africa.xls RR_6_in-situ_evalutation_prices_AsiaPacific.xls RR_6_in-situ_evalutation_prices_EuropeMiddleEast.xls RR_6_in-situ_evalutation_prices_LatinAmerica.xls RR_6_in-situ_evalutation_prices_USCanada.xls
+    local files "$input_reserves/RR_6_in-situ_evalutation_prices_Africa.xls" "$input_reserves/RR_6_in-situ_evalutation_prices_AsiaPacific.xls" "$input_reserves/RR_6_in-situ_evalutation_prices_EuropeMiddleEast.xls" "$input_reserves/RR_6_in-situ_evalutation_prices_LatinAmerica.xls" "$input_reserves/RR_6_in-situ_evalutation_prices_USCanada.xls"
 
     local first = 1
     foreach f of local files {

@@ -8,12 +8,13 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_financings "$input_metals_mining/properties_financings"
 
 * outputs
 global output_property_level "$dir_cleaned/property_level"
@@ -26,7 +27,6 @@ global temp_financings "$dir_temp/temp_financings"
 
 
 ************************************************************************
-cd "$input_metals_mining/properties_financings"
 
 * roadmap
 program main
@@ -46,7 +46,7 @@ program combine_financings_1
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file financings_1_most_recent_offerings_1_`region'.xls
+        local file "$input_financings/financings_1_most_recent_offerings_1_`region'.xls"
 
         // Define base variable names
         local basevars "snl_offering_key date_announced funding_type description"
@@ -101,7 +101,7 @@ program combine_financings_2
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file financings_1_most_recent_offerings_2_`region'.xls
+        local file "$input_financings/financings_1_most_recent_offerings_2_`region'.xls"
 
         // Define base variable names
         local basevars "completion_date termination_date amount use_of_proceeds"
@@ -156,7 +156,7 @@ program combine_financings_3
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file financings_1_most_recent_offerings_3_`region'.xls
+        local file "$input_financings/financings_1_most_recent_offerings_3_`region'.xls"
 
         // Define base variable names
         local basevars "flow_through IPO underwritten private_placement"
@@ -210,7 +210,7 @@ program combine_financings_4
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file financings_2_most_recent_credit_facilities_`region'.xls
+        local file "$input_financings/financings_2_most_recent_credit_facilities_`region'.xls"
 
         // Define base variable names
         local basevars "snl_funding_key revolving original_issue_date interest_rate original_amount amount_available current_historical term"

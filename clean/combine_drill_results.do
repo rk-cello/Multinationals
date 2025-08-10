@@ -7,19 +7,18 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_drill_results "$input_metals_mining/drill_results_capital_costs"
 
 * intermediates
 global temp_drill_results "$dir_temp/temp_drill_results"
 
-
 ************************************************************************
-cd "$input_metals_mining/drill_results_capital_costs"
 
 program main
     combine_drill_results
@@ -37,9 +36,9 @@ program combine_drill_results
     tempfile imported_file1_2
 
             foreach country of local countries {
-                local file1_1 "general_information/drill_results_1_general_info_1_`country'.xls"
-                local file1_2 "general_information/drill_results_1_general_info_2_`country'.xls"
-                local file2 "interval_details_value/drill_results_2_interval_details_value_`country'.xls"
+                local file1_1 "$input_drill_results/general_information/drill_results_1_general_info_1_`country'.xls"
+                local file1_2 "$input_drill_results/general_information/drill_results_1_general_info_2_`country'.xls"
+                local file2 "$input_drill_results/interval_details_value/drill_results_2_interval_details_value_`country'.xls"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file1_1'"
@@ -157,7 +156,7 @@ end
 program capital_costs_global
     clear all
     set more off
-    import excel "capital_costs_Global.xls", cellrange(A7) clear
+    import excel "$input_drill_results/capital_costs_Global.xls", cellrange(A7) clear
 
     // --- Rename variables ---
     rename A prop_name

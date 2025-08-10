@@ -5,9 +5,9 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"

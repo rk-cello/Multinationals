@@ -9,12 +9,13 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_production "$input_metals_mining/properties_production"
 
 * outputs
 global output_property_level "$dir_cleaned/property_level"
@@ -26,7 +27,6 @@ global temp_company_level "$dir_temp/company_level"
 global temp_production "$dir_temp/temp_production"
 
 ************************************************************************
-cd "$input_metals_mining/properties_production"
 
 * roadmap
 program main
@@ -83,7 +83,7 @@ program combine_production_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_1_ore_capacity_`region'.xls"
+        local file_name "$input_production/production_1_ore_capacity_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -178,7 +178,7 @@ program combine_production_2_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_2_commodity_capacity_precious_metals_`region'.xls"
+        local file_name "$input_production/production_2_commodity_capacity_precious_metals_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -249,7 +249,7 @@ program combine_production_2_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_2_commodity_capacity_base_metals_`region'.xls"
+        local file_name "$input_production/production_2_commodity_capacity_base_metals_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -355,7 +355,7 @@ program combine_production_2_3
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_2_commodity_capacity_bulk_commodities_`region'.xls"
+        local file_name "$input_production/production_2_commodity_capacity_bulk_commodities_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -468,7 +468,7 @@ program combine_production_2_4
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_2_commodity_capacity_specialty_commodities_`region'.xls"
+        local file_name "$input_production/production_2_commodity_capacity_specialty_commodities_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -622,7 +622,7 @@ program combine_production_2_5
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_2_commodity_capacity_diamonds_`region'.xls"
+        local file_name "$input_production/production_2_commodity_capacity_diamonds_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -664,7 +664,7 @@ program combine_production_2_6
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_2_commodity_capacity_U3O8_`region'.xls"
+        local file_name "$input_production/production_2_commodity_capacity_U3O8_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -707,7 +707,7 @@ program combine_production_3_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_3_ore_production_costs_1_`region'.xls"
+        local file_name "$input_production/production_3_ore_production_costs_1_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -762,7 +762,7 @@ program combine_production_3_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_3_ore_production_costs_2_`region'.xls"
+        local file_name "$input_production/production_3_ore_production_costs_2_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -816,7 +816,7 @@ program combine_production_3_3
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_3_ore_production_costs_3_`region'.xls"
+        local file_name "$input_production/production_3_ore_production_costs_3_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -870,7 +870,7 @@ program combine_production_3_4
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_3_ore_production_costs_4_`region'.xls"
+        local file_name "$input_production/production_3_ore_production_costs_4_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -923,7 +923,7 @@ program combine_production_3_5
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_3_ore_production_costs_5_`region'.xls"
+        local file_name "$input_production/production_3_ore_production_costs_5_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -976,7 +976,7 @@ program combine_production_3_6
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_3_ore_production_costs_6_`region'.xls"
+        local file_name "$input_production/production_3_ore_production_costs_6_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1029,7 +1029,7 @@ program combine_production_3_7
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_3_ore_production_costs_7_`region'.xls"
+        local file_name "$input_production/production_3_ore_production_costs_7_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1083,7 +1083,7 @@ program combine_production_4_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_actual_estimate_forecast_1991_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_actual_estimate_forecast_1991_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1136,7 +1136,7 @@ program combine_production_4_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_costs_diamonds_1991_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_costs_diamonds_1991_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1243,7 +1243,7 @@ program combine_production_4_3
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_costs_U3O8_1991_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_costs_U3O8_1991_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1347,7 +1347,7 @@ program combine_production_4_4
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_in_costs_base_metals_1991_2005_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_in_costs_base_metals_1991_2005_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1615,7 +1615,7 @@ program combine_production_4_5
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_in_costs_base_metals_2006_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_in_costs_base_metals_2006_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1929,7 +1929,7 @@ program combine_production_4_6
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_in_costs_bulk_commodities_1992_2007_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_in_costs_bulk_commodities_1992_2007_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2215,7 +2215,7 @@ program combine_production_4_7
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_in_costs_bulk_commodities_2008_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_in_costs_bulk_commodities_2008_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2508,7 +2508,7 @@ program combine_production_4_8
     tempfile temp_file
     save `temp_file', emptyok
 
-    import excel "production_4_commodity_production_costs_all_in_costs_precious_metals_1991_2023_EmergingAsiaPacific.xls", cellrange(A7) clear
+    import excel "$input_production/production_4_commodity_production_costs_all_in_costs_precious_metals_1991_2023_EmergingAsiaPacific.xls", cellrange(A7) clear
     drop C
     local oldcols "D E F G H I J K L M N O P Q R S T U V W X Y Z AA AB AC AD AE AF AG AH AI AJ AK AL AM AN AO AP AQ AR AS AT AU AV AW AX AY AZ BA BB BC BD BE BF BG BH BI BJ BK BL BM BN BO BP BQ BR BS BT BU BV BW BX BY BZ CA CB CC CD CE CF CG CH CI CJ CK CL CM CN CO CP CQ CR CS CT CU CV CW CX CY CZ DA DB DC DD DE DF DG DH DI DJ DK DL DM DN DO DP DQ DR DS DT DU DV DW DX DY DZ EA EB EC ED EE"
     local newcols "C D E F G H I J K L M N O P Q R S T U V W X Y Z AA AB AC AD AE AF AG AH AI AJ AK AL AM AN AO AP AQ AR AS AT AU AV AW AX AY AZ BA BB BC BD BE BF BG BH BI BJ BK BL BM BN BO BP BQ BR BS BT BU BV BW BX BY BZ CA CB CC CD CE CF CG CH CI CJ CK CL CM CN CO CP CQ CR CS CT CU CV CW CX CY CZ DA DB DC DD DE DF DG DH DI DJ DK DL DM DN DO DP DQ DR DS DT DU DV DW DX DY DZ EA EB EC ED"
@@ -2522,7 +2522,7 @@ program combine_production_4_8
     save `temp_file', replace
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_in_costs_precious_metals_1991_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_in_costs_precious_metals_1991_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2583,7 +2583,7 @@ program combine_production_4_9
 
  // 1991-2001
     local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
-    import excel "production_4_commodity_production_costs_all_in_costs_specialty_commodities_1991_2001_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
+    import excel "$input_production/production_4_commodity_production_costs_all_in_costs_specialty_commodities_1991_2001_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
 
     rename A  prop_name
     rename B  prop_id
@@ -2625,7 +2625,7 @@ program combine_production_4_9
  // 2002_2012
     clear
     local commodities "alumina aluminum bauxite chromite chromium coal ferrochrome ferromanganese iron_ore manganese phosphate potash"
-    import excel "production_4_commodity_production_costs_all_in_costs_specialty_commodities_2002_2012_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
+    import excel "$input_production/production_4_commodity_production_costs_all_in_costs_specialty_commodities_2002_2012_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
 
     rename A  prop_name
     rename B  prop_id
@@ -2668,7 +2668,7 @@ program combine_production_4_9
  // 2013_2023
     clear
     local commodities "antimony ferrotungsten ferrovanadium graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
-    import excel "production_4_commodity_production_costs_all_in_costs_specialty_commodities_2013_2023_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
+    import excel "$input_production/production_4_commodity_production_costs_all_in_costs_specialty_commodities_2013_2023_AfricaEmergingAsiaPacificLatinAmerica.xls", cellrange(A7) clear
 
     rename A  prop_name
     rename B  prop_id
@@ -2758,7 +2758,7 @@ program combine_production_4_10
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_production_diamonds_1991_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_production_diamonds_1991_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2859,7 +2859,7 @@ program combine_production_4_11
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_all_production_U3O8_1991_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_all_production_U3O8_1991_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2961,7 +2961,7 @@ program combine_production_4_12
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_1991_1999_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_base_metals_1991_1999_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3037,7 +3037,7 @@ program combine_production_4_13
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_2000_2008_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_base_metals_2000_2008_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3110,7 +3110,7 @@ program combine_production_4_14
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_2009_2017_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_base_metals_2009_2017_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3186,7 +3186,7 @@ program combine_production_4_15
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_base_metals_2018_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_base_metals_2018_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3263,7 +3263,7 @@ program combine_production_4_16
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_1992_1999_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_bulk_commodities_1992_1999_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3346,7 +3346,7 @@ program combine_production_4_17
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_2000_2007_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_bulk_commodities_2000_2007_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3428,7 +3428,7 @@ program combine_production_4_18
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_2008_2015_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_bulk_commodities_2008_2015_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3510,7 +3510,7 @@ program combine_production_4_19
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_bulk_commodities_2016_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_bulk_commodities_2016_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3592,7 +3592,7 @@ program combine_production_4_20
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_precious_metals_1991_2000_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_precious_metals_1991_2000_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3651,7 +3651,7 @@ program combine_production_4_21
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_precious_metals_2001_2010_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_precious_metals_2001_2010_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3710,7 +3710,7 @@ program combine_production_4_22
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_precious_metals_2011_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_precious_metals_2011_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3769,7 +3769,7 @@ program combine_production_4_23
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_specialty_commodities_1991_2001_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_specialty_commodities_1991_2001_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3830,7 +3830,7 @@ program combine_production_4_24
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_specialty_commodities_2002_2012_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_specialty_commodities_2002_2012_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3891,7 +3891,7 @@ program combine_production_4_25
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_4_commodity_production_costs_commodity_production_specialty_commodities_2013_2023_`region'.xls"
+        local file_name "$input_production/production_4_commodity_production_costs_commodity_production_specialty_commodities_2013_2023_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -3951,7 +3951,7 @@ program combine_production_5_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_5_production_rank_value_all_1_2010_2022_`region'.xls"
+        local file_name "$input_production/production_5_production_rank_value_all_1_2010_2022_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -4015,7 +4015,7 @@ program combine_production_5_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "production_5_production_rank_value_all_2_2010_2022_`region'.xls"
+        local file_name "$input_production/production_5_production_rank_value_all_2_2010_2022_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear

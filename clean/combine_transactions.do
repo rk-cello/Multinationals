@@ -7,19 +7,19 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_transactions "$input_metals_mining/transactions"
 
 * intermediates
 global temp_transactions "$dir_temp/temp_transactions"
 
 
 ************************************************************************
-cd "$input_metals_mining/transactions"
 
 program main
     combine_transactions_1
@@ -44,7 +44,7 @@ program combine_transactions_1
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file general_transaction_details_1_general_info_`region'.xlsx
+                local file "$input_transactions/general_transaction_details_1_general_info_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -151,7 +151,7 @@ program combine_transactions_2
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file general_transaction_details_2_company_info_`region'.xlsx
+                local file "$input_transactions/general_transaction_details_2_company_info_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -249,7 +249,7 @@ program combine_transactions_3
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file general_transaction_details_3_company_financials_buyer_`region'.xlsx
+                local file "$input_transactions/general_transaction_details_3_company_financials_buyer_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -337,7 +337,7 @@ program combine_transactions_4
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file general_transaction_details_3_company_financials_target_issuer_`region'.xlsx
+                local file "$input_transactions/general_transaction_details_3_company_financials_target_issuer_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -422,7 +422,7 @@ program combine_transactions_5
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file M_A_deals_terms_values_market_intelligence_1_`region'.xlsx
+                local file "$input_transactions/M_A_deals_terms_values_market_intelligence_1_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -509,7 +509,7 @@ program combine_transactions_6
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file M_A_deals_terms_values_market_intelligence_2_`region'.xlsx
+                local file "$input_transactions/M_A_deals_terms_values_market_intelligence_2_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -636,7 +636,7 @@ program combine_transactions_7
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file M_A_deals_terms_values_SNL_1_`region'.xlsx
+                local file "$input_transactions/M_A_deals_terms_values_SNL_1_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -770,7 +770,7 @@ program combine_transactions_8
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file M_A_deals_terms_values_SNL_2_`region'.xlsx
+                local file "$input_transactions/M_A_deals_terms_values_SNL_2_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -927,7 +927,7 @@ program combine_transactions_9
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file M_A_deals_ratios_multiples_SPIQ_metals_SNL_`region'.xlsx
+                local file "$input_transactions/M_A_deals_ratios_multiples_SPIQ_metals_SNL_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -1036,7 +1036,7 @@ program combine_transactions_10
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file M_A_metals_mining_deals_acquired_info_dates_`region'.xlsx
+                local file "$input_transactions/M_A_metals_mining_deals_acquired_info_dates_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"
@@ -1214,7 +1214,7 @@ program combine_transactions_11
     save `temp_all', emptyok
 
     foreach region of local regions {
-                local file M_A_shareholder_value_`region'.xlsx
+                local file "$input_transactions/M_A_shareholder_value_`region'.xlsx"
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file'"

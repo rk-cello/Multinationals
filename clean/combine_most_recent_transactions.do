@@ -8,12 +8,13 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_most_recent_transactions "$input_metals_mining/most_recent_transactions"
 
 * outputs
 global output_property_level "$dir_cleaned/property_level"
@@ -26,7 +27,6 @@ global temp_most_recent_transactions "$dir_temp/temp_most_recent_transactions"
 
 
 ************************************************************************
-cd "$input_metals_mining/properties_most_recent_transactions"
 
 * roadmap
 program main
@@ -47,7 +47,7 @@ program combine_most_recent_transactions_1
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file transaction_details_1_`region'.xls
+        local file "$input_most_recent_transactions/transaction_details_1_`region'.xls"
 
         // Define base variable names
         local basevars "buyer_name_target_name snl_deal_key deal_type target"
@@ -102,7 +102,7 @@ program combine_most_recent_transactions_2
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file transaction_details_2_`region'.xls
+        local file "$input_most_recent_transactions/transaction_details_2_`region'.xls"
 
         // Define base variable names
         local basevars "target_country announce_date deal_status completion_termination_date"
@@ -157,7 +157,7 @@ program combine_most_recent_transactions_3
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file transaction_details_3_`region'.xls
+        local file "$input_most_recent_transactions/transaction_details_3_`region'.xls"
 
         // Define base variable names
         local basevars "deal_consideration earn_in joint_venture deal_pct_acquired_announce"
@@ -212,7 +212,7 @@ program combine_most_recent_transactions_4
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file transaction_details_4_`region'.xls
+        local file "$input_most_recent_transactions/transaction_details_4_`region'.xls"
 
         // Define base variable names
         local basevars "eal_pct_acquired_complete total_deal_value_announce total_deal_value_complete rptd_currency_code"
@@ -267,7 +267,7 @@ program combine_most_recent_transactions_5
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file transaction_details_5_`region'.xls
+        local file "$input_most_recent_transactions/transaction_details_5_`region'.xls"
 
         // Define base variable names
         local basevars "buyer buyer_country seller seller_country"

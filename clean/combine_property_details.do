@@ -8,12 +8,13 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_property_details "$input_metals_mining/properties_property_details"
 
 * outputs
 global output_property_level "$dir_cleaned/property_level"
@@ -26,7 +27,6 @@ global temp_prop_details "$dir_temp/temp_prop_details"
 
 
 ************************************************************************
-cd "$input_metals_mining/properties_property_details"
 
 
 * roadmap
@@ -78,7 +78,7 @@ program combine_property_details_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_1_general_info_commodities_location_`region'.xls"
+        local file_name "$input_property_details/property_details_1_general_info_commodities_location_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -166,7 +166,7 @@ program combine_property_details_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_2_coal_`region'.xls"
+        local file_name "$input_property_details/property_details_2_coal_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -213,7 +213,7 @@ program combine_property_details_3_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_3_operator_1_`region'.xls"
+        local file_name "$input_property_details/property_details_3_operator_1_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -297,7 +297,7 @@ program combine_property_details_3_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_3_operator_2_`region'.xls"
+        local file_name "$input_property_details/property_details_3_operator_2_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -383,7 +383,7 @@ program combine_property_details_4
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_4_ownership_info_`region'.xls"
+        local file_name "$input_property_details/property_details_4_ownership_info_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -419,7 +419,7 @@ program combine_property_details_5_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_1_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_1_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -512,7 +512,7 @@ program combine_property_details_5_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_2_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_2_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -605,7 +605,7 @@ program combine_property_details_5_3
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_3_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_3_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -699,7 +699,7 @@ program combine_property_details_5_4
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_4_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_4_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -790,7 +790,7 @@ program combine_property_details_5_5
     tempfile temp_file
     save `temp_file', emptyok
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_5_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_5_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -881,7 +881,7 @@ program combine_property_details_5_6
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_6_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_6_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -974,7 +974,7 @@ program combine_property_details_5_7
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_7_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_7_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1066,7 +1066,7 @@ program combine_property_details_5_8
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_8_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_8_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1159,7 +1159,7 @@ program combine_property_details_5_9
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_9_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_9_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1235,7 +1235,7 @@ program combine_property_details_5_10
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_10_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_10_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1327,7 +1327,7 @@ program combine_property_details_5_11
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_11_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_11_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1403,7 +1403,7 @@ program combine_property_details_5_12
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_12_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_12_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1495,7 +1495,7 @@ program combine_property_details_5_13
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_13_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_13_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1587,7 +1587,7 @@ program combine_property_details_5_14
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_14_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_14_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1664,7 +1664,7 @@ program combine_property_details_5_15
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_5_ownership_details_15_`region'.xls"
+        local file_name "$input_property_details/property_details_5_ownership_details_15_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -1743,7 +1743,7 @@ program combine_property_details_6_1
 
     foreach year of numlist `years' {
         foreach region of local regions {
-            local file_name "property_details_6_historical_ownership_details_1_`year'_`region'.xls"
+            local file_name "$input_property_details/property_details_6_historical_ownership_details_1_`year'_`region'.xls"
             if (fileexists("`file_name'")) {
                 display "Processing: `file_name'"
                 import excel "`file_name'", cellrange(A7) clear
@@ -1841,7 +1841,7 @@ program combine_property_details_6_2
 
     foreach year of numlist `years' {
         foreach region of local regions {
-            local file_name "property_details_6_historical_ownership_details_2_`year'_`region'.xls"
+            local file_name "$input_property_details/property_details_6_historical_ownership_details_2_`year'_`region'.xls"
             if (fileexists("`file_name'")) {
                 display "Processing: `file_name'"
                 import excel "`file_name'", cellrange(A7) clear
@@ -1930,7 +1930,7 @@ program combine_property_details_7_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_7_royalty_details_1_`region'.xls"
+        local file_name "$input_property_details/property_details_7_royalty_details_1_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2019,7 +2019,7 @@ program combine_property_details_7_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_7_royalty_details_2_`region'.xls"
+        local file_name "$input_property_details/property_details_7_royalty_details_2_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2108,7 +2108,7 @@ program combine_property_details_7_3
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_7_royalty_details_3_`region'.xls"
+        local file_name "$input_property_details/property_details_7_royalty_details_3_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2197,7 +2197,7 @@ program combine_property_details_8
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_8_location_claims_comments_history_`region'.xls"
+        local file_name "$input_property_details/property_details_8_location_claims_comments_history_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2244,7 +2244,7 @@ program combine_property_details_9_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_9_contractor1_ID_name_`region'.xls"
+        local file_name "$input_property_details/property_details_9_contractor1_ID_name_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2301,7 +2301,7 @@ program combine_property_details_9_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_9_contractor1_HQ_verified_`region'.xls"
+        local file_name "$input_property_details/property_details_9_contractor1_HQ_verified_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2359,7 +2359,7 @@ program combine_property_details_9_3
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_9_contractor1_begin_`region'.xls"
+        local file_name "$input_property_details/property_details_9_contractor1_begin_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2415,7 +2415,7 @@ program combine_property_details_9_4
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_9_contractor1_end_`region'.xls"
+        local file_name "$input_property_details/property_details_9_contractor1_end_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2471,7 +2471,7 @@ program combine_property_details_9_5
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_9_contractor1_projected_end_`region'.xls"
+        local file_name "$input_property_details/property_details_9_contractor1_projected_end_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2526,7 +2526,7 @@ program combine_property_details_10_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_10_mine_econ_primary_power_source_`region'.xls"
+        local file_name "$input_property_details/property_details_10_mine_econ_primary_power_source_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2568,7 +2568,7 @@ program combine_property_details_10_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_10_mine_econ_secondary_power_source_`region'.xls"
+        local file_name "$input_property_details/property_details_10_mine_econ_secondary_power_source_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2611,7 +2611,7 @@ program combine_property_details_10_3
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_10_mine_econ_tertiary_power_source_`region'.xls"
+        local file_name "$input_property_details/property_details_10_mine_econ_tertiary_power_source_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2654,7 +2654,7 @@ program combine_property_details_11_1
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_11_risk_scores_1_`region'.xls"
+        local file_name "$input_property_details/property_details_11_risk_scores_1_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear
@@ -2721,7 +2721,7 @@ program combine_property_details_11_2
     save `temp_file', emptyok
 
     foreach region of local regions {
-        local file_name "property_details_11_risk_scores_2_`region'.xls"
+        local file_name "$input_property_details/property_details_11_risk_scores_2_`region'.xls"
         if (fileexists("`file_name'")) {
             display "Processing: `file_name'"
             import excel "`file_name'", cellrange(A7) clear

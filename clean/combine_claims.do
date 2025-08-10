@@ -8,21 +8,21 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_property_claims "$input_metals_mining/claims"
 
 * intermediates
 global temp_property_level "$dir_temp/property_level"
 global temp_company_level "$dir_temp/company_level"
 global temp_claims "$dir_temp/temp_claims"
 
-
 ************************************************************************
-cd "$input_metals_mining/claims"
+
 
 program main
     combine_claims
@@ -43,8 +43,8 @@ program combine_claims
     foreach status of local statuses {
         foreach type of local types {
             foreach region of local regions {
-                local file1 claims_1_general_info_`status'_`region'_`type'.xls
-                local file2 claims_2_general_info_location_`status'_`region'_`type'.xls 
+                local file1 "$input_metals_mining/claims_1_general_info_`status'_`region'_`type'.xls"
+                local file2 "$input_metals_mining/claims_2_general_info_location_`status'_`region'_`type'.xls" 
 
                 // Check if file exists; if not, continue to next iteration
                 capture confirm file "`file1'"
@@ -131,7 +131,7 @@ program combine_claims_linked_to_properties
     clear all
     set more off
     
-    local linkfiles ClaimsLinkedtoProperties_Africa.xlsx ClaimsLinkedtoProperties_Asia.xlsx ClaimsLinkedtoProperties_LatinAmerica.xlsx 
+    local linkfiles "$input_metals_mining/ClaimsLinkedtoProperties_Africa.xlsx" "$input_metals_mining/ClaimsLinkedtoProperties_Asia.xlsx" "$input_metals_mining/ClaimsLinkedtoProperties_LatinAmerica.xlsx" 
 
     tempfile all_links
     save `all_links', emptyok

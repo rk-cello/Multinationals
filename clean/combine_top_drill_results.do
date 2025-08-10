@@ -8,12 +8,13 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_top_drill "$input_metals_mining/properties_top_drill_results"
 
 * outputs
 global output_property_level "$dir_cleaned/property_level"
@@ -26,7 +27,6 @@ global temp_top_drill "$dir_temp/temp_top_drill"
 
 
 ************************************************************************
-cd "$input_metals_mining/properties_top_drill_results"
 
 * roadmap
 program main
@@ -58,7 +58,7 @@ program combine_top_drill_1_1
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file top_drill_results_1_drill_hole_interval_info_1_`region'.xls
+        local file "$input_top_drill/top_drill_results_1_drill_hole_interval_info_1_`region'.xls"
 
         // Define base variable names
         local basevars "interval_id hole_id date_rptd rptd_by"
@@ -113,7 +113,7 @@ program combine_top_drill_1_2
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file top_drill_results_1_drill_hole_interval_info_2_`region'.xls
+        local file "$input_top_drill/top_drill_results_1_drill_hole_interval_info_2_`region'.xls"
 
         // Define base variable names
         local basevars "interval depth explor_purpose significant_interval"
@@ -168,7 +168,7 @@ program combine_top_drill_1_3
     save `temp_all', emptyok
 
     foreach region of local regions {
-        local file top_drill_results_1_drill_hole_interval_info_3_`region'.xls
+        local file "$input_top_drill/top_drill_results_1_drill_hole_interval_info_3_`region'.xls"
 
         // Define base variable names
         local basevars "primary_interval_commodity interval_commodities interval_value"
@@ -226,7 +226,7 @@ program combine_top_drill_2_1
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_2_interval_grade_tonne_precious_metals_1_grade_`region'.xls
+        local file "$input_top_drill/top_drill_results_2_interval_grade_tonne_precious_metals_1_grade_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -282,7 +282,7 @@ program combine_top_drill_2_2
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_2_interval_grade_tonne_precious_metals_2_grade_by_interval_`region'.xls
+        local file "$input_top_drill/top_drill_results_2_interval_grade_tonne_precious_metals_2_grade_by_interval_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -338,7 +338,7 @@ program combine_top_drill_2_3
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_2_interval_grade_tonne_precious_metals_3_grade_equivalent_`region'.xls
+        local file "$input_top_drill/top_drill_results_2_interval_grade_tonne_precious_metals_3_grade_equivalent_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -394,7 +394,7 @@ program combine_top_drill_2_4
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_2_interval_grade_tonne_precious_metals_4_grade_equivalent_by_interval_`region'.xls
+        local file "$input_top_drill/top_drill_results_2_interval_grade_tonne_precious_metals_4_grade_equivalent_by_interval_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -450,7 +450,7 @@ program combine_top_drill_3_1
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_base_metals_1_grade_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_base_metals_1_grade_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -506,7 +506,7 @@ program combine_top_drill_3_2
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_base_metals_2_grade_by_interval_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_base_metals_2_grade_by_interval_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -562,7 +562,7 @@ program combine_top_drill_3_3
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_base_metals_3_grade_equivalent_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_base_metals_3_grade_equivalent_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -618,7 +618,7 @@ program combine_top_drill_3_4
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_base_metals_4_grade_equivalent_by_interval_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_base_metals_4_grade_equivalent_by_interval_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -674,7 +674,7 @@ program combine_top_drill_3_bulk_1
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_1_grade_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_1_grade_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -730,7 +730,7 @@ program combine_top_drill_3_bulk_2
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_2_grade_by_interval_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_2_grade_by_interval_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -786,7 +786,7 @@ program combine_top_drill_3_bulk_3
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_3_grade_equivalent_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_3_grade_equivalent_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -842,7 +842,7 @@ program combine_top_drill_3_bulk_4
     local nmetals : word count `metals'
 
     foreach region of local regions {
-        local file top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_4_grade_equivalent_by_interval_`region'.xls
+        local file "$input_top_drill/top_drill_results_3_interval_grade_percent_bulk_specialty_commodities_4_grade_equivalent_by_interval_`region'.xls"
 
         // Read data (from row 7 down)
         import excel "`file'", cellrange(A7) clear
@@ -896,7 +896,7 @@ program top_drill_3_U3O8
     local vars "interval_grade_pct grade_x_int_pct grade_equiv_pct grade_eq_x_int_pct"
     local nvars : word count `vars'
 
-    local file top_drill_results_3_interval_grade_percent_U3O8_all_Global.xls
+    local file "$input_top_drill/top_drill_results_3_interval_grade_percent_U3O8_all_Global.xls"
 
     // Read data (from row 7 down)
     import excel "`file'", cellrange(A7) clear
@@ -947,7 +947,7 @@ program most_recent_drill_results
     tempfile temp_all
     save `temp_all', emptyok
 
-    local file most_recent_drill_results_Global.xls
+    local file "$input_top_drill/most_recent_drill_results_Global.xls"
 
     // Read data (from row 7 down)
     import excel "`file'", cellrange(A7) clear

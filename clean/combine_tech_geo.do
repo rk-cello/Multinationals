@@ -8,12 +8,13 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../data/raw"
-global dir_temp "../../data/temp"
-global dir_cleaned "../../data/raw_cleaned"
+global dir_raw "../../../data/raw"
+global dir_temp "../../../data/temp"
+global dir_cleaned "../../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
+global input_tech_geo "$input_metals_mining/properties_technical_geology"
 
 * outputs
 global output_property_level "$dir_cleaned/property_level"
@@ -26,7 +27,6 @@ global temp_tech_geo "$dir_temp/temp_tech_geo"
 
 
 ************************************************************************
-cd "$input_metals_mining/properties_technical_geology"
 
 * roadmap
 program main
@@ -38,7 +38,7 @@ program combine_tech_geo
     clear all
     set more off
 
-    local files technical_geology_Africa.xls technical_geology_AsiaPacific.xls technical_geology_EuropeMiddleEast.xls technical_geology_LatinAmerica.xls technical_geology_USCanada.xls
+    local files "$input_tech_geo/technical_geology_Africa.xls" "$input_tech_geo/technical_geology_AsiaPacific.xls" "$input_tech_geo/technical_geology_EuropeMiddleEast.xls" "$input_tech_geo/technical_geology_LatinAmerica.xls" "$input_tech_geo/technical_geology_USCanada.xls"
     tempfile all
     local first = 1
 
