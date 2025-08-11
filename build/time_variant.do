@@ -28,6 +28,7 @@ global temp_top_drill "$dir_temp/temp_top_drill"
 global temp_claims "$dir_temp/temp_claims"
 global temp_drill_results "$dir_temp/temp_drill_results"
 global temp_transactions "$dir_temp/temp_transactions"
+global temp_mine_econ_modeled "$dir_temp/temp_mine_econ_modeled"
 
 
 ************************************************************************
@@ -307,5 +308,36 @@ program merge_time_variant_production
 
     * Save the merged dataset
     save "$output_properties/properties_production_panel.dta", replace
+
+end
+
+program merge_time_variant_econ_modeled
+    clear all
+    set more off
+
+    * List of files to merge
+    local files
+    forvalues i = 1/18 {
+        local files `files' "$temp_mine_econ_modeled/econ_modeled_`i'.dta"
+    }
+
+    * Use the first file as the master dataset
+    local first : word 1 of `files'
+    use `first', clear
+
+    * Loop through the rest and merge
+    local nfiles : word count `files'
+    forvalues i = 2/`nfiles' {
+        local f : word `i' of `files'
+        display "Merging file: `f'"
+        merge 1:1 prop_name prop_id year using `f'
+        drop _merge
+    }
+
+    // reorder to prop_name prop_id year and everythin else
+    order prop_name prop_id year, first
+
+    * Save the merged dataset
+    save "$output_properties/properties_mine_econ_modeled_data_panel.dta", replace
 
 end
