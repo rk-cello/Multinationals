@@ -30,7 +30,24 @@ global temp_mine_econ_modeled "$dir_temp/temp_mine_econ_modeled"
 
 * roadmap
 program main
-
+    combine_econ_modeled_1
+    combine_econ_modeled_2
+    combine_econ_modeled_3
+    combine_econ_modeled_4
+    combine_econ_modeled_5
+    combine_econ_modeled_6
+    combine_econ_modeled_7
+    combine_econ_modeled_8
+    combine_econ_modeled_9
+    combine_econ_modeled_10
+    combine_econ_modeled_11
+    combine_econ_modeled_12
+    combine_econ_modeled_13
+    combine_econ_modeled_14
+    combine_econ_modeled_15
+    combine_econ_modeled_16
+    combine_econ_modeled_17
+    combine_econ_modeled_18
 end
 
 
