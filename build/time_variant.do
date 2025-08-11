@@ -17,6 +17,18 @@ global output_property_level "$dir_cleaned/S&P_cleaned/property_level"
 global output_company_level "$dir_cleaned/S&P_cleaned/company_level"
 global output_properties "$output_property_level/properties"
 
+* intermediates
+global temp_prop_details "$dir_temp/temp_prop_details"
+global temp_production "$dir_temp/temp_production"
+global temp_reserves_resources "$dir_temp/temp_reserves_resources"
+global temp_tech_geo "$dir_temp/temp_tech_geo"
+global temp_financings "$dir_temp/temp_financings"
+global temp_most_recent_transactions "$dir_temp/temp_most_recent_transactions"
+global temp_top_drill "$dir_temp/temp_top_drill"
+global temp_claims "$dir_temp/temp_claims"
+global temp_drill_results "$dir_temp/temp_drill_results"
+global temp_transactions "$dir_temp/temp_transactions"
+
 
 ************************************************************************
 
@@ -34,10 +46,8 @@ program merge_time_variant_prop_details
     clear all
     set more off
 
-    cd "$dir_temp/temp_prop_details"
-
     * List of files to merge
-    local files property_details_6_1.dta property_details_6_2.dta 
+    local files "$temp_prop_details/property_details_6_1.dta" "$temp_prop_details/property_details_6_2.dta" 
 
     * Use the first file as the master dataset
     local first : word 1 of `files'
@@ -65,10 +75,8 @@ program commodity_production_base_metals
     clear all
     set more off
 
-    cd "$dir_temp/temp_production"
-
     * List of files to append
-    local files production_4_12.dta production_4_13.dta production_4_14.dta production_4_15.dta
+    local files "$temp_production/production_4_12.dta" "$temp_production/production_4_13.dta" "$temp_production/production_4_14.dta" "$temp_production/production_4_15.dta"
 
     * append files
     use `: word 1 of `files'', clear
@@ -100,10 +108,8 @@ program commodity_production_bulk_commodities
     clear all
     set more off
 
-    cd "$dir_temp/temp_production"
-
     * List of files to append
-    local files production_4_16.dta production_4_17.dta production_4_18.dta production_4_19.dta
+    local files "$temp_production/production_4_16.dta" "$temp_production/production_4_17.dta" "$temp_production/production_4_18.dta" "$temp_production/production_4_19.dta"
 
     * append files
     use `: word 1 of `files'', clear
@@ -139,12 +145,9 @@ program commodity_production_precious_metals
     clear all
     set more off
 
-    cd "$dir_temp/temp_production"
-
     * List of files to append
-    local files production_4_20.dta production_4_21.dta production_4_22.dta
-
-    * append files
+    
+    local files "$temp_production/production_4_20.dta" "$temp_production/production_4_21.dta" "$temp_production/production_4_22.dta"* append files
     use `: word 1 of `files'', clear
     local nfiles : word count `files'
     forvalues i = 2/`nfiles' {
@@ -170,10 +173,8 @@ program commodity_production_specialty_commodities
     clear all
     set more off
 
-    cd "$dir_temp/temp_production"
-
     * List of files to append
-    local files production_4_23.dta production_4_24.dta production_4_25.dta
+    local files "$temp_production/production_4_23.dta" "$temp_production/production_4_24.dta" "$temp_production/production_4_25.dta"
 
     * append files
     use `: word 1 of `files'', clear
@@ -221,7 +222,7 @@ program merge_time_variant_production
     cd "$dir_temp/temp_production"
 
     * First group of files (Ore production)
-        local files1 production_3_1.dta production_3_2.dta production_3_3.dta production_3_4.dta production_3_5.dta production_3_6.dta production_3_7.dta
+        local files1 "$temp_production/production_3_1.dta" "$temp_production/production_3_2.dta" "$temp_production/production_3_3.dta" "$temp_production/production_3_4.dta" "$temp_production/production_3_5.dta" "$temp_production/production_3_6.dta" "$temp_production/production_3_7.dta"
         local first1 : word 1 of `files1'
         use `first1', clear
 
@@ -243,8 +244,8 @@ program merge_time_variant_production
 
         save `temp_file', replace
 
-    * Second group of files (Commodity production)
-        local files2 commodity_production_base_metals.dta commodity_production_bulk_commodities.dta commodity_production_precious_metals.dta commodity_production_specialty_commodities.dta
+        * Second group of files (Commodity production)
+        local files2 "$temp_production/commodity_production_base_metals.dta" "$temp_production/commodity_production_bulk_commodities.dta" "$temp_production/commodity_production_precious_metals.dta" "$temp_production/commodity_production_specialty_commodities.dta"
         local first2 : word 1 of `files2'
         use `first2', clear
 
@@ -263,12 +264,12 @@ program merge_time_variant_production
         drop _merge
         save `temp_file', replace
 
-    * Third group of files (Other)
+        * Third group of files (Other)
         * List files
-        local files3 production_4_1.dta production_4_2.dta production_4_3.dta production_4_4.dta ///
-                    production_4_5.dta production_4_6.dta production_4_7.dta production_4_8.dta ///
-                    production_4_9.dta production_4_10.dta production_4_11.dta ///
-                    production_5_1.dta production_5_2.dta
+        local files3 "$temp_production/production_4_1.dta" "$temp_production/production_4_2.dta" "$temp_production/production_4_3.dta" "$temp_production/production_4_4.dta" ///
+                "$temp_production/production_4_5.dta" "$temp_production/production_4_6.dta" "$temp_production/production_4_7.dta" "$temp_production/production_4_8.dta" ///
+                "$temp_production/production_4_9.dta" "$temp_production/production_4_10.dta" "$temp_production/production_4_11.dta" ///
+                "$temp_production/production_5_1.dta" "$temp_production/production_5_2.dta"
 
         * Load first file (master) and make year numeric once
         local first3 : word 1 of `files3'

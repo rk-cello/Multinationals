@@ -17,6 +17,17 @@ global output_property_level "$dir_cleaned/S&P_cleaned/property_level"
 global output_company_level "$dir_cleaned/S&P_cleaned/company_level"
 global output_properties "$output_property_level/properties"
 
+* intermediates
+global temp_prop_details "$dir_temp/temp_prop_details"
+global temp_production "$dir_temp/temp_production"
+global temp_reserves_resources "$dir_temp/temp_reserves_resources"
+global temp_tech_geo "$dir_temp/temp_tech_geo"
+global temp_financings "$dir_temp/temp_financings"
+global temp_most_recent_transactions "$dir_temp/temp_most_recent_transactions"
+global temp_top_drill "$dir_temp/temp_top_drill"
+global temp_claims "$dir_temp/temp_claims"
+global temp_drill_results "$dir_temp/temp_drill_results"
+global temp_transactions "$dir_temp/temp_transactions"
 
 ************************************************************************
 
@@ -41,10 +52,8 @@ program merge_time_invariant_prop_details
     clear all
     set more off
 
-    cd "$dir_temp/temp_prop_details"
-
     * List of files to merge
-    local files property_details_1.dta property_details_2.dta property_details_3_1.dta property_details_3_2.dta property_details_4.dta property_details_5_1.dta property_details_5_2.dta property_details_5_3.dta property_details_5_4.dta property_details_5_5.dta property_details_5_6.dta property_details_5_7.dta property_details_5_8.dta property_details_5_9.dta property_details_5_10.dta property_details_5_11.dta property_details_5_12.dta property_details_5_13.dta property_details_5_14.dta property_details_5_15.dta property_details_7_1.dta property_details_7_2.dta property_details_7_3.dta property_details_8.dta property_details_9_1.dta property_details_9_2.dta property_details_9_3.dta property_details_9_4.dta property_details_9_5.dta property_details_10_1.dta property_details_10_2.dta property_details_10_3.dta property_details_11_1.dta property_details_11_2.dta
+    local files "$temp_prop_details/property_details_1.dta" "$temp_prop_details/property_details_2.dta" "$temp_prop_details/property_details_3_1.dta" "$temp_prop_details/property_details_3_2.dta" "$temp_prop_details/property_details_4.dta" "$temp_prop_details/property_details_5_1.dta" "$temp_prop_details/property_details_5_2.dta" "$temp_prop_details/property_details_5_3.dta" "$temp_prop_details/property_details_5_4.dta" "$temp_prop_details/property_details_5_5.dta" "$temp_prop_details/property_details_5_6.dta" "$temp_prop_details/property_details_5_7.dta" "$temp_prop_details/property_details_5_8.dta" "$temp_prop_details/property_details_5_9.dta" "$temp_prop_details/property_details_5_10.dta" "$temp_prop_details/property_details_5_11.dta" "$temp_prop_details/property_details_5_12.dta" "$temp_prop_details/property_details_5_13.dta" "$temp_prop_details/property_details_5_14.dta" "$temp_prop_details/property_details_5_15.dta" "$temp_prop_details/property_details_7_1.dta" "$temp_prop_details/property_details_7_2.dta" "$temp_prop_details/property_details_7_3.dta" "$temp_prop_details/property_details_8.dta" "$temp_prop_details/property_details_9_1.dta" "$temp_prop_details/property_details_9_2.dta" "$temp_prop_details/property_details_9_3.dta" "$temp_prop_details/property_details_9_4.dta" "$temp_prop_details/property_details_9_5.dta" "$temp_prop_details/property_details_10_1.dta" "$temp_prop_details/property_details_10_2.dta" "$temp_prop_details/property_details_10_3.dta" "$temp_prop_details/property_details_11_1.dta" "$temp_prop_details/property_details_11_2.dta"
 
     * Use the first file as the master dataset
     local first : word 1 of `files'
@@ -70,10 +79,8 @@ program merge_time_invariant_production
     clear all
     set more off
 
-    cd "$dir_temp/temp_production"
-
     * List of files to merge
-    local files production_1.dta production_2_1.dta production_2_2.dta production_2_3.dta production_2_4.dta production_2_5.dta production_2_6.dta
+    local files "$temp_production/production_1.dta" "$temp_production/production_2_1.dta" "$temp_production/production_2_2.dta" "$temp_production/production_2_3.dta" "$temp_production/production_2_4.dta" "$temp_production/production_2_5.dta" "$temp_production/production_2_6.dta"
 
     * Use the first file as the master dataset
     local first : word 1 of `files'
@@ -108,14 +115,14 @@ end
 
 program merge_time_invariant_reserves
 
-    use "$dir_temp/temp_reserves_resources/RR6.dta"
+    use "$temp_reserves_resources/RR6.dta"
     save "$output_properties/properties_reserves_resources_crosssection.dta", replace
 
 end
 
 program merge_time_invariant_tech_geo
 
-    use "$dir_temp/temp_tech_geo/tech_geo.dta"
+    use "$temp_tech_geo/tech_geo.dta"
     save "$output_properties/properties_technical_geology_crosssection.dta", replace
 
 end
@@ -125,10 +132,8 @@ program merge_time_invariant_financings
     clear all
     set more off
 
-    cd "$dir_temp/temp_financings"
-
     * List of files to merge
-    local files financings_1_1.dta financings_1_2.dta financings_1_3.dta financings_2.dta
+    local files "$temp_financings/financings_1_1.dta" "$temp_financings/financings_1_2.dta" "$temp_financings/financings_1_3.dta" "$temp_financings/financings_2.dta"
 
     * Use the first file as the master dataset
     local first : word 1 of `files'
@@ -152,10 +157,8 @@ program merge_time_invariant_most_recent_transactions
     clear all
     set more off
 
-    cd "$dir_temp/temp_most_recent_transactions"
-
     * List of files to merge
-    local files transaction_details_1.dta transaction_details_2.dta transaction_details_3.dta transaction_details_4.dta transaction_details_5.dta
+    local files "$temp_most_recent_transactions/transaction_details_1.dta" "$temp_most_recent_transactions/transaction_details_2.dta" "$temp_most_recent_transactions/transaction_details_3.dta" "$temp_most_recent_transactions/transaction_details_4.dta" "$temp_most_recent_transactions/transaction_details_5.dta"
 
     * Use the first file as the master dataset
     local first : word 1 of `files'
@@ -179,10 +182,8 @@ program merge_time_invariant_top_drill_results
     clear all
     set more off
 
-    cd "$dir_temp/temp_top_drill"
-
     * List of files to merge
-    local files top_drill_1_1.dta top_drill_1_2.dta top_drill_1_3.dta top_drill_2_1.dta top_drill_2_2.dta top_drill_2_3.dta top_drill_2_4.dta top_drill_3_1.dta top_drill_3_2.dta top_drill_3_3.dta top_drill_3_4.dta top_drill_3_bulk_1.dta top_drill_3_bulk_2.dta top_drill_3_bulk_3.dta top_drill_3_bulk_4.dta top_drill_3_U3O8.dta most_recent_drill.dta
+    local files "$temp_top_drill/top_drill_1_1.dta" "$temp_top_drill/top_drill_1_2.dta" "$temp_top_drill/top_drill_1_3.dta" "$temp_top_drill/top_drill_2_1.dta" "$temp_top_drill/top_drill_2_2.dta" "$temp_top_drill/top_drill_2_3.dta" "$temp_top_drill/top_drill_2_4.dta" "$temp_top_drill/top_drill_3_1.dta" "$temp_top_drill/top_drill_3_2.dta" "$temp_top_drill/top_drill_3_3.dta" "$temp_top_drill/top_drill_3_4.dta" "$temp_top_drill/top_drill_3_bulk_1.dta" "$temp_top_drill/top_drill_3_bulk_2.dta" "$temp_top_drill/top_drill_3_bulk_3.dta" "$temp_top_drill/top_drill_3_bulk_4.dta" "$temp_top_drill/top_drill_3_U3O8.dta" "$temp_top_drill/most_recent_drill.dta"
 
     * Use the first file as the master dataset
     local first : word 1 of `files'
@@ -203,21 +204,21 @@ end
 
 program merge_time_invariant_claims
 
-    use "$dir_temp/temp_claims/claims_linked_to_properties.dta"
+    use "$temp_claims/claims_linked_to_properties.dta"
     save "$output_property_level/claims_crosssection.dta", replace
     
 end
 
 program merge_time_invariant_drill_results
 
-    use "$dir_temp/temp_drill_results/drill_results_1&2.dta", clear
+    use "$temp_drill_results/drill_results_1&2.dta", clear
     save "$output_property_level/drill_results_crosssection.dta", replace
 
 end
 
 program merge_time_invariant_capital_costs
 
-    use "$dir_temp/temp_drill_results/capital_costs_global.dta", clear
+    use "$temp_drill_results/capital_costs_global.dta", clear
     save "$dir_cleaned/S&P_cleaned/capital_costs_crosssection.dta", replace
 
 end
@@ -226,11 +227,9 @@ program merge_time_invariant_transactions
     clear all
     set more off
 
-    cd "$dir_temp/temp_transactions"
-
     * List of files to merge
-    local files transactions_1.dta transactions_2.dta transactions_3.dta transactions_4.dta transactions_5.dta transactions_6.dta transactions_7.dta transactions_8.dta transactions_9.dta transactions_10.dta transactions_11.dta
-
+    
+    local files "$temp_transactions/transactions_1.dta" "$temp_transactions/transactions_2.dta" "$temp_transactions/transactions_3.dta" "$temp_transactions/transactions_4.dta" "$temp_transactions/transactions_5.dta" "$temp_transactions/transactions_6.dta" "$temp_transactions/transactions_7.dta" "$temp_transactions/transactions_8.dta" "$temp_transactions/transactions_9.dta" "$temp_transactions/transactions_10.dta" "$temp_transactions/transactions_11.dta"
     * Use the first file as the master dataset
     local first : word 1 of `files'
     use `first', clear
