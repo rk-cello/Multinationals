@@ -8,9 +8,9 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../../data/raw"
-global dir_temp "../../../data/temp"
-global dir_cleaned "../../../data/raw_cleaned"
+global dir_raw "../../data/raw"
+global dir_temp "../../data/temp"
+global dir_cleaned "../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
@@ -792,6 +792,182 @@ program combine_RR1_19
     replace year = "MstRctYear" if year == "2023"
 
     save "$temp_reserves/RR1_19.dta", replace
+
+end
+
+program combine_RR2_1
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_1_grade_reserves_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "grd_resv_gpert_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+        //label var `shortname' "Total per unit cost associated with production of metal in `year' (`metal')"
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+         }
+    }
+
+    reshape long grd_resv_gpert_, i(prop_name prop_id) j(year_metal) string
+    rename grd_resv_gpert_ grd_resv_gpert
+    label var grd_resv_gpert "Grade of product in ore used to calculate reserves (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    //replace commodity = "heavy_mineral" if commodity == "heavy"
+    drop year_metal
+    //replace year = "MstRctYear" if year == "2023"
+
+    save "$temp_reserves/RR2_1.dta", replace
+
+end
+
+program combine_RR2_2
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_2_contained_reserves_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "contained_resv_oz_g_t_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long contained_resv_oz_g_t_, i(prop_name prop_id) j(year_metal) string
+    rename contained_resv_oz_g_t_ contained_resv_oz_g_t
+    label var contained_resv_oz_g_t "The quantity of mineable product identified as reserves (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    replace metal = "palladium" if metal == "palla"
+    replace metal = "platinum" if metal == "plati"
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    drop year_metal
+
+    save "$temp_reserves/RR2_2.dta", replace
+
+end
+
+program combine_RR2_3
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_7_grade_total_resources_excl_reserves_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "grd_total_resrc_gpert_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long grd_total_resrc_gpert_, i(prop_name prop_id) j(year_metal) string
+    rename grd_total_resrc_gpert_ grd_total_resrc_gpert
+    label var grd_total_resrc_gpert "Grade of product in ore used to calculate resources including inferred (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    replace metal = "palladium" if metal == "palla"
+    replace metal = "platinum" if metal == "plati"
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    drop year_metal
+
+    save "$temp_reserves/RR2_3.dta", replace
 
 end
 
