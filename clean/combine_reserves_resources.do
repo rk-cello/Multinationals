@@ -912,7 +912,7 @@ program combine_RR2_2
 
 end
 
-program combine_RR2_3
+program combine_RR2_7
     clear
     local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
     local metals "gold palladium platinum rhodium silver"
@@ -967,7 +967,371 @@ program combine_RR2_3
     replace metal = "silver" if metal == "silve"
     drop year_metal
 
-    save "$temp_reserves/RR2_3.dta", replace
+    save "$temp_reserves/RR2_7.dta", replace
+
+end
+
+program combine_RR2_8
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_8_contained_total_resources_excl_reserves_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "contained_total_resrc_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long contained_total_resrc_, i(prop_name prop_id) j(year_metal) string
+    rename contained_total_resrc_ contained_total_resrc
+    label var contained_total_resrc "The quantity of mineable product identified as resources, including inferred (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    replace metal = "palladium" if metal == "palla"
+    replace metal = "platinum" if metal == "plati"
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    drop year_metal
+
+    save "$temp_reserves/RR2_8.dta", replace
+
+end
+
+program combine_RR2_9
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_9_grade_reserves_resources_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "grd_r_and_r_gpert_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long grd_r_and_r_gpert_, i(prop_name prop_id) j(year_metal) string
+    rename grd_r_and_r_gpert_ grd_r_and_r_gpert
+    label var grd_r_and_r_gpert "Grade of product in ore used to calculate total reserves and resources (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    /*
+    replace metal = "palladium" if metal == "palla"
+    replace metal = "platinum" if metal == "plati"
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    */
+    drop year_metal
+
+    save "$temp_reserves/RR2_9.dta", replace
+
+end
+
+program combine_RR2_10
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_10_contained_reserves_resources_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "contained_r_and_r_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long contained_r_and_r_, i(prop_name prop_id) j(year_metal) string
+    rename contained_r_and_r_ contained_r_and_r
+    label var contained_r_and_r "The quantity of mineable product identified as any reserve or resource (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    /*
+    replace metal = "palladium" if metal == "palla"
+    replace metal = "platinum" if metal == "plati"
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    */
+    drop year_metal
+
+    save "$temp_reserves/RR2_10.dta", replace
+
+end
+
+program combine_RR2_insitu_1
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_in-situ_value_reserves_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "in_situ_value_resv_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long in_situ_value_resv_, i(prop_name prop_id) j(year_metal) string
+    rename in_situ_value_resv_ in_situ_value_resv
+    label var in_situ_value_resv "Value of mineable product identified as reserves (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    /*
+    replace metal = "palladium" if metal == "palla"
+    replace metal = "platinum" if metal == "plati"
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    */
+    drop year_metal
+
+    save "$temp_reserves/RR2_insitu_1.dta", replace
+
+end
+
+program combine_RR2_insitu_2
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum rhodium silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_in-situ_value_resources_excl_reserves_precious_metals_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "insitu_val_resrc_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 5) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long insitu_val_resrc_, i(prop_name prop_id) j(year_metal) string
+    rename insitu_val_resrc_ insitu_val_resrc
+    label var insitu_val_resrc "Value of mineable product identified as resources, including inferred (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    replace metal = "palladium" if metal == "palladi"
+    replace metal = "platinum" if metal == "platinu"
+    /*
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    */
+    drop year_metal
+
+    save "$temp_reserves/RR2_insitu_2.dta", replace
+
+end
+
+program combine_RR2_insitu_3
+    clear
+    local regions "Africa EmergingAsiaPacific LatinAmericaOthers Mexico Peru"
+    local metals "gold palladium platinum silver"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_2_grade_contained_in-situ_value_reserves_resources_precious_metals_1991_2000_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    * all in cost
+    local year = 2000
+    unab vars : C-AP
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "insitu_value_r_and_r_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 4) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long insitu_value_r_and_r_, i(prop_name prop_id) j(year_metal) string
+    rename insitu_value_r_and_r_ insitu_value_r_and_r
+    label var insitu_value_r_and_r "Value of mineable product identified as any reserve or resource (g/tonne, oz)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    replace metal = "palladium" if metal == "pallad"
+    replace metal = "platinum" if metal == "platin"
+    /*
+    replace metal = "rhodium" if metal == "rhodi"
+    replace metal = "silver" if metal == "silve"
+    */
+    drop year_metal
+
+    save "$temp_reserves/RR2_insitu_3.dta", replace
 
 end
 
