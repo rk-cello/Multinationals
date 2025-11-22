@@ -30,8 +30,55 @@ global temp_reserves "$dir_temp/temp_reserves_resources"
 
 * roadmap
 program main
+    combine_RR1_1
+    combine_RR1_2
+    combine_RR1_3
+    combine_RR1_4
+    combine_RR1_5
+    combine_RR1_6
+    combine_RR1_7
+    combine_RR1_8
+    combine_RR1_9
+    combine_RR1_10
+    combine_RR1_11
+    combine_RR1_12
+    combine_RR1_13
+    combine_RR1_14
+    combine_RR1_15
+    combine_RR1_16
+    combine_RR1_17
+    combine_RR1_18
+    combine_RR1_19
+    combine_RR2_1
+    combine_RR2_2
+    combine_RR2_3
+    combine_RR2_4
+    combine_RR2_5
+    combine_RR2_6
+    combine_RR2_7
+    combine_RR2_8
+    combine_RR2_9
+    combine_RR2_10
+    combine_RR2_insitu_1
+    combine_RR2_insitu_2
+    combine_RR2_insitu_3
+    combine_RR2_insitu_4
+    combine_RR2_insitu_5
+    combine_RR3_1
+    combine_RR3_2
+    combine_RR3_7
+    combine_RR3_8
+    combine_RR3_9
+    combine_RR3_10
+    combine_RR3_insitu_1
+    combine_RR3_insitu_2
+    combine_RR3_insitu_3
+    combine_RR3_insitu_4
+    combine_RR3_insitu_5
+    combine_RR3_insitu_6
+    combine_RR3_insitu_7
+    combine_RR3_insitu_8
     combine_RR6
-
 end
 
 program combine_RR1_1
@@ -2320,6 +2367,657 @@ program combine_RR3_insitu_8
     drop year_metal
 
     save "$temp_reserves/RR3_insitu_8.dta", replace
+
+end
+
+program combine_RR3_insitu_9
+    clear
+    local regions "Africa AsiaPacific EuropeMiddleEast LatinAmerica USCanada"
+    local metals "antimony graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_3_grade_contained_in-situ_value_reserves_resources_specialty_commodities_1991_2001_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+   
+    local year = 2001
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "in_situ_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 15) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long in_situ_, i(prop_name prop_id) j(year_metal) string
+    label var in_situ_ "Value of mineable product identified as any reserve or resource (%, tonne)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    rename in_situ_ in_situ_value_r_and_r_pct
+    replace metal = "heavy_mineral_sands" if metal == "heavy"
+    
+    drop year_metal year_metal3 year_metal4
+
+    save "$temp_reserves/RR3_insitu_9.dta", replace
+
+end
+
+program combine_RR3_insitu_10
+    clear
+    local regions "Africa AsiaPacific EuropeMiddleEast LatinAmerica USCanada"
+    local metals "antimony graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_3_grade_contained_in-situ_value_reserves_resources_specialty_commodities_2002_2012_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+   
+    local year = 2012
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "in_situ_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 15) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long in_situ_, i(prop_name prop_id) j(year_metal) string
+    label var in_situ_ "Value of mineable product identified as any reserve or resource (%, tonne)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    rename in_situ_ in_situ_value_r_and_r_pct
+    replace metal = "heavy_mineral_sands" if metal == "heavy"
+    
+    drop year_metal year_metal3 year_metal4
+
+    save "$temp_reserves/RR3_insitu_10.dta", replace
+
+end
+
+program combine_RR3_insitu_11
+    clear
+    local regions "Africa AsiaPacific EuropeMiddleEast LatinAmerica USCanada"
+    local metals "antimony graphite heavy_mineral_sands ilmenite lanthanides lithium niobium rutile scandium tantalum titanium tungsten vanadium yttrium zircon"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_3_grade_contained_in-situ_value_reserves_resources_specialty_commodities_2013_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+   
+    local year = 2023
+    unab vars : C-FK
+    local i = 1
+    foreach oldname of local vars {
+        local metal : word `i' of `metals'
+        local newname = "in_situ_`year'_`metal'"
+        local shortname = substr("`newname'", 1, 32)
+
+        rename `oldname' `shortname'
+
+        local i = `i' + 1
+        if (`i' > 15) {
+            local i = 1
+            local year = `year' - 1
+        }
+    }
+
+    reshape long in_situ_, i(prop_name prop_id) j(year_metal) string
+    label var in_situ_ "Value of mineable product identified as any reserve or resource (%, tonne)"
+    split year_metal, parse("_")
+    rename year_metal1 year
+    rename year_metal2 metal
+    rename in_situ_ in_situ_value_r_and_r_pct
+    replace metal = "heavy_mineral_sands" if metal == "heavy"
+    
+    drop year_metal year_metal3 year_metal4
+    drop FL-FZ // drop duplicate columns for year 2001
+
+    save "$temp_reserves/RR3_insitu_11.dta", replace
+
+end
+
+program combine_RR4_1
+    clear
+    import excel "$input_reserves/RR_4_grade_contained_1_U3O8_1991_2023_Global.xls", cellrange(A7) clear
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "grd_resv_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist AJ-BP {
+        local newname = "contained_resv_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist BQ-CW {
+        local newname = "grd_meas_ind_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist CX-ED {
+        local newname = "contained_meas_ind_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist EE-FK {
+        local newname = "grd_inf_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist FL-GR {
+        local newname = "contained_inf_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    
+    reshape long grd_resv_U3O8_ contained_resv_U3O8_ grd_meas_ind_U3O8_ contained_meas_ind_U3O8_ grd_inf_U3O8_ contained_inf_U3O8_ , i(prop_name prop_id) j(year) string
+
+    rename grd_resv_U3O8_ grd_resv_U3O8
+    rename contained_resv_U3O8_ contained_resv_U3O8
+    rename grd_meas_ind_U3O8_ grd_meas_ind_U3O8
+    rename contained_meas_ind_U3O8_ contained_meas_ind_U3O8
+    rename grd_inf_U3O8_ grd_inf_U3O8
+    rename contained_inf_U3O8_ contained_inf_U3O8
+
+    
+    label var grd_resv_U3O8 "Grade of product in ore used to caluculate reserves (%,lb)"
+    label var contained_resv_U3O8 "The quantity of mineable product identified as reserves (%,lb)"
+    label var grd_meas_ind_U3O8 "Grade of product in ore used to caluculate measured and indicated resources (%,lb)"
+    label var contained_meas_ind_U3O8 "The quantity of mineable product identified as measured and indicated resources (%,lb)"
+    label var grd_inf_U3O8 "Grade of product in ore used to caluculate inferred resources (%,lb)"
+    label var contained_inf_U3O8 "The quantity of mineable product identified as inferred resources (%,lb)"
+    //replace year = "MstRctYear" if year == "2023"
+    
+    save "$temp_reserves/RR4_1.dta", replace
+end
+
+program combine_RR4_2
+    clear
+    //local regions "Africa AsiaPacific EuropeMiddleEast LatinAmerica USCanada"
+    import excel "$input_reserves/RR_4_grade_contained_2_U3O8_1991_2023_Global.xls", cellrange(A7) clear
+
+    /* tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_4_grade_contained_1_U3O8_1991_2023_Global.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    } */
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "grd_total_resrc_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist AJ-BP {
+        local newname = "contained_total_resrc_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist BQ-CW {
+        local newname = "grd_r_and_r_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist CX-ED {
+        local newname = "contained_r_and_r_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist EE-FK {
+        local newname = "grd_meas_ind_incl_resv_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist FL-GR {
+        local newname = "cont_meas_ind_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    reshape long grd_total_resrc_U3O8_ contained_total_resrc_U3O8_ grd_r_and_r_U3O8_ contained_r_and_r_U3O8_ grd_meas_ind_incl_resv_U3O8_ cont_meas_ind_U3O8_, i(prop_name prop_id) j(year) string
+    
+    rename grd_total_resrc_U3O8_ grd_total_resrc_U3O8
+    rename contained_total_resrc_U3O8_ contained_total_resrc_U3O8
+    rename grd_r_and_r_U3O8_ grd_r_and_r_U3O8
+    rename contained_r_and_r_U3O8_ contained_r_and_r_U3O8
+    rename grd_meas_ind_incl_resv_U3O8_ grd_meas_ind_incl_resv_U3O8
+    rename cont_meas_ind_U3O8_ contain_meas_ind_incl_resv_U3O8
+    
+    label var grd_total_resrc_U3O8 "Grade of product in ore used to caluculate resources including inferred (%,lb)"
+    label var contained_total_resrc_U3O8 "The quantity of mineable product identified as resources, including inferred (%,lb)"
+    label var grd_r_and_r_U3O8 "Grade of product in ore used to caluculate total reserves and resources (%,lb)"
+    label var contained_r_and_r_U3O8 "The quantity of mineable product identified as any reserve or resource (%,lb)"
+    label var grd_meas_ind_incl_resv_U3O8 "Grade of product in ore used to caluculate measured and indicated resources inclusive of reserves (%,lb)"
+    label var contain_meas_ind_incl_resv_U3O8 "The quantity of mineable product identified as measured and indicated resources inclusive of reserves (%,lb)"
+    
+    save "$temp_reserves/RR4_2.dta", replace
+
+end
+
+program combine_RR4_insitu_1
+    clear
+    local regions "Africa AsiaPacific EuropeMiddleEast LatinAmerica USCanada"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_4_grade_contained_in-situ_values_U3O8_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "resv_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist AJ-BP {
+        local newname = "m_and_i_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist BQ-CW {
+        local newname = "inf_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist CX-ED {
+        local newname = "resrc_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist EE-FK {
+        local newname = "r_and_r_U3O8_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    reshape long resv_U3O8_ m_and_i_U3O8_ inf_U3O8_ resrc_U3O8_ r_and_r_U3O8_, i(prop_name prop_id) j(year) string
+    
+    rename resv_U3O8_ in_situ_val_resv_U3O8
+    rename m_and_i_U3O8_ in_situ_val_m_and_i_U3O8
+    rename inf_U3O8_ in_situ_val_inf_U3O8
+    rename resrc_U3O8_ in_situ_val_resrc_U3O8
+    rename r_and_r_U3O8_ in_situ_val_r_and_r_U3O8
+    
+    label var in_situ_val_resv_U3O8 "Value of mineable product identified as reserves (%,lb)"
+    label var in_situ_val_m_and_i_U3O8 "Value of mineable product identified as resources (%,lb)"
+    label var in_situ_val_inf_U3O8 "Value of mineable product identified as inferred resources (%,lb)"
+    label var in_situ_val_resrc_U3O8 "Value of mineable product identified as resources including inferred (%,lb)"
+    label var in_situ_val_r_and_r_U3O8 "Value of mineable product identified as any reserve or resource (%,lb)"
+    
+    save "$temp_reserves/RR4_insitu_1.dta", replace
+
+end
+
+program combine_RR5_1
+    clear
+    import excel "$input_reserves/RR_5_grade_contained_1_diamonds_1991_2023_Global.xls", cellrange(A7) clear
+    
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "grd_resv_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist AJ-BP {
+        local newname = "con_resv_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist BQ-CW {
+        local newname = "grd_meas_ind_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist CX-ED {
+        local newname = "con_meas_ind_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist EE-FK {
+        local newname = "grd_inf_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist FL-GR {
+        local newname = "con_inf_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    reshape long grd_resv_diamond_ con_resv_diamond_ grd_meas_ind_diamond_ con_meas_ind_diamond_ grd_inf_diamond_ con_inf_diamond_ , i(prop_name prop_id) j(year) string
+
+    rename grd_resv_diamond_ grd_resv_diamond
+    rename con_resv_diamond_ contained_resv_diamond
+    rename grd_meas_ind_diamond_ grd_meas_ind_diamond
+    rename con_meas_ind_diamond_ contained_meas_ind_diamond
+    rename grd_inf_diamond_ grd_inf_diamond
+    rename con_inf_diamond_ contained_inf_diamond
+
+    
+    label var grd_resv_diamond "Grade of product in ore used to caluculate reserves (%,lb)"
+    label var contained_resv_diamond "The quantity of mineable product identified as reserves (%,lb)"
+    label var grd_meas_ind_diamond "Grade of product in ore used to caluculate measured and indicated resources (%,lb)"
+    label var contained_meas_ind_diamond "The quantity of mineable product identified as measured and indicated resources (%,lb)"
+    label var grd_inf_diamond "Grade of product in ore used to caluculate inferred resources (%,lb)"
+    label var contained_inf_diamond "The quantity of mineable product identified as inferred resources (%,lb)"
+    //replace year = "MstRctYear" if year == "2023"
+    
+    save "$temp_reserves/RR5_1.dta", replace
+
+end
+
+program combine_RR5_2
+    clear
+    import excel "$input_reserves/RR_5_grade_contained_2_diamonds_1991_2023_Global.xls", cellrange(A7) clear
+    
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "grd_tot_resrc_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist AJ-BP {
+        local newname = "con_tot_resrc_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist BQ-CW {
+        local newname = "grd_r_and_r_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist CX-ED {
+        local newname = "con_r_and_r_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+
+    foreach var of varlist EE-FK {
+        local newname = "grd_meas_ind_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    
+    foreach var of varlist FL-GR {
+        local newname = "con_meas_ind_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    reshape long grd_tot_resrc_diamond_ con_tot_resrc_diamond_ grd_r_and_r_diamond_ con_r_and_r_diamond_ grd_meas_ind_diamond_ con_meas_ind_diamond_ , i(prop_name prop_id) j(year) string
+
+    rename grd_tot_resrc_diamond_ grd_total_resrc_diamond
+    rename con_tot_resrc_diamond_ contained_total_resrc_diamond
+    rename grd_r_and_r_diamond_ grd_r_and_r_diamond
+    rename con_r_and_r_diamond_ contained_r_and_r_diamond
+    rename grd_meas_ind_diamond_ grd_meas_ind_resv_diamond
+    rename con_meas_ind_diamond_ contain_meas_ind_diamond
+
+    
+    label var grd_total_resrc_diamond "Grade of product in ore used to caluculate resources including inferred (ct/tonne)"
+    label var contained_total_resrc_diamond "The quantity of mineable product identified as resources, including inferred (ct/tonne)"
+    label var grd_r_and_r_diamond "Grade of product in ore used to caluculate total reserves and resources (ct/tonne)"
+    label var contained_r_and_r_diamond "The quantity of mineable product identified as any reserve or resource (ct/tonne)"
+    label var grd_meas_ind_resv_diamond "Grade of product in ore used to calculate measured and indicated resources inclusive of reserves (ct/tonne)"
+    label var contain_meas_ind_diamond "The quantity of mineable product identified as measured and indicated resources inclusive of reserves (ct/tonne)"
+    //replace year = "MstRctYear" if year == "2023"
+    
+    save "$temp_reserves/RR5_2.dta", replace
+
+end
+
+program combine_RR5_insitu_1
+    clear
+    local regions "Africa AsiaPacific EuropeMiddleEast LatinAmerica USCanada"
+
+    tempname temp_file
+    tempfile temp_file
+    save `temp_file', emptyok
+
+    foreach region of local regions {
+        local file_name "$input_reserves/RR_5_grade_contained_in-situ_values_diamonds_1991_2023_`region'.xls"
+        if (fileexists("`file_name'")) {
+            display "Processing: `file_name'"
+            import excel "`file_name'", cellrange(A7) clear
+            tostring B, replace
+            append using `temp_file'
+            save `temp_file', replace
+        }
+    }
+
+    rename A  prop_name
+    rename B  prop_id
+
+    label var prop_name "Name of the mine or facility"
+    label var prop_id   "Unique key for the project"
+
+    local year = 2023
+    foreach var of varlist C-AI {
+        local newname = "resv_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist AJ-BP {
+        local newname = "m_and_i_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist BQ-CW {
+        local newname = "inf_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist CX-ED {
+        local newname = "resrc_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    local year = 2023
+    foreach var of varlist EE-FK {
+        local newname = "r_and_r_diamond_`year'"
+        rename `var' `newname'
+        local year = `year' - 1
+    }
+
+    reshape long resv_diamond_ m_and_i_diamond_ inf_diamond_ resrc_diamond_ r_and_r_diamond_, i(prop_name prop_id) j(year) string
+    
+    rename resv_diamond_ in_situ_val_resv_diamond
+    rename m_and_i_diamond_ in_situ_val_m_and_i_diamond
+    rename inf_diamond_ in_situ_val_inf_diamond
+    rename resrc_diamond_ in_situ_val_resrc_diamond
+    rename r_and_r_diamond_ in_situ_val_r_and_r_diamond
+    
+    label var in_situ_val_resv_diamond "Value of mineable product identified as reserves (ct/tonne)"
+    label var in_situ_val_m_and_i_diamond "Value of mineable product identified as resources (ct/tonne)"
+    label var in_situ_val_inf_diamond "Value of mineable product identified as inferred resources (ct/tonne)"
+    label var in_situ_val_resrc_diamond "Value of mineable product identified as resources including inferred (ct/tonne)"
+    label var in_situ_val_r_and_r_diamond "Value of mineable product identified as any reserve or resource (ct/tonne)"
+    
+    save "$temp_reserves/RR5_insitu_1.dta", replace
 
 end
 
