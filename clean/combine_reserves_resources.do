@@ -78,6 +78,12 @@ program main
     combine_RR3_insitu_6
     combine_RR3_insitu_7
     combine_RR3_insitu_8
+    combine_RR4_1
+    combine_RR4_2
+    combine_RR4_insitu_1
+    combine_RR5_1
+    combine_RR5_2
+    combine_RR5_insitu_1
     combine_RR6
 end
 

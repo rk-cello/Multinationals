@@ -10,7 +10,7 @@ set more off
 * directories
 global dir_raw "../../../data/raw"
 global dir_temp "../../../data/temp"
-global dir_cleaned "../../../data/raw_cleaned"
+global dir_cleaned "../../../data/raw_cleaned/S&P_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
@@ -2785,4 +2785,45 @@ program combine_property_details_11_2
 
     save "$temp_prop_details/property_details_11_2.dta", replace
 
+end
+
+program merge_property_details
+    use "$temp_prop_details/property_details_1.dta", clear
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_2.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_3_1.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_3_2.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_4.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_1.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_2.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_3.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_4.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_5.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_6.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_7.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_8.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_9.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_10.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_11.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_12.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_13.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_14.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_5_15.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_6_1.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_6_2.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_7_1.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_7_2.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_7_3.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_8.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_9_1.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_9_2.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_9_3.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_9_4.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_9_5.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_10_1.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_10_2.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_10_3.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_11_1.dta", nogenerate
+    merge 1:1 prop_name prop_id using "$temp_prop_details/property_details_11_2.dta", nogenerate
+
+    save "$final_prop_details/property_details_crosssection.dta", replace
 end
