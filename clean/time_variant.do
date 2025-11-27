@@ -5,9 +5,9 @@ clear all
 set more off
 
 * directories
-global dir_raw "../../../data/raw"
-global dir_temp "../../../data/temp"
-global dir_cleaned "../../../data/raw_cleaned"
+global dir_raw "../../data/raw"
+global dir_temp "../../data/temp"
+global dir_cleaned "../../data/raw_cleaned"
 
 * inputs
 global input_metals_mining "$dir_raw/data_S&P/metals_mining"
@@ -40,6 +40,9 @@ program main
     commodity_production_precious_metals
     commodity_production_specialty_commodities
     merge_time_variant_production
+    merge_time_variant_econ_modeled
+    merge_time_variant_reserves_1
+    merge_time_variant_reserves_2
 end
 
 ***** property details ****
@@ -349,7 +352,7 @@ program merge_time_variant_reserves_1
     * List of files to merge
     local files
     forvalues i = 1/19 {
-        local files `files' "$temp_reserves/RR1_`i'.dta"
+        local files `files' "$temp_reserves_resources/RR1_`i'.dta"
     }
 
     * Use the first file as the master dataset
@@ -367,8 +370,92 @@ program merge_time_variant_reserves_1
 
     // reorder to prop_name prop_id year and everythin else
     order prop_name prop_id year, first
+    replace year = "2023" if year == "MstRctYear"
+    destring year, replace
 
     * Save the merged dataset
     save "$output_properties/properties_reserves_resources_panel.dta", replace
+
+end
+
+program merge_time_variant_reserves_2
+    clear all
+    set more off
+
+    * List of files to merge
+
+    // build list of existing RR2 files
+    local files ""
+    forvalues i = 1/10 {
+        local f "$temp_reserves_resources/RR2_`i'.dta"
+        if fileexists("`f'") local files "`files' `f'"
+    }
+    // if no files found, exit gracefully
+    /* if "`files'" == "" {
+        di as err "No RR2 files found in $temp_reserves"
+        exit 198
+    } */
+
+    * Use the first file as the master dataset
+    local first : word 1 of `files'
+    use "`first'", clear
+
+    * Loop through the rest and merge
+    local nfiles : word count `files'
+    forvalues i = 2/`nfiles' {
+        local f : word `i' of `files'
+        display "Merging file: `f'"
+        merge 1:1 prop_name prop_id year metal using `f'
+        drop _merge
+    }
+    
+    // reorder to prop_name prop_id year and everythin else
+    order prop_name prop_id year metal, first
+    rename grd_resv_gpert grd_resv_
+    rename contained_resv_oz_g_t contained_resv_
+    rename grd_total_resrc_gpert grd_total_resrc_
+    rename contained_total_resrc contained_total_resrc_
+    rename grd_r_and_r_gpert grd_r_and_r_
+    rename contained_r_and_r contained_r_and_r_
+
+    //replace commodity = "ironore" if commodity == "iron_ore"
+    //duplicates drop prop_name prop_id year commodity commodity_prod_t_, force
+    reshape wide grd_resv contained_resv grd_total_resrc contained_total_resrc grd_r_and_r contained_r_and_r, i(prop_name prop_id year) j(metal) string
+    destring year, replace
+
+        label var grd_resv_gold "Grade of product in ore used to calculate reserves (g/t) (gold)"
+        label var grd_resv_palladium "Grade of product in ore used to calculate reserves (g/t) (palladium)"
+        label var grd_resv_platinum "Grade of product in ore used to calculate reserves (g/t) (platinum)"
+        label var grd_resv_rhodium "Grade of product in ore used to calculate reserves (g/t) (rhodium)"
+        label var grd_resv_silver "Grade of product in ore used to calculate reserves (g/t) (silver)"
+        label var contained_resv_gold "Quantity of product identified as reserves (g/t) (gold)"
+        label var contained_resv_palladium "Quantity of product identified as reserves (g/t) (palladium)"
+        label var contained_resv_platinum "Quantity of product identified as reserves (g/t) (platinum)"
+        label var contained_resv_rhodium "Quantity of product identified as reserves (g/t) (rhodium)"
+        label var contained_resv_silver "Quantity of product identified as reserves (g/t) (silver)"
+        label var grd_total_resrc_gold "Grade of product in ore used to calculate resources including inferred (g/t) (gold)"
+        label var grd_total_resrc_palladium "Grade of product in ore used to calculate resources including inferred (g/t) (palladium)"
+        label var grd_total_resrc_platinum "Grade of product in ore used to calculate resources including inferred (g/t) (platinum)"
+        label var grd_total_resrc_rhodium "Grade of product in ore used to calculate resources including inferred (g/t) (rhodium)"
+        label var grd_total_resrc_silver "Grade of product in ore used to calculate resources including inferred (g/t) (silver)"
+        label var contained_total_resrc_gold "Quantity of product identified as resources including inferred (g/t) (gold)"
+        label var contained_total_resrc_palladium "Quantity of product identified as resources including inferred (g/t) (palladium)"
+        label var contained_total_resrc_platinum "Quantity of product identified as resources including inferred (g/t) (platinum)"
+        label var contained_total_resrc_rhodium "Quantity of product identified as resources including inferred (g/t) (rhodium)"
+        label var contained_total_resrc_silver "Quantity of product identified as resources including inferred (g/t) (silver)"
+        label var grd_r_and_r_gold "Grade of product in ore used to calculate total reserves and resources (g/t) (gold)"
+        label var grd_r_and_r_palladium "Grade of product in ore used to calculate total reserves and resources (g/t) (palladium)"
+        label var grd_r_and_r_platinum "Grade of product in ore used to calculate total reserves and resources (g/t) (platinum)"
+        label var grd_r_and_r_rhodium "Grade of product in ore used to calculate total reserves and resources (g/t) (rhodium)"
+        label var grd_r_and_r_silver "Grade of product in ore used to calculate total reserves and resources (g/t) (silver)"
+        label var contained_r_and_r_gold "Quantity of product identified as any reserve or resource (g/t) (gold)"
+        label var contained_r_and_r_palladium "Quantity of product identified as any reserve or resource (g/t) (palladium)"
+        label var contained_r_and_r_platinum "Quantity of product identified as any reserve or resource (g/t) (platinum)"
+        label var contained_r_and_r_rhodium "Quantity of product identified as any reserve or resource (g/t) (rhodium)"
+        label var contained_r_and_r_silver "Quantity of product identified as any reserve or resource (g/t) (silver)"
+        
+
+    * Save the merged dataset
+    save "$output_properties/properties_reserves_resources_panel2.dta", replace
 
 end
