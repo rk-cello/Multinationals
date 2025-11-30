@@ -1745,6 +1745,7 @@ program combine_RR3_8
     replace metal = "lead" if metal == "lea"
     replace metal = "molybdenum" if metal == "mol"
     replace metal = "nickel" if metal == "nic"
+    replace metal = "zinc" if metal == "zin"
     drop year_metal
 
     save "$temp_reserves/RR3_8.dta", replace

@@ -272,6 +272,6 @@ program merge_time_invariant
     /* merge 1:1 prop_name prop_id using , nogenerate
     merge 1:1 prop_name prop_id using , nogenerate */
 
-    save "$output_property_level/crosssection_data.dta", replace
+    save "$output_property_level/property_level_crosssection_data.dta", replace
     // does not include capital costs and transactions 
 end
