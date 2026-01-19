@@ -1,5 +1,11 @@
 **** combine time invariant data and construct cross-section data ****
 **** notes ****
+* some cross-section data are not at the property level, and thus excluded from the property_level output folder
+* these include...
+* claims: claim owner level data linked to properties
+* drill results: drill results level data linked to properties
+* capital costs: capital cost level data linked to properties
+* trasactions: transaction level
 **** environment ****
 clear all
 set more off
@@ -209,7 +215,7 @@ program merge_time_invariant_claims
     rename RelatedProperty prop_name
     rename PropertyKey prop_id
     tostring prop_id, replace
-    save "$output_property_level/claims_crosssection.dta", replace
+    save "$dir_cleaned/claims_crosssection.dta", replace
     
 end
 
@@ -217,7 +223,7 @@ program merge_time_invariant_drill_results
 
     use "$temp_drill_results/drill_results_1&2.dta", clear
     tostring prop_id, replace
-    save "$output_property_level/drill_results_crosssection.dta", replace
+    save "$dir_cleaned/drill_results_crosssection.dta", replace
 
 end
 

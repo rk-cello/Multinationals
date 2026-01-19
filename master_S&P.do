@@ -19,9 +19,10 @@ cd ../clean
 *run combine_tech_geo.do
 *run combine_top_drill_results.do
 *run combine_transactions.do
-
-cd ../build
 *run time_invariant.do
 *run time_variant.do 
+
+cd ../build
+
   
 cd ../analysis
