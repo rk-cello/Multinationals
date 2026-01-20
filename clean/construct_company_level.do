@@ -1,5 +1,6 @@
 **** construct company level cross-section data ****
 **** notes ****
+// company_id (owner) | property_id | property_name ...
 **1.Steps**
 * first generate company IDs at the property level and create map between property ID/name and company ID
 * merge map file to each cross-section data (not at property level) that includes property ID/name
@@ -37,7 +38,6 @@ end
 
 program generate_company_id
     use "$input_property_level/property_level_crosssection_data.dta", clear
-    preserve
     keep operator_snl_instn_key
     duplicates drop
     drop if operator_snl_instn_key == "NA" | operator_snl_instn_key == ""
@@ -47,9 +47,189 @@ program generate_company_id
     save "$dir_temp/company_id_list.dta", replace
 end
 
-program 
-    restore
-    * convert data from property level to company level
-    
+/* program company_property_map
+    use "$input_property_level/property_level_crosssection_data.dta", clear
+    keep prop_name prop_id owner_snl_instn_key_1-owner_snl_instn_key_8
 
+    foreach v of varlist owner_snl_instn_key_* {
+        replace `v' = "" if `v' == "NA"
+        destring `v', replace
+    }
+    reshape long owner_snl_instn_key_, i(prop_name prop_id) j(owner_slot)
+    drop if missing(owner_snl_instn_key_)
+    rename owner_snl_instn_key_ company_id
+    tostring company_id, replace
+    save "$dir_temp/company_property_map.dta", replace
+end */
+
+
+program owner_company_reshape
+    use "$input_property_level/property_level_crosssection_data.dta", clear
+    *------------------------------------------------------------
+    * 0) Make a unique id for each wide row
+    *------------------------------------------------------------
+    egen prop_row = group(prop_id prop_name), label
+    isid prop_row
+
+    *------------------------------------------------------------
+    * 1a) Collect ALL variables whose *labels* end in "(Owner #)"
+    *------------------------------------------------------------
+    * rename pattern offender
+    forvalues i = 1/8 {
+        rename owner_price_to_earn_after_extra`i' owner_price_to_earnings_extra_`i'
+    }
+
+    local owner_vars
+    foreach v of varlist _all {
+        local lab : variable label `v'
+        if regexm("`lab'", "\((Owner|OWNER|owner) [0-9]+\)$") {
+            local owner_vars `owner_vars' `v'
+        }
+    }
+    di "Owner-slot variables found: `owner_vars'"
+
+    /* local offenders
+    foreach v of local owner_vars {
+        if regexm("`v'","[0-9]+$") & !regexm("`v'","_[0-9]+$") {
+            local offenders `offenders' `v'
+        }
+    }
+    di "Offenders (end in digit but not _digit): `offenders'" */
+
+    *------------------------------------------------------------
+    * 1b) Add owner-slot variables that follow the name pattern *_1..*_8
+    *     but do NOT have "(Owner #)" in the label (e.g., owner_location_1)
+    *------------------------------------------------------------
+    ds owner_*_*
+    local candidates `r(varlist)'
+
+    foreach v of local candidates {
+        * must end with _#
+        if !regexm("`v'", "_[0-9]+$") continue
+
+        * already included? skip
+        if strpos(" `owner_vars' ", " `v' ") continue
+
+        * optional: exclude known non-slot fields that contain "owners" (counts/lists)
+        if inlist("`v'", "num_royalty_owners", "owner_list") continue
+
+        * add it
+        local owner_vars `owner_vars' `v'
+    }
+
+    di "Owner-slot variables found (labels + name-pattern): `owner_vars'"
+
+
+    *------------------------------------------------------------
+    * 2) Convert that variable list into a UNIQUE stub list
+    *    (strip trailing _1, _2, ... from variable names)
+    *------------------------------------------------------------
+    local stubs
+    foreach v of local owner_vars {
+        local stub = regexr("`v'", "_[0-9]+$", "")
+        if !strpos(" `stubs' ", " `stub' ") local stubs `stubs' `stub'
+    }
+    di "Stubs to reshape: `stubs'"
+
+    local stubs_u
+    foreach s of local stubs {
+        local stubs_u `stubs_u' `s'_
+    }
+    di "Stubs to reshape (underscore style): `stubs_u'"
+
+    *------------------------------------------------------------
+    * 3) Reshape wide -> long for ALL those stubs
+    *------------------------------------------------------------
+    reshape long `stubs_u', i(prop_row) j(owner_slot)
+
+    save "$dir_temp/property_crosssection_reshaped.dta", replace
+
+    *------------------------------------------------------------
+    * 4) Drop empty owner slots
+    *------------------------------------------------------------
+    drop if owner_snl_instn_key_ == "NA" | owner_snl_instn_key_ == ""
+    rename owner_snl_instn_key_ company_id  
+    order company_id prop_row prop_id prop_name owner_slot
+
+    save "$dir_temp/owner_company_level_crosssection.dta", replace
+
+    *------------------------------------------------------------
+    * 5) Drop royalty owner variables (not needed for owner company data)
+    *------------------------------------------------------------
+    drop *royalty*
+
+    save "$dir_temp/owner_company_level_crosssection.dta", replace
+end
+
+
+
+program royalty_company_reshape
+    use "$input_property_level/property_level_crosssection_data.dta", clear
+    *------------------------------------------------------------
+    * 0) Make a unique id for each wide row
+    *------------------------------------------------------------
+    egen prop_row = group(prop_id prop_name), label
+    isid prop_row
+
+    *------------------------------------------------------------
+    * 1) Collect ALL variables whose *labels* end in "(Royalty #)"
+    *------------------------------------------------------------
+
+    local royalty_vars
+    foreach v of varlist _all {
+        local lab : variable label `v'
+        if regexm("`lab'", "\((Royalty|ROYALTY|royalty) [0-11]+\)$") {
+            local royalty_vars `royalty_vars' `v'
+        }
+    }
+    di "Royalty-slot variables found: `royalty_vars'"
+
+    *------------------------------------------------------------
+    * 2) Convert that variable list into a UNIQUE stub list
+    *    (strip trailing _1, _2, ... from variable names)
+    *------------------------------------------------------------
+    local stubs
+    foreach v of local royalty_vars {
+        local stub = regexr("`v'", "_[0-11]+$", "")
+        if !strpos(" `stubs' ", " `stub' ") local stubs `stubs' `stub'
+    }
+    di "Stubs to reshape: `stubs'"
+
+    local stubs_u
+    foreach s of local stubs {
+        local stubs_u `stubs_u' `s'_
+    }
+    di "Stubs to reshape (underscore style): `stubs_u'"
+
+    *------------------------------------------------------------
+    * 3) Reshape wide -> long for ALL those stubs
+    *------------------------------------------------------------
+    reshape long `stubs_u', i(prop_row) j(royalty_slot)
+
+    /* save "$dir_temp/property_crosssection_reshaped.dta", replace */
+
+    *------------------------------------------------------------
+    * 4) Drop empty royalty slots
+    *------------------------------------------------------------
+    drop if royalty_snl_instn_key_ == "NA" | royalty_snl_instn_key_ == ""
+    rename royalty_snl_instn_key_ company_id  
+    order company_id prop_row prop_id prop_name royalty_slot
+
+    save "$dir_temp/royalty_company_level_crosssection.dta", replace
+
+    *------------------------------------------------------------
+    * 5) Drop owner variables (not needed for royalty company data)
+    *------------------------------------------------------------
+    drop *owner*
+
+    save "$dir_temp/royalty_company_level_crosssection.dta", replace
+end
+
+
+
+program merge_property_details
+    use "$dir_temp/company_property_map.dta", clear
+    merge 1:m prop_id using "$input_property_level/property_level_crosssection_data.dta", nogenerate
+    drop if missing(prop_name)
+    save "$output_company_level/property_details_company_level.dta", replace
 end

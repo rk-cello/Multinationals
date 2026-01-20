@@ -6,3 +6,7 @@ These include...
 * capital costs: capital cost level data linked to properties
 * trasactions: transaction level
 and are stored in ../data/raw_cleaned/S&P_cleaned
+
+prop_id does NOT uniquely identify the observations in property_level_crosssection_data.dta
+prop_name prop_id does
+(same prop_id for different prop_name, reason unidentified...)
