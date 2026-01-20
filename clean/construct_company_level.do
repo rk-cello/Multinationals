@@ -13,6 +13,7 @@
 **** environment ****
 clear all
 set more off
+set maxvar 32767
 
 * directories
 global dir_raw "../../../data/raw"
@@ -206,7 +207,7 @@ program royalty_company_reshape
     *------------------------------------------------------------
     reshape long `stubs_u', i(prop_row) j(royalty_slot)
 
-    /* save "$dir_temp/property_crosssection_reshaped.dta", replace */
+    save "$dir_temp/property_crosssection_reshaped2.dta", replace
 
     *------------------------------------------------------------
     * 4) Drop empty royalty slots
@@ -220,9 +221,14 @@ program royalty_company_reshape
     *------------------------------------------------------------
     * 5) Drop owner variables (not needed for royalty company data)
     *------------------------------------------------------------
-    drop *owner*
+    drop *owner* current_controlling_own_pct_1-current_controlling_own_pct_8
 
     save "$dir_temp/royalty_company_level_crosssection.dta", replace
+
+    * reshape wide to company level
+    order company_id royalty_slot
+    drop prop_row
+    reshape wide prop_id-, i(company_id) j(royalty_slot)
 end
 
 
