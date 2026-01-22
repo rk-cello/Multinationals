@@ -270,7 +270,7 @@ program royalty_company_reshape
     tempfile base out part
     save `base', replace
 
-    local step 250
+    local step 100
     local n : word count `reshape_vars'
     local first 1
 
@@ -298,6 +298,205 @@ program royalty_company_reshape
         save `part', replace
 
         * Logic to initialize or merge
+        if `first' == 1 {
+            save `out', replace
+            local first 0
+        }
+        else {
+            use `out', clear
+            merge 1:1 company_id using `part', nogen
+            save `out', replace
+        }
+    }
+
+    use `out', clear
+
+*------------------------------------------------------------
+    clear all
+    use "$dir_temp/royalty_company_level_crosssection.dta", replace
+
+    drop prop_row
+    rename royalty_slot slot
+    rename operator_investor_relations_bio operator_investor_relat_bio
+    rename operator_chairman_of_board_bio operator_chair_of_board_bio
+
+    * 1. Get the initial list of all variables in the range
+    ds prop_id-date_most_recent_drill_results
+    local all_original_vars `r(varlist)'
+
+    * 2. Identify strL variables to encode
+    ds prop_id-date_most_recent_drill_results, has(type strL)
+    local strL_vars `r(varlist)'
+
+    * 3. Create a clean "final_vars" list
+    local reshape_vars ""
+
+    foreach v of local all_original_vars {
+        * Check if this variable is in our strL list
+        local is_strL : list v in strL_vars
+        
+        if `is_strL' {
+            di as txt "Converting strL: `v' -> `v'_id"
+            egen `v'_id = group(`v'), label
+            drop `v'
+            
+            * Append the NEW name to our final list
+            local reshape_vars `reshape_vars' `v'_id
+        }
+        else {
+            * Append the ORIGINAL name to our final list
+            local reshape_vars `reshape_vars' `v'
+        }
+    }
+
+    * Setup the indexing for reshape
+    bysort company_id (prop_id): gen prop_num = _n 
+    order company_id prop_num
+
+    * --- CHUNKING LOOP ---
+    tempfile base out part
+    save `base', replace
+
+    local step 100
+    local n : word count `reshape_vars'
+    local first 1
+
+    forvalues a = 1(`step')`n' {
+        
+        local b = `a' + `step' - 1
+        if `b' > `n' local b = `n'
+
+        * Build the chunk based on the CLEAN reshape_vars list
+        local chunk ""
+        forvalues k = `a'/`b' {
+            local var : word `k' of `reshape_vars'
+            local chunk `chunk' `var'
+        }
+
+        use `base', clear
+        
+        * Keep only what is needed for this specific reshape
+        keep company_id prop_num `chunk'
+        
+        * Reshape
+        greshape wide `chunk', i(company_id) j(prop_num)
+
+        save `part', replace
+
+        if `first' == 1 {
+            save `out', replace
+            local first 0
+        }
+        else {
+            use `out', clear
+            merge 1:1 company_id using `part', nogen
+            save `out', replace
+        }
+    }
+
+    use `out', clear
+
+*------------------------------------------------------------
+    clear all
+    use "$dir_temp/royalty_company_level_crosssection.dta", replace
+
+    * 1. Basic Cleanup
+    drop prop_row
+    rename royalty_slot slot
+
+    * --- FIX 1: PREVENT NAME OVERFLOW ---
+    * Rename the specific long variable that is causing the crash
+    rename operator_investor_relations_bio operator_investor_relat_bio
+    rename operator_chairman_of_board_bio operator_chair_of_board_bio
+    rename operator_investor_relations_name operator_investor_relat_name
+    rename date_most_recent_drill_results drill_date_recent 
+    rename contractor_verified_contract_min contractor_verified_con_min
+    rename contractor_verified_contract_pro contractor_verified_con_pro
+    forvalues i = 1/8 {
+        rename cash_and_equiv_most_recent_yr_`i' cash_and_equiv_recent_yr_`i'
+        rename cash_and_equiv_most_recent_qtr_`i' cash_and_equiv_recent_qtr_`i'
+        rename  app5b_net_increase_cash_qtr_`i' app5b_increase_cash_qtr_`i'
+    }
+
+    * (Optional) Safety loop: Rename ANY variable > 28 chars to ensure suffix space
+    foreach v of varlist * {
+        local len = length("`v'")
+        if `len' > 28 {
+            local newname = substr("`v'", 1, 28)
+            rename `v' `newname'
+            di as txt "Renamed long variable: `v' -> `newname'"
+        }
+    }
+
+    * 2. Identify variables to reshape
+    * Note: We use the NEW name 'drill_date_recent' here
+    ds prop_id-drill_date_recent
+    local all_original_vars `r(varlist)'
+
+    * 3. Identify ALL string variables (str# AND strL) in that range
+    ds prop_id-drill_date_recent, has(type string)
+    local string_vars `r(varlist)'
+
+    local reshape_vars ""
+
+    foreach v of local all_original_vars {
+        
+        * Check if this variable is in our string list
+        local is_string : list v in string_vars
+        
+        if `is_string' {
+            di as txt "Encoding string: `v' -> `v'_id"
+            
+            * Use 'capture' in case the variable is already numeric (safety)
+            capture confirm numeric variable `v'
+            if _rc {
+                egen `v'_id = group(`v'), label missing
+                drop `v'
+                local reshape_vars `reshape_vars' `v'_id
+            }
+            else {
+                local reshape_vars `reshape_vars' `v'
+            }
+        }
+        else {
+            local reshape_vars `reshape_vars' `v'
+        }
+    }
+
+    * Setup Indexing
+    bysort company_id (prop_id): gen prop_num = _n 
+    order company_id prop_num
+
+    * --- CHUNKING LOOP ---
+    tempfile base out part
+    save `base', replace
+
+    local step 100
+    local n : word count `reshape_vars'
+    local first 1
+
+    forvalues a = 1(`step')`n' {
+        
+        local b = `a' + `step' - 1
+        if `b' > `n' local b = `n'
+
+        local chunk ""
+        forvalues k = `a'/`b' {
+            local var : word `k' of `reshape_vars'
+            local chunk `chunk' `var'
+        }
+
+        use `base', clear
+        
+        * Keep only strictly necessary variables to prevent conflicts
+        keep company_id prop_num `chunk'
+        
+        * Use standard 'reshape' if greshape continues to fail (it's slower but safer for debugging)
+        * If this works, you can switch back to 'greshape'
+        greshape wide `chunk', i(company_id) j(prop_num)
+
+        save `part', replace
+
         if `first' == 1 {
             save `out', replace
             local first 0
