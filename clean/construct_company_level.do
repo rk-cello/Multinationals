@@ -50,7 +50,7 @@ end
 
 
 program owner_company_reshape
-    use "$input_property_level/property_level_crosssection_data.dta", clear
+    use "$input_property_level/property_level_crosssection_data_renamed.dta", clear
     *------------------------------------------------------------
     * 0) Make a unique id for each wide row
     *------------------------------------------------------------
@@ -60,10 +60,10 @@ program owner_company_reshape
     *------------------------------------------------------------
     * 1a) Collect ALL variables whose *labels* end in "(Owner #)"
     *------------------------------------------------------------
-    * rename pattern offender
+    /* * rename pattern offender
     forvalues i = 1/8 {
         rename owner_price_to_earn_after_extra`i' owner_price_to_earnings_extra_`i'
-    }
+    } */
 
     local owner_vars
     foreach v of varlist _all {
@@ -137,14 +137,85 @@ program owner_company_reshape
     rename owner_snl_instn_key_ company_id  
     order company_id prop_row prop_id prop_name owner_slot
 
-    save "$dir_temp/owner_company_level_crosssection.dta", replace
+    //save "$dir_temp/owner_company_level_crosssection.dta", replace
 
     *------------------------------------------------------------
-    * 5) Drop royalty owner variables (not needed for owner company data)
+    * 5) Drop owner variables related to royalty (not needed for royalty company data)
     *------------------------------------------------------------
-    drop *royalty*
+    drop *roy*
 
     save "$dir_temp/owner_company_level_crosssection.dta", replace
+    use "$dir_temp/owner_company_level_crosssection.dta", clear
+
+    *------------------------------------------------------------
+    * 6) Reshape wide to company level
+    *------------------------------------------------------------
+    drop prop_row
+    rename owner_slot slot
+
+    * Find strL variables inside that range
+    ds prop_id-owner_pe_ratio_after_extra8_, has(type strL)
+    local strL_vars `r(varlist)'
+
+    * For each strL var: encode to numeric id with value label
+    *    - creates <var>_id
+    *    - drops original strL var
+    *    - updates reshape varlist to use the *_id instead
+
+    foreach v of local strL_vars {
+        * Drop the unsupported strL variable
+        drop `v'
+    }
+
+    * Identify the varlist you plan to reshape
+    ds prop_id-owner_pe_ratio_after_extra8_
+    local reshape_vars `r(varlist)'
+
+    bysort company_id (prop_id): gen prop_num = _n // indexing properties for each company
+    order company_id prop_num
+    label var prop_num "Owning property index for each company"
+    label var slot "Owning slot number of the property"
+
+    ds prop_id-owner_pe_ratio_after_extra8_
+    local reshape_vars `r(varlist)'
+    greshape wide `reshape_vars', i(company_id) j(prop_num)
+    /* save "$dir_temp/royalty_company_level_crosssection.dta", replace */
+
+    /* tempfile base
+    save `base', replace
+
+    * Define the output directory (Ensure this global is defined before running)
+    * global dir_temp "C:/path/to/your/temp/folder" 
+
+    local step 15
+    local n : word count `reshape_vars'
+
+    forvalues a = 1(`step')`n' {
+        
+        local b = `a' + `step' - 1
+        if `b' > `n' local b = `n'
+
+        * Create the chunk of variables
+        local chunk ""
+        forvalues k = `a'/`b' {
+            local var : word `k' of `reshape_vars'
+            local chunk `chunk' `var'
+        }
+
+        use `base', clear
+        
+        * Keep ID, J variable, and the specific chunk vars
+        keep company_id prop_num `chunk'
+        
+        * Perform the reshape
+        greshape wide `chunk', i(company_id) j(prop_num)
+
+        * Save the individual chunk to the directory
+        * The filename includes `a` to ensure uniqueness (e.g., chunk_1.dta, chunk_16.dta)
+        save "$output_company_level/royalty_company_crosssection_chunk_`a'.dta", replace
+    } */
+
+    save "$output_company_level/owner_company_crosssection.dta", replace
 end
 
 
@@ -207,7 +278,7 @@ program royalty_company_reshape
     drop *owner* cur_controlling_own_pct_1-cur_controlling_own_pct_8
 
     save "$dir_temp/royalty_company_level_crosssection.dta", replace
-    /* use "$dir_temp/royalty_company_level_crosssection.dta", clear */
+    use "$dir_temp/royalty_company_level_crosssection.dta", clear
 
     *------------------------------------------------------------
     * 6) Reshape wide to company level
