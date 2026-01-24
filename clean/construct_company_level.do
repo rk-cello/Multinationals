@@ -48,21 +48,6 @@ program generate_company_id
     save "$dir_temp/company_id_list.dta", replace
 end
 
-/* program company_property_map
-    use "$input_property_level/property_level_crosssection_data.dta", clear
-    keep prop_name prop_id owner_snl_instn_key_1-owner_snl_instn_key_8
-
-    foreach v of varlist owner_snl_instn_key_* {
-        replace `v' = "" if `v' == "NA"
-        destring `v', replace
-    }
-    reshape long owner_snl_instn_key_, i(prop_name prop_id) j(owner_slot)
-    drop if missing(owner_snl_instn_key_)
-    rename owner_snl_instn_key_ company_id
-    tostring company_id, replace
-    save "$dir_temp/company_property_map.dta", replace
-end */
-
 
 program owner_company_reshape
     use "$input_property_level/property_level_crosssection_data.dta", clear
@@ -165,7 +150,7 @@ end
 
 
 program royalty_company_reshape
-    use "$input_property_level/property_level_crosssection_data.dta", clear
+    use "$input_property_level/property_level_crosssection_data_renamed.dta", clear
     *------------------------------------------------------------
     * 0) Make a unique id for each wide row
     *------------------------------------------------------------
@@ -207,7 +192,7 @@ program royalty_company_reshape
     *------------------------------------------------------------
     reshape long `stubs_u', i(prop_row) j(royalty_slot)
 
-    save "$dir_temp/property_crosssection_reshaped2.dta", replace
+    //save "$dir_temp/property_crosssection_reshaped2.dta", replace
 
     *------------------------------------------------------------
     * 4) Drop empty royalty slots
@@ -219,27 +204,24 @@ program royalty_company_reshape
     *------------------------------------------------------------
     * 5) Drop owner variables (not needed for royalty company data)
     *------------------------------------------------------------
-    drop *owner* current_controlling_own_pct_1-current_controlling_own_pct_8
+    drop *owner* cur_controlling_own_pct_1-cur_controlling_own_pct_8
 
     save "$dir_temp/royalty_company_level_crosssection.dta", replace
+    /* use "$dir_temp/royalty_company_level_crosssection.dta", clear */
 
     *------------------------------------------------------------
     * 6) Reshape wide to company level
     *------------------------------------------------------------
     /* order company_id royalty_slot */
-    clear all
-    use "$dir_temp/royalty_company_level_crosssection.dta", replace
+    /* clear all
+    use "$dir_temp/royalty_company_level_crosssection.dta", replace */
     drop prop_row
     rename royalty_slot slot
-    rename operator_investor_relations_bio operator_investor_relat_bio
-    rename operator_chairman_of_board_bio operator_chair_of_board_bio
-
-    * Identify the varlist you plan to reshape
-    ds prop_id-date_most_recent_drill_results
-    local reshape_vars `r(varlist)'
+    /* rename operator_investor_relations_bio operator_investor_relat_bio
+    rename operator_chairman_of_board_bio operator_chair_of_board_bio */
 
     * Find strL variables inside that range
-    ds prop_id-date_most_recent_drill_results, has(type strL)
+    ds prop_id-drill_date_recent, has(type strL)
     local strL_vars `r(varlist)'
 
     * For each strL var: encode to numeric id with value label
@@ -248,29 +230,74 @@ program royalty_company_reshape
     *    - updates reshape varlist to use the *_id instead
 
     foreach v of local strL_vars {
-        di as txt "Converting strL variable to numeric id: `v' -> `v'_id"
+        //di as txt "Converting strL variable to numeric id: `v' -> `v'_id"
 
         * Create numeric id with value labels preserving the original text
-        egen `v'_id = group(`v'), label
+        //egen `v'_id = group(`v'), label
 
         * Drop the unsupported strL variable
         drop `v'
 
         * Replace `v' with `v'_id in the reshape varlist
-        local reshape_vars : subinstr local reshape_vars "`v'" "`v'_id", word all
+        //local reshape_vars : subinstr local reshape_vars "`v'" "`v'_id", word all
     }
+
+    * Identify the varlist you plan to reshape
+    ds prop_id-drill_date_recent 
+    local reshape_vars `r(varlist)'
 
     bysort company_id (prop_id): gen prop_num = _n // indexing properties for each company
     order company_id prop_num
     label var prop_num "Royalty-owning property index for each company"
     label var slot "Royalty owner slot number of the property"
 
-    /* greshape wide `reshape_vars', i(company_id) j(prop_num) */
+    ds prop_id-drill_date_recent
+    local reshape_vars `r(varlist)'
+
+    tempfile base
+    save `base', replace
+
+    * Define the output directory (Ensure this global is defined before running)
+    * global dir_temp "C:/path/to/your/temp/folder" 
+
+    local step 15
+    local n : word count `reshape_vars'
+
+    forvalues a = 1(`step')`n' {
+        
+        local b = `a' + `step' - 1
+        if `b' > `n' local b = `n'
+
+        * Create the chunk of variables
+        local chunk ""
+        forvalues k = `a'/`b' {
+            local var : word `k' of `reshape_vars'
+            local chunk `chunk' `var'
+        }
+
+        use `base', clear
+        
+        * Keep ID, J variable, and the specific chunk vars
+        keep company_id prop_num `chunk'
+        
+        * Perform the reshape
+        greshape wide `chunk', i(company_id) j(prop_num)
+
+        * Save the individual chunk to the directory
+        * The filename includes `a` to ensure uniqueness (e.g., chunk_1.dta, chunk_16.dta)
+        save "$output_company_level/royalty_company_crosssection_chunk_`a'.dta", replace
+    }
+    /* greshape wide `reshape_vars', i(company_id) j(prop_num)
+    save "$dir_temp/royalty_company_level_crosssection.dta", replace */
+
+
+
+    *----------------
 
     tempfile base out part
     save `base', replace
 
-    local step 100
+    local step 15
     local n : word count `reshape_vars'
     local first 1
 
@@ -310,6 +337,10 @@ program royalty_company_reshape
     }
 
     use `out', clear
+
+    save "$dir_temp/royalty_company_level_crosssection.dta", replace
+
+end
 
 *------------------------------------------------------------
     clear all
@@ -509,6 +540,8 @@ program royalty_company_reshape
     }
 
     use `out', clear
+
+*------------------------------------------------------------
 
 
     save "$dir_temp/royalty_company_level_crosssection.dta", replace

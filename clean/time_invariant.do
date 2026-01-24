@@ -282,4 +282,232 @@ program merge_time_invariant
 
     save "$output_property_level/property_level_crosssection_data.dta", replace
     // does not include capital costs and transactions 
+
+end
+
+program rename_long_vars
+    clear all
+    use "$output_property_level/property_level_crosssection_data.dta"
+    * ----------------------------------------------------------------------
+    * STATA SCRIPT: BULK RENAME FOR LONG VARIABLES
+    * ----------------------------------------------------------------------
+
+    * 1. METRICS & COSTS (The "Prefixes")
+    * We shorten the description of the cost/grade to make room for the element name.
+    * ----------------------------------------------------------------------
+    * "All-in Sustaining Cost" -> aisc
+    rename *all_sustain_cost* *aisc*
+
+    * "Total Production Cost" -> tot_cost
+    rename *total_prod_cost* *tot_cost*
+
+    * "Production Capacity" -> prod_cap
+    rename *production_capacity* *prod_cap*
+
+    * "Millhead Grade" -> mill_gr
+    rename *millhead_grade* *mill_gr*
+
+    * "Evaluation Price" -> eval_px
+    rename *evaluation_price* *eval_px*
+
+    * "Cash Cost" -> c_cost
+    rename *cash_cost* *c_cost*
+
+    * "Current" -> cur
+    rename *current_* *cur_*
+
+    * "Recov Rate" -> rec_rt
+    rename *recov_rate* *rec_rt*
+
+
+    * 2. GEOLOGICAL INTERVALS (The "Middle" chunks)
+    * These are critical to shorten because they are often followed by numbers.
+    * ----------------------------------------------------------------------
+    * "Interval Grade Pct" -> int_gr_pct
+    rename *interval_grade_pct* *int_gr_pct*
+
+    * "Grade Equiv X Interval" -> greq_x_int
+    rename *grade_equiv_x_int* *greq_x_int*
+    rename *grade_eq_x_int* *greq_x_int* 
+    
+    * "Grade X Interval" -> gr_x_int
+    rename *grade_x_interval* *gr_x_int*
+    rename *grade_x_int* *gr_x_int*
+
+    * "Primary Interval" -> prim_int
+    rename *primary_interval* *prim_int*
+
+
+    * 3. DATES & DEALS
+    * ----------------------------------------------------------------------
+    * "Completion Termination" -> comp_term
+    rename *completion_termination* *comp_term*
+
+    * "Deal Pct Acquired" -> pct_acq
+    rename *deal_pct_acquired* *pct_acq*
+
+    * "Total Deal Value" -> tot_deal_val
+    rename *total_deal_value* *tot_deal_val*
+
+    * "Announce" -> ann
+    rename *announce* *ann*
+
+    * "Complete" -> comp
+    rename *complete* *comp*
+
+
+    * 4. COMMODITIES (The "Suffixes")
+    * Shortening long chemical names is the most effective way to save space.
+    * ----------------------------------------------------------------------
+    rename *ferromolybdenum* *femoly*
+    rename *ferromanganese* *femang*
+    rename *ferromanganes* *femang*
+    rename *ferrotungsten* *fetung*
+    rename *ferrovanadium* *fevan*
+    rename *ferronickel* *fenick*
+    rename *ferrochrome* *fechro*
+    rename *ferrochrom* *fechro*
+
+    rename *heavy_mineral* *hvy_min*
+    rename *lanthanides* *lanth*
+    rename *lanthanide* *lanth*
+    rename *molybdenum* *moly*
+    rename *phosphate* *phos*
+    rename *palladium* *pld*
+    rename *platinum* *plt*
+    rename *aluminum* *alum*
+    rename *alumina* *almia*
+    rename *titanium* *ti*
+    rename *tungsten* *tung*
+    rename *vanadium* *van*
+    rename *scandium* *scan*
+    rename *graphite* *graph*
+    rename *tantalum* *tant*
+    /* rename *magnesium* *mag* */
+    rename *manganese* *mang*
+
+
+    * 5. ESG / SCORES
+    * ----------------------------------------------------------------------
+    rename *technological* *tech*
+    rename *environmental* *env*
+    rename *operational* *ops*
+
+
+    * ------------------------------------------------------------------
+    * 1. SPECIFIC LONG VARS (Fixing the known outliers first)
+    * ------------------------------------------------------------------
+    capture rename date_most_recent_drill_results drill_date_recent
+    capture rename transport_method_coal_details trans_meth_coal_det
+    capture rename mill_capacity_cubic_m_per_dy_ore mill_cap_m3_day
+    capture rename mill_capacity_cubic_m_per_yr_ore mill_cap_m3_yr
+    capture rename mining_process_cost_cubic_m_ore mine_cost_m3
+
+    * ------------------------------------------------------------------
+    * 2. SHORTEN "ACTIVITIES" (The ends of the variable names)
+    * We do this BEFORE shortening prefixes to ensure we catch the long phrases.
+    * ------------------------------------------------------------------
+    rename *blasting_and_explosives* *blast*
+    rename *engineering_procurement* *epcm*
+    rename *infrastructure_and* *infra*
+    rename *independent_project* *ind_proj*
+    rename *prefeasibility_study* *pfs*
+    rename *feasibility_study* *fs*
+    rename *scoping_study* *scop*
+    rename *quality_assurance* *qaqc*
+    rename *tailings_and_waste* *tail*
+    rename *remote_location* *rem_loc*
+    rename *resources_estimation* *res_est*
+    rename *grade_control* *gr_ctrl*
+    rename *mine_design* *mine_des*
+    rename *processing_design* *proc_des*
+    rename *expansion_assessment* *exp_ass*
+    rename *contract_mining* *cont_min*
+    rename *contract_processing* *cont_proc*
+    rename *data_management* *data_mgr*
+    rename *social_impact* *social*
+    rename *transportation* *trans*
+    rename *metallurgical* *met*
+    rename *geotechnical* *geotech*
+    rename *hydrological* *hydro*
+    /* rename *environmental* *env* */
+    rename *remediation* *remed*
+    rename *optimization* *opt*
+    rename *development* *dev*
+    rename *exploration* *expl*
+    rename *geophysics* *geophys*
+
+    * ------------------------------------------------------------------
+    * 3. SHORTEN PREFIXES (Operator, Owner, Contractor, Dates)
+    * ------------------------------------------------------------------
+
+    * Contractor -> contr
+    rename contractor_* contr_*
+
+    * Operator -> op
+    rename operator_* op_*
+
+    * Owner -> own
+    /* rename owner_* own_* */
+    
+    * Royalty Holder -> roy_hldr
+    rename royalty_holder_* roy_hldr_*
+
+    * "Begin Year/Month" -> beg_yr / beg_mo
+    rename begin_yr_* beg_yr_*
+    rename begin_mo_* beg_mo_*
+
+    * "Project End" -> pend
+    rename proj_end_* pend_*
+    rename end_yr_* end_yr_* // "end_yr" is short enough, but "proj_end" is long
+
+    * "Cash and Equivalents" -> cash_eq
+    rename cash_and_equiv_* cash_eq_*
+
+    * "App 5B Net Increase" -> app5b_inc
+    rename app5b_net_increase_* app5b_inc_*
+
+    * "Investor Relations" -> inv_rel
+    rename *investor_relations* *inv_rel*
+
+    * "Chairman of Board" -> chair
+    rename *chairman_of_board* *chair*
+
+    * "Trading Symbol Exchange" -> sym_exch
+    rename *trading_symbol_exchange* *sym_exch*
+    rename *trading_symbol_ex* *sym_exch*
+
+    * "Debt to Total Cap" -> debt_cap
+    rename *total_debt_to_total_cap* *debt_cap*
+
+    * "Price to Earn" -> pe_ratio
+    rename *price_to_earn* *pe_ratio*
+    rename *price_earn* *pe_ratio*
+
+    * "Planning" -> "Plan"
+    rename *planning* *plan*
+    rename *planni* *plan*
+    rename *plann* *plan*
+
+    * ------------------------------------------------------------------
+    * 4. FINAL VERIFICATION LOOP
+    * ------------------------------------------------------------------
+    di " "
+    di "--- CHECKING FOR REMAINING LONG VARIABLES ---"
+    local count = 0
+    foreach v of varlist * {
+        if length("`v'") > 28 {
+            display as error "WARNING: `v' is still " length("`v'") " chars long."
+            local count = `count' + 1
+        }
+    }
+
+    if `count' == 0 {
+        di as txt "SUCCESS! All variables are now safe for reshaping."
+    }
+    else {
+        di as error "There are still `count' long variables. Check the list above."
+    }
+
+    save "$output_property_level/property_level_crosssection_data_renamed.dta", replace
 end
