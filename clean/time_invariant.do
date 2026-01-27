@@ -313,6 +313,9 @@ program rename_long_vars
     * "Cash Cost" -> c_cost
     rename *cash_cost* *c_cost*
 
+    * "Production Cost" -> prod_cost
+    rename *production_cost* *prod_cost*
+
     * "Current" -> cur
     rename *current_* *cur_*
 
@@ -355,6 +358,8 @@ program rename_long_vars
     * "Complete" -> comp
     rename *complete* *comp*
 
+    rename *evaluation* *eval*
+
 
     * 4. COMMODITIES (The "Suffixes")
     * Shortening long chemical names is the most effective way to save space.
@@ -386,6 +391,8 @@ program rename_long_vars
     /* rename *magnesium* *mag* */
     rename *manganese* *mang*
 
+    rename *comments* *comm*
+
 
     * 5. ESG / SCORES
     * ----------------------------------------------------------------------
@@ -408,7 +415,9 @@ program rename_long_vars
     * We do this BEFORE shortening prefixes to ensure we catch the long phrases.
     * ------------------------------------------------------------------
     rename *blasting_and_explosives* *blast*
+    rename *blasting_and_explosi* *blast*
     rename *engineering_procurement* *epcm*
+    rename *engineering_procurem* *epcm*
     rename *infrastructure_and* *infra*
     rename *independent_project* *ind_proj*
     rename *prefeasibility_study* *pfs*
@@ -438,7 +447,7 @@ program rename_long_vars
     rename *geophysics* *geophys*
 
     * ------------------------------------------------------------------
-    * 3. SHORTEN PREFIXES (Operator, Owner, Contractor, Dates)
+    * 3. SHORTEN PREFIXES
     * ------------------------------------------------------------------
 
     * Contractor -> contr
@@ -492,11 +501,14 @@ program rename_long_vars
     * ------------------------------------------------------------------
     * 4. FINAL VERIFICATION LOOP
     * ------------------------------------------------------------------
+
+    /* use "$output_property_level/property_level_crosssection_data_renamed.dta", clear */
+    
     di " "
     di "--- CHECKING FOR REMAINING LONG VARIABLES ---"
     local count = 0
     foreach v of varlist * {
-        if length("`v'") > 28 {
+        if length("`v'") > 27 {
             display as error "WARNING: `v' is still " length("`v'") " chars long."
             local count = `count' + 1
         }
