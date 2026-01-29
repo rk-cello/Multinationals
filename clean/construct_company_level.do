@@ -162,11 +162,126 @@ program owner_company_reshape
     local reshape_vars `r(varlist)'
     greshape wide `reshape_vars', i(company_id) j(prop_num) */
 
+    use "$dir_temp/owner_company_level_crosssection.dta"
+
+    * 1. Calculate the total properties per company
+    * We do this BEFORE the loop so it's calculated on the full dataset
+
+    levelsof snl_global_region, local(regions)
+
+    foreach r of local regions {
+        preserve
+        keep if snl_global_region == "`r'"
+
+        bysort company_id: gen prop_count = _N
+        
+        * Keep only the target companies (>1000)
+        keep if prop_count > 100
+        
+        * Deduplicate so we have one row per company
+        duplicates drop company_id, force
+        
+        count
+        * IF there are very few companies (e.g., less than 20), make a named bar chart
+        if r(N) > 0 & r(N) < 20 {
+            * Note: Replace 'company_name' with your actual variable name for the company name
+            graph hbar (sum) prop_count, over(company_id, sort(1) descending label(labsize(small))) ///
+                ytitle("Number of Properties") ///
+                title("Top Portfolios: `r'") ///
+                blabel(bar) ///  <-- This adds the exact number at the end of the bar
+                saving("$dir_datadist/bar_propnum_large_`r'.gph", replace)
+                
+            graph export "$dir_datadist/bar_propnum_large_`r'.png", replace
+        }
+        * ELSE if there are many companies, stick with the histogram
+        else if r(N) >= 20 {
+            histogram prop_count, frequency start(1000) ///
+                xtitle("Number of Properties") ///
+                title("Distribution: `r'") ///
+                saving("$dir_datadist/hist_propnum_large_`r'.gph", replace)
+            graph export "$dir_datadist/hist_propnum_large_`r'.png", replace
+        }
+        
+        restore
+    }
+
+
+
+    foreach r of local regions {
+        preserve
+        
+            * 2. Filter for the specific region
+            keep if snl_global_region == "`r'"
+            
+            * 3. Deduplicate: Keep only one row per company
+            * Now the dataset represents "Companies", not "Properties"
+            duplicates drop company_id, force
+            
+            * 4. Create the Plot
+            * 'discrete' tells Stata the x-axis values are integers (1, 2, 3...)
+            * 'freq' makes the y-axis the count of companies
+            histogram prop_count, discrete freq ///
+                xtitle("Number of Properties Owned") ///
+                ytitle("Count of Companies") ///
+                title("Portfolio Size Distribution: `r'") ///
+                gap(10) ///
+                saving("$dir_datadist/hist_propnum_`r'.gph", replace)
+                
+            graph export "$dir_datadist/hist_propnum_`r'.png", replace
+            
+        restore
+    }
+
+
+    * 1. Calculate total properties per company (on full dataset)
+    /* bysort company_id: gen prop_count = _N */
+
+    levelsof snl_global_region, local(regions)
+
+    foreach r of local regions {
+        preserve
+            
+            * 2. Filter for Region AND High-Volume Portfolios (>1000)
+            keep if snl_global_region == "`r'"
+            keep if prop_count > 1000
+            
+            * 3. Check if there is data to plot
+            * (Prevents the script from crashing if a region has no companies > 1000)
+            count
+            if r(N) > 0 {
+            
+                * 4. Deduplicate: One row per Company
+                duplicates drop company_id, force
+                
+                * 5. Create the Histogram
+                * We remove 'discrete' because values like 2000, 3000, 4000 are continuous ranges
+                * frequency: Y-axis is number of companies
+                * start(2000): Anchors the x-axis at your cutoff
+                histogram prop_count, frequency ///
+                    start(1000) ///
+                    xtitle("Number of Properties (>1000)") ///
+                    ytitle("Count of Companies") ///
+                    title("Large Portfolios Distribution: `r'") ///
+                    saving("$dir_datadist/hist_propnum_large_`r'.gph", replace)
+                    
+                graph export "$dir_datadist/hist_propnum_large_`r'.png", replace
+            }
+            else {
+                display "Skipping `r': No companies with >1000 properties."
+            }
+            
+        restore
+    }
+
+
+
+*------------------------------------------------------------
     * 1. Identify all unique regions and store them in a local macro called 'regions'
     levelsof snl_global_region, local(regions)
 
     foreach r of local regions {
-        histogram prop_num if snl_global_region == "`r'", discrete frequency title("Property Count Distribution in `r' Region") ///
+        /* historgram prop_num if snl_global_region == "`r'", discrete frequency title("Property Count Distribution in `r' Region")  */
+        graph bar count, over(prop_num) if snl_global_region == "`r'"///
         saving("$dir_datadist/hist_propnum_`r'.gph", replace)
         graph export "$dir_datadist/hist_propnum_`r'.png", replace        
     }
